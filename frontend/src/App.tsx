@@ -12,12 +12,14 @@ import { useToggle } from './hooks/useToggle'
 import { cn } from './lib/utils'
 
 // import AppRouter from './AppRouter'
+import BackgroundPattern from './components/ui/BackgroundPattern'
+import { BgPatternImage } from './assets/images'
 
 function NavigationCard() {
   const [isOpen, toggle] = useToggle(false)
   return (
     <DropdownMenu defaultOpen={isOpen} open={isOpen} onOpenChange={toggle}>
-      <DropdownMenuTrigger className=" flex items-center space-x-4 rounded-md border p-2 sm:p-4 bg-white">
+      <DropdownMenuTrigger className=" flex hover:scale-105 transition-transform items-center space-x-4 rounded-md border p-2 sm:p-4 bg-white">
         <img
           src="https://res.cloudinary.com/maddope/image/upload/v1711923023/masyntech-mern-blog/uwcz3p8o75ozapa9pjf6.jpg"
           alt="Profile image"
@@ -57,8 +59,8 @@ function App() {
         <AnnouncementIcon className="align-middle w-5 max-md:w-3 inline-block" />
         <p className="inline-block">Tip: Use the settings page to customise your display</p>
       </aside>
-      <header className="h-[70vh] bg-primary py-4 px-16 max-md:px-8 max-sm:px-3">
-        <div className="flex items-center justify-between">
+      <header className="h-[70vh] bg-primary py-4 px-16 max-md:px-8 max-sm:px-3 grid relative overflow-hidden">
+        <div className="flex items-center justify-between self-start">
           <a href="/" className="text-5xl text-secondary">
             <VicfIcon width={'1em'} />
           </a>
@@ -86,6 +88,18 @@ function App() {
             </ul>
           </nav>
         </div>
+        <div className="text-center absolute inset-0 space-y-2 text-white self-center">
+          <h3 className="font-bold text-3xl">Let’s Save Some Contacts</h3>
+          <p className="text-sm flex items-start justify-center gap-2 text-white text-opacity-85 mx-auto">
+            <AnnouncementIcon width={'16px'} className="align-baseline" />
+            <span className="max-w-[35ch]">
+              Tip: Use the "Overwrite name" checkbox to give contact a custom name
+            </span>
+          </p>
+        </div>
+
+        <BackgroundPattern className="opacity-20 w-64 aspect-square" source={BgPatternImage} />
+        <BackgroundPattern className="opacity-20 w-64 aspect-square" source={BgPatternImage} />
       </header>
       {/* <AppRouter /> */}
     </>

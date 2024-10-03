@@ -1,0 +1,6 @@
+@layer framework {
+  .background-pattern {
+    top: var(--posY);
+    left: var(--posX);
+  }
+}
