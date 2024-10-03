@@ -19,7 +19,7 @@ function NavigationCard() {
   const [isOpen, toggle] = useToggle(false)
   return (
     <DropdownMenu defaultOpen={isOpen} open={isOpen} onOpenChange={toggle}>
-      <DropdownMenuTrigger className=" flex hover:scale-105 transition-transform items-center space-x-4 rounded-md border p-2 sm:p-4 bg-white">
+      <DropdownMenuTrigger className=" flex hover:scale-105 transition-transform items-center space-x-4 rounded-2xl border p-2 sm:p-4 bg-white">
         <img
           src="https://res.cloudinary.com/maddope/image/upload/v1711923023/masyntech-mern-blog/uwcz3p8o75ozapa9pjf6.jpg"
           alt="Profile image"
@@ -88,11 +88,11 @@ function App() {
             </ul>
           </nav>
         </div>
-        <div className="text-center absolute inset-0 space-y-2 text-white self-center">
-          <h3 className="font-bold text-3xl">Let’s Save Some Contacts</h3>
+        <div className="text-center absolute inset-0 space-y-2 max-md:-mt-40 text-white self-center">
+          <h3 className="font-bold text-3xl max-sm:text-2xl">Let’s Save Some Contacts</h3>
           <p className="text-sm flex items-start justify-center gap-2 text-white text-opacity-85 mx-auto">
             <AnnouncementIcon width={'16px'} className="align-baseline" />
-            <span className="max-w-[35ch]">
+            <span className="max-w-[35ch] max-md:max-w-[28ch]">
               Tip: Use the "Overwrite name" checkbox to give contact a custom name
             </span>
           </p>
