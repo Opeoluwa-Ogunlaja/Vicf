@@ -3,4 +3,8 @@
     top: var(--posY);
     left: var(--posX);
   }
+
+  .main-wrapper {
+    grid-template-columns: fit-content 1fr;
+  }
 }

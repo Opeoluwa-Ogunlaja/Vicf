@@ -1,5 +1,14 @@
 import './App.css'
-import { AnnouncementIcon, BellIcon, ChevronDownIcon, SettingsIcon, VicfIcon } from './assets/icons'
+import {
+  AnnouncementIcon,
+  BellIcon,
+  ChevronDownIcon,
+  ClockRewindIcon,
+  PhonePlusIcon,
+  SettingsIcon,
+  UserPlusIcon,
+  VicfIcon
+} from './assets/icons'
 import {
   DropdownMenuTrigger,
   DropdownMenuLabel,
@@ -14,6 +23,7 @@ import { cn } from './lib/utils'
 // import AppRouter from './AppRouter'
 import BackgroundPattern from './components/ui/BackgroundPattern'
 import { BgPatternImage } from './assets/images'
+import { Button } from './components/ui/button'
 
 function NavigationCard() {
   const [isOpen, toggle] = useToggle(false)
@@ -59,7 +69,7 @@ function App() {
         <AnnouncementIcon className="align-middle w-5 max-md:w-3 inline-block" />
         <p className="inline-block">Tip: Use the settings page to customise your display</p>
       </aside>
-      <header className="h-[70vh] bg-primary py-4 px-16 max-md:px-8 max-sm:px-3 grid relative overflow-hidden">
+      <header className="h-[426px] bg-primary py-4 px-16 max-md:px-8 max-sm:px-3 grid relative overflow-hidden">
         <div className="flex items-center justify-between self-start">
           <a href="/" className="text-5xl text-secondary">
             <VicfIcon width={'1em'} />
@@ -101,6 +111,35 @@ function App() {
         <BackgroundPattern className="opacity-20 w-64 aspect-square" source={BgPatternImage} />
         <BackgroundPattern className="opacity-20 w-64 aspect-square" source={BgPatternImage} />
       </header>
+      <main className="main-wrapper grid">
+        <aside className="w-fit flex flex-col gap-20 px-16 py-10">
+          <Button variant={'secondary'} className="w-max">
+            Create New
+          </Button>
+          <div className="flex flex-col">
+            <h3 className="text-2xl font-medium border-b border-b-neutral-200 pb-2">
+              Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
+            </h3>
+            <ul>
+              <li>
+                <div className=" flex hover:scale-105 transition-transform items-center space-x-4 rounded-2xl border p-3 sm:p-4 bg-white">
+                  <PhonePlusIcon className="w-5 drop-shadow-md self-start pt-2" />
+                  <div className="flex-1 flex flex-col gap-1 text-left text-sm">
+                    <h4 className="font-semibold text-lg">Geology Department</h4>
+                    <p className="font-medium leading-none flex gap-2 text-neutral-400">
+                      <UserPlusIcon width={'1em'} /> Opeoluwa
+                    </p>
+                    <p className="text-xs text-muted mt-2">
+                      Contacts not exported or saved to drive
+                    </p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </aside>
+        <section></section>
+      </main>
       {/* <AppRouter /> */}
     </>
   )

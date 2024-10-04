@@ -6,5 +6,16 @@ import VicfIcon from './Vicf.svg?react'
 import BellIcon from './bell.svg?react'
 import SettingsIcon from './settings.svg?react'
 import ChevronDownIcon from './chevron-down.svg?react'
+import PhonePlusIcon from './phone-plus.svg?react'
+import UserPlusIcon from './user-plus.svg?react'
 
-export { AnnouncementIcon, ClockRewindIcon, VicfIcon, BellIcon, SettingsIcon, ChevronDownIcon }
+export {
+  AnnouncementIcon,
+  ClockRewindIcon,
+  VicfIcon,
+  BellIcon,
+  SettingsIcon,
+  ChevronDownIcon,
+  PhonePlusIcon,
+  UserPlusIcon
+}
