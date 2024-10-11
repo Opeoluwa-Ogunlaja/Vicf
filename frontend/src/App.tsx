@@ -116,13 +116,13 @@ function App() {
           <Button variant={'secondary'} className="w-max">
             Create New
           </Button>
-          <div className="flex flex-col">
-            <h3 className="text-2xl font-medium border-b border-b-neutral-200 pb-2">
+          <section className="flex flex-col">
+            <h3 className="text-2xl font-medium border-b border-b-neutral-200 pb-2 mb-4">
               Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
-            <ul>
+            <ul className="space-y-2">
               <li>
-                <div className=" flex hover:scale-105 transition-transform items-center space-x-4 rounded-2xl border p-3 sm:p-4 bg-white">
+                <div className=" flex hover:scale-105 transition-transform items-center space-x-4 rounded-2xl border border-neutral-100 p-3 sm:p-4 bg-white">
                   <PhonePlusIcon className="w-5 drop-shadow-md self-start pt-2" />
                   <div className="flex-1 flex flex-col gap-1 text-left text-sm">
                     <h4 className="font-semibold text-lg">Geology Department</h4>
@@ -135,8 +135,25 @@ function App() {
                   </div>
                 </div>
               </li>
+              <li>
+                <div className=" flex hover:scale-105 transition-transform items-center space-x-4 rounded-2xl border p-3 sm:p-4 bg-white border-neutral-100">
+                  <PhonePlusIcon className="w-5 drop-shadow-md self-start pt-2" />
+                  <div className="flex-1 flex flex-col gap-1 text-left text-sm">
+                    <h4 className="font-semibold text-lg">Choir Members</h4>
+                    <p className="font-medium leading-none flex gap-2 text-neutral-400">
+                      <UserPlusIcon width={'1em'} /> 32 members
+                    </p>
+                    <p className="text-xs text-accent mt-2">Contacts saved to drive</p>
+                  </div>
+                </div>
+              </li>
             </ul>
-          </div>
+          </section>
+          <section className="flex flex-col">
+            <h3 className="text-2xl font-medium border-b border-b-neutral-200 pb-2 mb-4">
+              Goto <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
+            </h3>
+          </section>
         </aside>
         <section></section>
       </main>
