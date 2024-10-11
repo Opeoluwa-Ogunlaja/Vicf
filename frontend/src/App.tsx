@@ -4,6 +4,8 @@ import {
   BellIcon,
   ChevronDownIcon,
   ClockRewindIcon,
+  FacebookIcon,
+  InstagramIcon,
   PhonePlusIcon,
   SettingsIcon,
   UserPlusIcon,
@@ -153,10 +155,55 @@ function App() {
             <h3 className="text-2xl font-medium border-b border-b-neutral-200 pb-2 mb-4">
               Goto <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
+            <ul className=" flex flex-col gap-4 text-neutral-500">
+              <li>
+                <a>Home</a>
+              </li>
+              <li>
+                <a>Dashboard</a>
+              </li>
+              <li>
+                <a className="font-semibold">Save Contacts</a>
+              </li>
+            </ul>
           </section>
         </aside>
         <section></section>
       </main>
+      <footer className="self-end mt-20 p-14 max-sm:px-10 relative flex items-center bg-secondary/20">
+        <h2 className="text-6xl max-sm:text-4xl inline-block">
+          <VicfIcon width={'1em'} />
+        </h2>
+        <nav className="ml-6 text-sm text-muted font-medium">
+          <ul className="flex gap-4">
+            <li>
+              <a>Home</a>
+            </li>
+            <li>
+              <a>Dashboard</a>
+            </li>
+            <li>
+              <a className="font-bold">Save Contacts</a>
+            </li>
+          </ul>
+        </nav>
+        <ul className="flex gap-4 ml-auto text-xl">
+          <li>
+            <a>
+              <FacebookIcon width={'1em'} />
+            </a>
+          </li>
+          <li>
+            <a>
+              <InstagramIcon width={'1em'} />
+            </a>
+          </li>
+        </ul>
+        <span className="absolute m-4 text-xs -bottom-2 w-max mx-auto text-center inset-x-0 text-muted">
+          Copyright{' '}
+          <VicfIcon width="20px" className="text-neutral-600 inline-block align-baseline" /> 2023
+        </span>
+      </footer>
       {/* <AppRouter /> */}
     </>
   )

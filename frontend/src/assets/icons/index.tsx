@@ -8,6 +8,8 @@ import SettingsIcon from './settings.svg?react'
 import ChevronDownIcon from './chevron-down.svg?react'
 import PhonePlusIcon from './phone-plus.svg?react'
 import UserPlusIcon from './user-plus.svg?react'
+import FacebookIcon from './facebook.svg?react'
+import InstagramIcon from './instagram.svg?react'
 
 export {
   AnnouncementIcon,
@@ -17,5 +19,7 @@ export {
   SettingsIcon,
   ChevronDownIcon,
   PhonePlusIcon,
-  UserPlusIcon
+  UserPlusIcon,
+  FacebookIcon,
+  InstagramIcon
 }
