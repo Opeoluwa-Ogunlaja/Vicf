@@ -5,6 +5,6 @@
   }
 
   .main-wrapper {
-    grid-template-columns: fit-content 1fr;
+    grid-template-columns: max-content 1fr;
   }
 }

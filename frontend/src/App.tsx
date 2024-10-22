@@ -26,6 +26,7 @@ import { cn } from './lib/utils'
 import BackgroundPattern from './components/ui/BackgroundPattern'
 import { BgPatternImage } from './assets/images'
 import { Button } from './components/ui/button'
+import ContactsTable from './components/ContactsTable'
 
 function NavigationCard() {
   const [isOpen, toggle] = useToggle(false)
@@ -168,7 +169,9 @@ function App() {
             </ul>
           </section>
         </aside>
-        <section></section>
+        <section className="my-4 px-6 py-10">
+          <ContactsTable />
+        </section>
       </main>
       <footer className="self-end mt-20 p-14 max-sm:px-10 relative flex items-center bg-secondary/20">
         <h2 className="text-6xl max-sm:text-4xl inline-block">
