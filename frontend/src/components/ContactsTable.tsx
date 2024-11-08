@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
+import { twMerge } from 'tailwind-merge'
 
 const invoices = [
   {
@@ -15,66 +16,32 @@ const invoices = [
     paymentStatus: 'Paid',
     totalAmount: '$250.00',
     paymentMethod: 'Credit Card'
-  },
-  {
-    invoice: 'INV002',
-    paymentStatus: 'Pending',
-    totalAmount: '$150.00',
-    paymentMethod: 'PayPal'
-  },
-  {
-    invoice: 'INV003',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$350.00',
-    paymentMethod: 'Bank Transfer'
-  },
-  {
-    invoice: 'INV004',
-    paymentStatus: 'Paid',
-    totalAmount: '$450.00',
-    paymentMethod: 'Credit Card'
-  },
-  {
-    invoice: 'INV005',
-    paymentStatus: 'Paid',
-    totalAmount: '$550.00',
-    paymentMethod: 'PayPal'
-  },
-  {
-    invoice: 'INV006',
-    paymentStatus: 'Pending',
-    totalAmount: '$200.00',
-    paymentMethod: 'Bank Transfer'
-  },
-  {
-    invoice: 'INV007',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$300.00',
-    paymentMethod: 'Credit Card'
   }
 ]
 
-function ContactsTable() {
+function ContactsTable({ className }: { className?: string }) {
   return (
     <>
-      <div className="h-16 bg-neutral-600 rounded-t-lg"></div>
-      <Table className="px-6 [&_th]:px-6 [&_th]:!text-center [&_td]:px-6 [&_th]:py-4 [&_td]:py-4 text-center">
+      <div className={twMerge('h-16 bg-neutral-600 rounded-t-lg mx-auto', className)}></div>
+      <Table className="overflow-x-auto px-6 [&_th]:px-6 [&_th]:!text-center [&_td]:px-6 [&_th]:py-4 [&_td]:py-4 text-center border-y">
         <TableCaption>5 out of 5 contacts</TableCaption>
-        <TableHeader className="sticky bg-muted/10 [&_*]:!font-medium">
-          <TableRow>
-            <TableHead className="w-[100px]">Invoice</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Method</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
+        <TableHeader className="sticky bg-muted/10 [&_*]:!font-medium shadow-md shadow-neutral-50">
+          <TableRow className="font-normal">
+            <TableHead className="w-fit font-normal text-sm">Number</TableHead>
+            <TableHead className="max-lg:hidden w-fit font-normal text-sm">Slug</TableHead>
+            <TableHead className="max-lg:hidden w-fit font-normal text-sm">Email</TableHead>
+            <TableHead className="w-fit font-normal text-sm">Additional Information</TableHead>
+            <TableHead className="text-right font-normal text-sm">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="text-center [&_td]:!text-center">
           {invoices.map(invoice => (
             <TableRow key={invoice.invoice}>
               <TableCell className="font-medium">{invoice.invoice}</TableCell>
-              <TableCell>{invoice.paymentStatus}</TableCell>
+              <TableCell className="max-lg:hidden">{invoice.paymentStatus}</TableCell>
               <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+              <TableCell className="text-right">Okay</TableCell>
+              <TableCell className="text-right">Okay</TableCell>
             </TableRow>
           ))}
         </TableBody>

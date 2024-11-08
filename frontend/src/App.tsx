@@ -74,9 +74,12 @@ function App() {
       </aside>
       <header className="h-[426px] bg-primary py-4 px-16 max-md:px-8 max-sm:px-3 grid relative overflow-hidden">
         <div className="flex items-center justify-between self-start">
-          <a href="/" className="text-5xl text-secondary">
-            <VicfIcon width={'1em'} />
-          </a>
+          <div className="md:contents max-md flex gap-4">
+            <button className="font-bold text-white drop-shadow-sm text-lg">&#9776;</button>
+            <a href="/" className="text-5xl text-secondary">
+              <VicfIcon width={'1em'} />
+            </a>
+          </div>
 
           <nav className="contents">
             <ul className="flex items-center gap-6">
@@ -101,7 +104,7 @@ function App() {
             </ul>
           </nav>
         </div>
-        <div className="text-center absolute inset-0 space-y-2 max-md:-mt-40 text-white self-center">
+        <div className="text-center absolute inset-0 space-y-2 max-md:-mt-20 text-white self-center">
           <h3 className="font-bold text-3xl max-sm:text-2xl">Let’s Save Some Contacts</h3>
           <p className="text-sm flex items-start justify-center gap-2 text-white text-opacity-85 mx-auto">
             <AnnouncementIcon width={'16px'} className="align-baseline" />
@@ -114,13 +117,13 @@ function App() {
         <BackgroundPattern className="opacity-20 w-64 aspect-square" source={BgPatternImage} />
         <BackgroundPattern className="opacity-20 w-64 aspect-square" source={BgPatternImage} />
       </header>
-      <main className="main-wrapper grid">
-        <aside className="w-fit flex flex-col gap-20 px-16 py-10">
+      <main className="main-wrapper grid max-lg:grid-cols-1">
+        <aside className="max-lg:fixed scroll-auto max-lg:px-10 max-lg:top-0 max-lg:left-0 bg-white z-50 w-fit flex flex-col gap-20 px-12 py-10">
           <Button variant={'secondary'} className="w-max">
             Create New
           </Button>
           <section className="flex flex-col">
-            <h3 className="text-2xl font-medium border-b border-b-neutral-200 pb-2 mb-4">
+            <h3 className="max-lg:text-lg text-2xl font-medium border-b border-b-neutral-200 pb-2 mb-4">
               Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
             <ul className="space-y-2">
@@ -153,7 +156,7 @@ function App() {
             </ul>
           </section>
           <section className="flex flex-col">
-            <h3 className="text-2xl font-medium border-b border-b-neutral-200 pb-2 mb-4">
+            <h3 className="max-lg:text-lg text-2xl font-medium border-b border-b-neutral-200 pb-2 mb-4">
               Goto <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
             <ul className=" flex flex-col gap-4 text-neutral-500">
@@ -173,12 +176,12 @@ function App() {
           <ContactsTable />
         </section>
       </main>
-      <footer className="self-end mt-20 p-14 max-sm:px-10 relative flex items-center bg-secondary/20">
-        <h2 className="text-6xl max-sm:text-4xl inline-block">
+      <footer className="self-end mt-20 p-14 max-md:gap-8 max-sm:px-10 relative flex max-md:flex-col justify-center items-center bg-secondary/20">
+        <h2 className="text-6xl max-md:text-4xl inline-block">
           <VicfIcon width={'1em'} />
         </h2>
-        <nav className="ml-6 text-sm text-muted font-medium">
-          <ul className="flex gap-4">
+        <nav className="md:ml-6 text-sm text-muted font-medium">
+          <ul className="flex max-md:flex-col max-md:justify-center text-center gap-4">
             <li>
               <a>Home</a>
             </li>
@@ -190,7 +193,7 @@ function App() {
             </li>
           </ul>
         </nav>
-        <ul className="flex gap-4 ml-auto text-xl">
+        <ul className="flex max-md-justify-center gap-4 md:ml-auto text-xl">
           <li>
             <a>
               <FacebookIcon width={'1em'} />
