@@ -30,4 +30,20 @@ const BackgroundPattern: FC<{
   )
 }
 
+export const MultiBackgroundPatterns = ({
+  className,
+  count = 2,
+  source
+}: {
+  className: string
+  count: number
+  source: string
+}) => {
+  return Array(count)
+    .fill(0)
+    .map((key, i) => (
+      <BackgroundPattern className={className} source={source} key={`pattern-${i}`} />
+    ))
+}
+
 export default BackgroundPattern

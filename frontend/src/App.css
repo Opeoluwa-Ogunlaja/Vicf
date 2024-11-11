@@ -7,4 +7,14 @@
   .main-wrapper {
     grid-template-columns: minmax(0, max-content) 1fr;
   }
+
+  .animate-background {
+    animation: fade-bg cubic-bezier(0.85, 0.055, 0.675, 0.2) 3s 0.5s alternate infinite;
+  }
+
+  @keyframes fade-bg {
+    to {
+      opacity: 0.9;
+    }
+  }
 }

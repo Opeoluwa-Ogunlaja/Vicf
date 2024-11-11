@@ -1,10 +1,21 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { FC } from 'react'
+import Layout from './hoc/Layout'
+import { checkAuthLoader } from './utils/routeLoaders'
+import Create from './pages/Create'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <>Na so una dey do for here?</>
+    element: <Layout />,
+    id: 'root',
+    loader: checkAuthLoader,
+    children: [
+      {
+        path: '',
+        element: <Create />
+      }
+    ]
   },
   {
     path: '/auth',
