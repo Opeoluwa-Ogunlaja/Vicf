@@ -12,8 +12,11 @@ const BackgroundPattern: FC<{
         width: document.body.clientWidth,
         height: document.body.clientHeight
       }
-      elem.current!.style.setProperty('--posX', Math.random() * (area.width - 50) + 50 + 'px')
-      elem.current!.style.setProperty('--poxY', Math.random() * (area.height - 50) + 50 + 'px')
+
+      const posX = Math.random() * (area.width - 50) + 50
+      const posY = Math.random() * (area.height - 50) + 50
+      elem.current!.style.setProperty('--posX', posX + 'px')
+      elem.current!.style.setProperty('--posY', posY + 'px')
     }
   }, [])
 
