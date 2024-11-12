@@ -1,4 +1,8 @@
 @layer framework {
+  body {
+    container: body / block-size;
+  }
+
   .background-pattern {
     top: var(--posY);
     left: var(--posX);

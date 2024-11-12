@@ -16,12 +16,13 @@ import {
 } from '@/assets/icons'
 import { cn } from '@/lib/utils'
 import NavigationCard from '@/components/NavigationCard'
+import ContactForm from '@/components/ContactForm'
 
 const CreateLayout = ({ name }: { name: string }) => {
   const navIconClass = cn('w-8 max-md:w-6')
   console.log(name)
   return (
-    <div className="animate-in opacity-100">
+    <div className="animate-in">
       <aside className="bg-secondary max-md:text-xs text-center py-2 font-medium space-x-2">
         <AnnouncementIcon className="align-middle w-5 max-md:w-3 inline-block" />
         <p className="inline-block">Tip: Use the settings page to customise your display</p>
@@ -75,12 +76,10 @@ const CreateLayout = ({ name }: { name: string }) => {
       </header>
       <main className="main-wrapper grid max-lg:grid-cols-1">
         <Sidenav />
-        <section className="my-4 px-6 py-10">
-          <div className="form-container absolute grid place-items-center inset-0 h-full w-full pointer-events-none bg-pink grid-rows-12">
-            <div className="pointer-events-auto absolute content-start z-40 row-start-6 bg-white p-8 rounded-xl min-h-[200px] origin-top">
-              <form action="">
-                <input type="text" name="" id="" />
-              </form>
+        <section className="my-4 px-6 py-10 overflow-hidden">
+          <div className="form-container absolute overflow-hidden grid place-content-center place-items-center inset-0 h-full w-full pointer-events-none grid-rows-12">
+            <div className="pointer-events-auto static max-sm:min-w-[300px] min-w-[476px] z-[500] max-md:row-start-7 row-start-8 bg-white p-8 rounded-xl min-h-[200px] origin-top">
+              <ContactForm />
             </div>
           </div>
           <ContactsTable />

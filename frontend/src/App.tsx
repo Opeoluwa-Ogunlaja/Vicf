@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import './App.scss'
+import './App.css'
 // import {
 //   // AnnouncementIcon,
 //   // BellIcon,

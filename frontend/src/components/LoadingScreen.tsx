@@ -13,9 +13,9 @@ const LoadingScreen = () => {
       />
       <div className="flex flex-col text-center items-center gap-3">
         <VicfIcon className="text-neutral-600 animate-pulse" />
-        <p className="text-sm flex items-start justify-center gap-2 text-neutral-500 text-opacity-85 mx-auto">
+        <p className="text-sm flex items-start justify-center gap-2 text-neutral-600 text-opacity-85 mx-auto">
           <AnnouncementIcon width={'16px'} className="align-baseline" />
-          <span className="max-w-[35ch] max-md:max-w-[28ch]">
+          <span className="max-w-[35ch] font-bold max-md:max-w-[28ch]">
             Tip: Use the "Overwrite name" checkbox to give contact a custom name
           </span>
         </p>

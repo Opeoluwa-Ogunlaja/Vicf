@@ -26,7 +26,7 @@ function ContactsTable({ className }: { className?: string }) {
       <Table className="overflow-x-auto px-6 [&_th]:px-6 [&_th]:!text-center [&_td]:px-6 [&_th]:py-4 [&_td]:py-4 text-center border-y">
         <TableCaption>5 out of 5 contacts</TableCaption>
         <TableHeader className="sticky bg-muted/10 [&_*]:!font-medium shadow-md shadow-neutral-50">
-          <TableRow className="font-normal">
+          <TableRow className="font-normal hover:bg-secondary">
             <TableHead className="w-fit font-normal text-sm">Number</TableHead>
             <TableHead className="max-lg:hidden w-fit font-normal text-sm">Slug</TableHead>
             <TableHead className="max-lg:hidden w-fit font-normal text-sm">Email</TableHead>
