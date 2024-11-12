@@ -44,8 +44,8 @@ export const MultiBackgroundPatterns = ({
 }) => {
   return Array(count)
     .fill(0)
-    .map((key, i) => (
-      <BackgroundPattern className={className} source={source} key={`pattern-${i}`} />
+    .map((...args: unknown[]) => (
+      <BackgroundPattern className={className} source={source} key={`pattern-${args[1]}`} />
     ))
 }
 
