@@ -38,7 +38,7 @@ const ContactForm = () => {
           </span>
           <h2 className="text-2xl font-semibold">Apo boiz</h2>
           <p className="-mt-3 text-sm text-neutral-400">
-            Click "Add Contacts" and Fill the form below to add people to your collection
+            Click "Add Contact" and Fill the form below to add people to your collection
           </p>
         </section>
         <Accordion type="multiple">
@@ -46,18 +46,18 @@ const ContactForm = () => {
             <AccordionTrigger className="font-bold text-neutral-500 underline transition-all">
               Add Contact
             </AccordionTrigger>
-            <AccordionContent className="grid gap-3">
+            <AccordionContent className="grid gap-3 px-1">
               <FormField
                 control={formHook.control}
-                name="name"
+                name="number"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Number</FormLabel>
                     <FormControl className="-mt-2">
                       <Input placeholder="+234 801 234 5678" {...field} />
                     </FormControl>
-                    <FormDescription className="text-neutral-400">
-                      This is your public display name.
+                    <FormDescription className="text-xs text-neutral-400">
+                      This should contain the contact's number.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -72,8 +72,8 @@ const ContactForm = () => {
                     <FormControl className="-mt-2">
                       <Input placeholder="john.doe@email.com" {...field} />
                     </FormControl>
-                    <FormDescription className="text-neutral-400">
-                      This is your public display name.
+                    <FormDescription className="text-xs text-neutral-400">
+                      This should contain the contact's email.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

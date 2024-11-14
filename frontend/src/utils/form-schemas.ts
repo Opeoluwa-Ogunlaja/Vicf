@@ -18,7 +18,7 @@ export const phoneNumberType = z.string().transform((value, ctx) => {
 })
 
 export const ContactFormSchema = z.object({
-  name: phoneNumberType,
+  number: phoneNumberType,
   email: z.string().email({ message: 'This must be a valid email' }).optional()
 })
 
