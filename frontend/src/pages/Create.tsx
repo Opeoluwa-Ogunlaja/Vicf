@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { Await, useRouteLoaderData } from 'react-router-dom'
 import LoadingScreen from '../components/LoadingScreen'
-import BackgroundPattern from '@/components/ui/BackgroundPattern'
+import { MultiBackgroundPatterns } from '@/components/ui/BackgroundPattern'
 import { BgPatternImage } from '@/assets/images'
 import ContactsTable from '@/components/ContactsTable'
 import Sidenav from '@/components/ui/Sidenav'
@@ -23,14 +23,14 @@ const CreateLayout = ({ name }: { name: string }) => {
   console.log(name)
   return (
     <div className="animate-in">
-      <aside className="bg-secondary max-md:text-xs text-center py-2 font-medium space-x-2">
-        <AnnouncementIcon className="align-middle w-5 max-md:w-3 inline-block" />
+      <aside className="space-x-2 bg-secondary py-2 text-center font-medium max-md:text-xs">
+        <AnnouncementIcon className="inline-block w-5 align-middle max-md:w-3" />
         <p className="inline-block">Tip: Use the settings page to customise your display</p>
       </aside>
-      <header className="h-[426px] bg-primary py-4 px-16 max-md:px-8 max-sm:px-3 grid relative overflow-hidden">
+      <header className="relative grid h-[426px] overflow-hidden bg-primary px-16 py-4 max-md:px-8 max-sm:px-3">
         <div className="flex items-center justify-between self-start">
-          <div className="md:contents max-md flex gap-4">
-            <button className="font-bold text-white drop-shadow-sm text-lg md:hidden">
+          <div className="max-md flex gap-4 md:contents">
+            <button className="text-lg font-bold text-white drop-shadow-sm md:hidden">
               &#9776;
             </button>
             <a href="/" className="text-5xl text-secondary">
@@ -61,9 +61,9 @@ const CreateLayout = ({ name }: { name: string }) => {
             </ul>
           </nav>
         </div>
-        <div className="text-center absolute inset-0 space-y-2 max-md:-mt-20 text-white self-center">
-          <h3 className="font-bold text-3xl max-sm:text-2xl">Let’s Save Some Contacts</h3>
-          <p className="text-sm flex items-start justify-center gap-2 text-white text-opacity-85 mx-auto">
+        <div className="absolute inset-0 space-y-2 self-center text-center text-white max-md:-mt-20">
+          <h3 className="text-3xl font-bold max-sm:text-2xl">Let’s Save Some Contacts</h3>
+          <p className="mx-auto flex items-start justify-center gap-2 text-sm text-white text-opacity-85">
             <AnnouncementIcon width={'16px'} className="align-baseline" />
             <span className="max-w-[35ch] max-md:max-w-[28ch]">
               Tip: Use the "Overwrite name" checkbox to give contact a custom name
@@ -71,26 +71,29 @@ const CreateLayout = ({ name }: { name: string }) => {
           </p>
         </div>
 
-        <BackgroundPattern className="opacity-20 w-64 aspect-square" source={BgPatternImage} />
-        <BackgroundPattern className="opacity-20 w-64 aspect-square" source={BgPatternImage} />
+        <MultiBackgroundPatterns
+          count={4}
+          className="aspect-square w-64 opacity-20"
+          source={BgPatternImage}
+        />
       </header>
       <main className="main-wrapper grid max-lg:grid-cols-1">
         <Sidenav />
-        <section className="my-4 px-6 py-10 overflow-hidden">
-          <div className="form-container absolute overflow-hidden grid place-content-center place-items-center inset-0 h-full w-full pointer-events-none grid-rows-12">
-            <div className="pointer-events-auto border-2 border-secondary static max-sm:min-w-[320px] transition-all max-sm:-mt-5 max-lg:mt-28 mt-32 min-w-[520px] z-[500] max-lg:row-start-5 row-start-4 bg-white p-8 rounded-xl min-h-[200px] origin-top">
+        <section className="my-4 overflow-hidden px-8">
+          <div className="form-container pointer-events-none absolute inset-0 z-50 grid h-full w-full grid-rows-12 place-content-center place-items-center overflow-hidden">
+            <div className="pointer-events-auto static z-[500] row-start-3 mt-24 w-[520px] origin-top place-self-start rounded-xl bg-white px-14 py-5 shadow-neutral-300 drop-shadow-lg transition-all max-lg:row-start-4 max-sm:-mt-5 max-sm:max-w-[286px] max-sm:px-8">
               <ContactForm />
             </div>
           </div>
-          <ContactsTable />
+          <ContactsTable className="mt-24 max-sm:mt-4" />
         </section>
       </main>
-      <footer className="self-end mt-20 p-14 max-md:gap-8 max-sm:px-10 relative flex max-md:flex-col justify-center items-center bg-secondary/20">
-        <h2 className="text-6xl max-md:text-4xl inline-block">
+      <footer className="relative mt-20 flex items-center justify-center self-end bg-secondary/20 p-14 max-md:flex-col max-md:gap-8 max-sm:px-10">
+        <h2 className="inline-block text-6xl max-md:text-4xl">
           <VicfIcon width={'1em'} />
         </h2>
-        <nav className="md:ml-6 text-sm text-muted font-medium">
-          <ul className="flex max-md:flex-col max-md:justify-center text-center gap-4">
+        <nav className="text-sm font-medium text-muted md:ml-6">
+          <ul className="flex gap-4 text-center max-md:flex-col max-md:justify-center">
             <li>
               <a>Home</a>
             </li>
@@ -102,7 +105,7 @@ const CreateLayout = ({ name }: { name: string }) => {
             </li>
           </ul>
         </nav>
-        <ul className="flex max-md-justify-center gap-4 md:ml-auto text-xl">
+        <ul className="max-md-justify-center flex gap-4 text-xl md:ml-auto">
           <li>
             <a>
               <FacebookIcon width={'1em'} />
@@ -114,9 +117,9 @@ const CreateLayout = ({ name }: { name: string }) => {
             </a>
           </li>
         </ul>
-        <span className="absolute m-4 text-xs -bottom-2 w-max mx-auto text-center inset-x-0 text-muted">
+        <span className="absolute inset-x-0 -bottom-2 m-4 mx-auto w-max text-center text-xs text-muted">
           Copyright{' '}
-          <VicfIcon width="20px" className="text-neutral-600 inline-block align-baseline" /> 2023
+          <VicfIcon width="20px" className="inline-block align-baseline text-neutral-600" /> 2023
         </span>
       </footer>
     </div>

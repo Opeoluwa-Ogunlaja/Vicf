@@ -4,6 +4,8 @@
     position: relative;
     isolation: isolate;
     display: grid;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 
   .background-pattern {

@@ -4,16 +4,16 @@ import { AnnouncementIcon, VicfIcon } from '@/assets/icons'
 
 const LoadingScreen = () => {
   return (
-    <div className="absolute place-self-center isolate inset-0 h-full w-full grid place-content-center overflow-hidden">
-      <div className="absolute w-full h-full inset-0 bg-secondary -z-30 animate-background"></div>
+    <div className="absolute inset-0 isolate grid h-full w-full place-content-center overflow-hidden">
+      <div className="animate-background absolute inset-0 -z-30 h-full w-full bg-secondary"></div>
       <MultiBackgroundPatterns
         count={4}
-        className="opacity-20 w-48 -z-10 aspect-square invert"
+        className="-z-10 aspect-square w-48 opacity-20 invert"
         source={BgPatternImage}
       />
-      <div className="flex flex-col text-center items-center gap-3">
-        <VicfIcon className="text-neutral-600 animate-pulse" />
-        <p className="text-sm flex items-start justify-center gap-2 text-neutral-600 text-opacity-85 mx-auto">
+      <div className="flex flex-col items-center gap-3 text-center">
+        <VicfIcon className="w-20 animate-pulse text-neutral-600 lg:w-28" />
+        <p className="mx-auto flex items-start justify-center gap-2 text-sm text-neutral-600 text-opacity-85">
           <AnnouncementIcon width={'16px'} className="align-baseline" />
           <span className="max-w-[35ch] font-bold max-md:max-w-[28ch]">
             Tip: Use the "Overwrite name" checkbox to give contact a custom name

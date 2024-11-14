@@ -22,16 +22,16 @@ const invoices = [
 function ContactsTable({ className }: { className?: string }) {
   return (
     <>
-      <div className={twMerge('h-16 bg-neutral-600 rounded-t-lg mx-auto', className)}></div>
-      <Table className="overflow-x-auto px-6 [&_th]:px-6 [&_th]:!text-center [&_td]:px-6 [&_th]:py-4 [&_td]:py-4 text-center border-y">
+      <div className={twMerge('mx-auto h-16 rounded-t-lg bg-neutral-600', className)}></div>
+      <Table className="overflow-x-auto border-y px-6 text-center [&_td]:px-6 [&_td]:py-4 [&_th]:px-6 [&_th]:py-4 [&_th]:!text-center">
         <TableCaption>5 out of 5 contacts</TableCaption>
-        <TableHeader className="sticky bg-muted/10 [&_*]:!font-medium shadow-md shadow-neutral-50">
+        <TableHeader className="sticky bg-muted/10 shadow-md shadow-neutral-50 [&_*]:!font-medium">
           <TableRow className="font-normal hover:bg-secondary">
-            <TableHead className="w-fit font-normal text-sm">Number</TableHead>
-            <TableHead className="max-lg:hidden w-fit font-normal text-sm">Slug</TableHead>
-            <TableHead className="max-lg:hidden w-fit font-normal text-sm">Email</TableHead>
-            <TableHead className="w-fit font-normal text-sm">Additional Information</TableHead>
-            <TableHead className="text-right font-normal text-sm">Actions</TableHead>
+            <TableHead className="w-fit text-sm font-normal">Number</TableHead>
+            <TableHead className="w-fit text-sm font-normal max-lg:hidden">Slug</TableHead>
+            <TableHead className="w-fit text-sm font-normal max-lg:hidden">Email</TableHead>
+            <TableHead className="w-fit text-sm font-normal">Additional Information</TableHead>
+            <TableHead className="text-right text-sm font-normal">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="text-center [&_td]:!text-center">
