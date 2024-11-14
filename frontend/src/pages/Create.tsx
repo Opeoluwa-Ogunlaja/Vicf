@@ -78,7 +78,7 @@ const CreateLayout = ({ name }: { name: string }) => {
         <Sidenav />
         <section className="my-4 px-6 py-10 overflow-hidden">
           <div className="form-container absolute overflow-hidden grid place-content-center place-items-center inset-0 h-full w-full pointer-events-none grid-rows-12">
-            <div className="pointer-events-auto static max-sm:min-w-[300px] min-w-[476px] z-[500] max-md:row-start-7 row-start-8 bg-white p-8 rounded-xl min-h-[200px] origin-top">
+            <div className="pointer-events-auto border-2 border-secondary static max-sm:min-w-[320px] transition-all max-sm:-mt-5 max-lg:mt-28 mt-32 min-w-[520px] z-[500] max-lg:row-start-5 row-start-4 bg-white p-8 rounded-xl min-h-[200px] origin-top">
               <ContactForm />
             </div>
           </div>

@@ -1,6 +1,9 @@
 @layer framework {
   body {
     container: body / block-size;
+    position: relative;
+    isolation: isolate;
+    display: grid;
   }
 
   .background-pattern {
