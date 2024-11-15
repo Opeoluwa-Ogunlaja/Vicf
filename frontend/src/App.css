@@ -17,6 +17,25 @@
     grid-template-columns: minmax(0, max-content) 1fr;
   }
 
+  .nav-link::after {
+    position: absolute;
+    content: '';
+    height: 8px;
+    width: 100%;
+    left: 0;
+    bottom: -8px;
+    background: url('@/assets/icons/styled-underline.svg');
+    clip-path: inset(0 100% 0 0);
+    transition: all 0.5s ease;
+    mix-blend-mode: color-burn;
+  }
+
+  .nav-link:hover::after,
+  .nav-link:is(.active)::after {
+    clip-path: inset(0 0 0 0);
+    transition: all 1s ease;
+  }
+
   .animate-background {
     animation: fade-bg cubic-bezier(0.85, 0.055, 0.675, 0.2) 3s 0.5s alternate infinite;
   }

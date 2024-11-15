@@ -10,6 +10,7 @@ import PhonePlusIcon from './phone-plus.svg?react'
 import UserPlusIcon from './user-plus.svg?react'
 import FacebookIcon from './facebook.svg?react'
 import InstagramIcon from './instagram.svg?react'
+import StyledUnderline from './styled-underline.svg?react'
 
 export {
   AnnouncementIcon,
@@ -21,5 +22,6 @@ export {
   PhonePlusIcon,
   UserPlusIcon,
   FacebookIcon,
-  InstagramIcon
+  InstagramIcon,
+  StyledUnderline
 }

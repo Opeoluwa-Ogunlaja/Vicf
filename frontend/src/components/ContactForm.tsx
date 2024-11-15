@@ -19,6 +19,7 @@ import {
   FormMessage
 } from './ui/form'
 import { Input } from './ui/input'
+import { Checkbox } from './ui/checkbox'
 
 const ContactForm = () => {
   const formHook = useForm<ContactFormType>({
@@ -79,13 +80,43 @@ const ContactForm = () => {
                   </FormItem>
                 )}
               />
-              <Accordion type="multiple" className="-mt-2">
+              <section></section>
+              <Accordion type="multiple" className="mt-4">
                 <AccordionItem value="additional">
                   <AccordionTrigger className="text-lg font-normal text-neutral-600 transition-all">
-                    Additional Information
+                    Overwrites
                   </AccordionTrigger>
                   <AccordionContent>
-                    Yes. It adheres to the WAI-ARIA design pattern.
+                    <FormField
+                      control={formHook.control}
+                      name="overwrite"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                          </FormControl>
+                          <FormLabel className="ml-2 align-top text-neutral-500">
+                            Overwrite the auto-generate name slug with:
+                          </FormLabel>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={formHook.control}
+                      name="overwrite_name"
+                      render={({ field }) => (
+                        <FormItem className="mt-2">
+                          <FormControl>
+                            <Input placeholder="eg. Bestie" {...field} />
+                          </FormControl>
+                          <FormDescription className="text-xs text-neutral-400">
+                            This should contain the name overwrite.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>

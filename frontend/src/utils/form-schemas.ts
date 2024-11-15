@@ -19,7 +19,9 @@ export const phoneNumberType = z.string().transform((value, ctx) => {
 
 export const ContactFormSchema = z.object({
   number: phoneNumberType,
-  email: z.string().email({ message: 'This must be a valid email' }).optional()
+  email: z.string().email({ message: 'This must be a valid email' }).optional(),
+  overwrite: z.boolean().default(false),
+  overwrite_name: z.string()
 })
 
 export type ContactFormType = z.infer<typeof ContactFormSchema>

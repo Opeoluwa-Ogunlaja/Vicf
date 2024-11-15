@@ -17,6 +17,7 @@ import {
 import { cn } from '@/lib/utils'
 import NavigationCard from '@/components/NavigationCard'
 import ContactForm from '@/components/ContactForm'
+import { NavigationLink } from '@/components/ui/navigation-link'
 
 const CreateLayout = ({ name }: { name: string }) => {
   const navIconClass = cn('w-8 max-md:w-6')
@@ -41,9 +42,12 @@ const CreateLayout = ({ name }: { name: string }) => {
           <nav className="contents">
             <ul className="flex items-center gap-6">
               <li className="inline-flex max-md:hidden">
-                <a href="" className="text-sm text-white">
-                  Save Contacts
-                </a>
+                <NavigationLink
+                  to="/"
+                  className="font-medium text-white contrast-50 saturate-100 sepia after:filter"
+                >
+                  Home
+                </NavigationLink>
               </li>
               <li>
                 <a href="" className="text-white">
@@ -95,13 +99,13 @@ const CreateLayout = ({ name }: { name: string }) => {
         <nav className="text-sm font-medium text-muted md:ml-6">
           <ul className="flex gap-4 text-center max-md:flex-col max-md:justify-center">
             <li>
-              <a>Home</a>
+              <NavigationLink to="/">Home</NavigationLink>
             </li>
             <li>
-              <a>Dashboard</a>
+              <NavigationLink to="/dashboard">Dashboard</NavigationLink>
             </li>
             <li>
-              <a className="font-bold">Save Contacts</a>
+              <NavigationLink to="/create">Save Contacts</NavigationLink>
             </li>
           </ul>
         </nav>
