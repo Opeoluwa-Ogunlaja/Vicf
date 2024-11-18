@@ -23,7 +23,13 @@ import { Checkbox } from './ui/checkbox'
 
 const ContactForm = () => {
   const formHook = useForm<ContactFormType>({
-    resolver: zodResolver(ContactFormSchema)
+    resolver: zodResolver(ContactFormSchema),
+    defaultValues: {
+      email: '',
+      number: '',
+      overwrite: false,
+      overwrite_name: ''
+    }
   })
 
   const onSubmit: SubmitHandler<ContactFormType> = data => {
@@ -91,7 +97,7 @@ const ContactForm = () => {
                       control={formHook.control}
                       name="overwrite"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="mx-1">
                           <FormControl>
                             <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                           </FormControl>
@@ -105,17 +111,25 @@ const ContactForm = () => {
                     <FormField
                       control={formHook.control}
                       name="overwrite_name"
-                      render={({ field }) => (
-                        <FormItem className="mt-2">
-                          <FormControl>
-                            <Input placeholder="eg. Bestie" {...field} />
-                          </FormControl>
-                          <FormDescription className="text-xs text-neutral-400">
-                            This should contain the name overwrite.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      render={({ field }) => {
+                        const overwite = !formHook.getValues().overwrite
+                        return (
+                          <FormItem className="mx-1 mt-2">
+                            <FormControl>
+                              <Input
+                                disabled={overwite}
+                                aria-disabled={overwite}
+                                placeholder="eg. Bestie"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormDescription className="text-xs text-neutral-400">
+                              This should contain the name overwrite.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )
+                      }}
                     />
                   </AccordionContent>
                 </AccordionItem>

@@ -11,6 +11,8 @@ import UserPlusIcon from './user-plus.svg?react'
 import FacebookIcon from './facebook.svg?react'
 import InstagramIcon from './instagram.svg?react'
 import StyledUnderline from './styled-underline.svg?react'
+import EditIcon from './edit.svg?react'
+import TrashIcon from './trash.svg?react'
 
 export {
   AnnouncementIcon,
@@ -23,5 +25,7 @@ export {
   UserPlusIcon,
   FacebookIcon,
   InstagramIcon,
-  StyledUnderline
+  StyledUnderline,
+  EditIcon,
+  TrashIcon
 }

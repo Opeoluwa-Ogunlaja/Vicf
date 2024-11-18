@@ -10,15 +10,6 @@ import {
 } from '@/components/ui/table'
 import { twMerge } from 'tailwind-merge'
 
-const invoices = [
-  {
-    invoice: 'INV001',
-    paymentStatus: 'Paid',
-    totalAmount: '$250.00',
-    paymentMethod: 'Credit Card'
-  }
-]
-
 function ContactsTable({ className }: { className?: string }) {
   return (
     <>
@@ -35,15 +26,13 @@ function ContactsTable({ className }: { className?: string }) {
           </TableRow>
         </TableHeader>
         <TableBody className="text-center [&_td]:!text-center">
-          {invoices.map(invoice => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{invoice.invoice}</TableCell>
-              <TableCell className="max-lg:hidden">{invoice.paymentStatus}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell className="text-right">Okay</TableCell>
-              <TableCell className="text-right">Okay</TableCell>
-            </TableRow>
-          ))}
+          <TableRow>
+            <TableCell className="font-medium">200</TableCell>
+            <TableCell className="max-lg:hidden">200</TableCell>
+            <TableCell>490</TableCell>
+            <TableCell className="text-right">300</TableCell>
+            <TableCell className="flex items-center text-right"></TableCell>
+          </TableRow>
         </TableBody>
         {/* <TableFooter>
           <TableRow className="text-start">
