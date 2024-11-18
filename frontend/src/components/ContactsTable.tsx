@@ -9,6 +9,8 @@ import {
   TableRow
 } from '@/components/ui/table'
 import { twMerge } from 'tailwind-merge'
+import EditButton from './table-components/EditButton'
+import DeleteButton from './table-components/DeleteButton'
 
 function ContactsTable({ className }: { className?: string }) {
   return (
@@ -26,12 +28,15 @@ function ContactsTable({ className }: { className?: string }) {
           </TableRow>
         </TableHeader>
         <TableBody className="text-center [&_td]:!text-center">
-          <TableRow>
+          <TableRow className="transition-colors hover:bg-neutral-100">
             <TableCell className="font-medium">200</TableCell>
             <TableCell className="max-lg:hidden">200</TableCell>
             <TableCell>490</TableCell>
             <TableCell className="text-right">300</TableCell>
-            <TableCell className="flex items-center text-right"></TableCell>
+            <TableCell className="flex items-center justify-center gap-4 text-center">
+              <EditButton contactId="hello" />
+              <DeleteButton contactId="hello" />
+            </TableCell>
           </TableRow>
         </TableBody>
         {/* <TableFooter>
