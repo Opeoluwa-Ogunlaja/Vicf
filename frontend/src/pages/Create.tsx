@@ -18,6 +18,20 @@ import { cn } from '@/lib/utils'
 import NavigationCard from '@/components/NavigationCard'
 import ContactForm from '@/components/ContactForm'
 import { NavigationLink } from '@/components/ui/navigation-link'
+import { useSidenav } from '@/hooks/useSidenav'
+
+const SidenavToggle = () => {
+  const [, , setOpen] = useSidenav()
+  return (
+    <button
+      onClick={() => setOpen(true)}
+      className="text-lg font-bold text-white drop-shadow-sm md:hidden"
+      data-sidenav-toggle="true"
+    >
+      &#9776;
+    </button>
+  )
+}
 
 const CreateLayout = ({ name }: { name: string }) => {
   const navIconClass = cn('w-8 max-md:w-6')
@@ -31,9 +45,7 @@ const CreateLayout = ({ name }: { name: string }) => {
       <header className="relative grid h-[426px] overflow-hidden bg-primary px-16 py-4 max-md:px-8 max-sm:px-3">
         <div className="flex items-center justify-between self-start">
           <div className="max-md flex gap-4 md:contents">
-            <button className="text-lg font-bold text-white drop-shadow-sm md:hidden">
-              &#9776;
-            </button>
+            <SidenavToggle />
             <a href="/" className="text-5xl text-secondary">
               <VicfIcon width={'1em'} />
             </a>
@@ -85,7 +97,7 @@ const CreateLayout = ({ name }: { name: string }) => {
         <Sidenav />
         <section className="my-4 overflow-hidden px-8">
           <div className="form-container pointer-events-none absolute inset-0 z-50 grid h-full w-full grid-rows-12 place-content-center place-items-center overflow-hidden">
-            <div className="pointer-events-auto static z-[500] row-start-3 mt-24 w-[520px] origin-top place-self-start rounded-xl bg-white px-12 py-5 shadow-neutral-300 drop-shadow-lg transition-all max-lg:row-start-4 max-lg:mt-6 max-sm:max-w-[286px] max-sm:px-8">
+            <div className="pointer-events-auto static z-[500] row-start-3 mx-auto mt-20 w-[520px] origin-top place-self-start rounded-xl bg-white px-12 py-5 shadow-neutral-300 drop-shadow-lg transition-all max-xl:mt-24 max-lg:row-start-4 max-lg:mt-10 max-sm:-mt-4 max-sm:w-10/12 max-sm:min-w-[300px] max-sm:px-8">
               <ContactForm />
             </div>
           </div>

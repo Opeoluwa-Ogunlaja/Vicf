@@ -1,11 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { ReactEventHandler, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
-export function useEventListener<EventType = Element>(
+export function useEventListener<
+  EventType extends Event = Event,
+  ElementType extends HTMLElement | Window = HTMLElement | Window
+>(
   eventType: string,
-  callback: ReactEventHandler<EventType>,
-  element: HTMLElement,
-  defaultToWindows: boolean = true
+  callback: (event: EventType) => void,
+  element?: ElementType | null,
+  defaultToWindow: boolean = true
 ) {
   const callbackRef = useRef(callback)
 
@@ -14,24 +16,17 @@ export function useEventListener<EventType = Element>(
   }, [callback])
 
   useEffect(() => {
-    const handler: typeof callback = e => {
-      callbackRef.current(e)
+    const target = element ?? (defaultToWindow ? window : null)
+    if (!target) return
+
+    const handler = (event: EventType) => {
+      callbackRef.current(event)
     }
 
-    if (element == null || element == undefined) {
-      if (defaultToWindows == true) {
-        window.addEventListener(eventType, handler as any)
-      } else {
-        return
-      }
-    } else if (element != null) {
-      element.addEventListener(eventType, handler as any)
-    }
+    target.addEventListener(eventType, handler as EventListener)
 
     return () => {
-      if (element) {
-        element.removeEventListener(eventType, handler as any)
-      }
+      target.removeEventListener(eventType, handler as EventListener)
     }
-  }, [element, defaultToWindows, eventType])
+  }, [eventType, element, defaultToWindow])
 }

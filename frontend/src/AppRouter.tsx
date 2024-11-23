@@ -3,6 +3,7 @@ import { FC } from 'react'
 import Layout from './hoc/Layout'
 import { checkAuthLoader } from './utils/routeLoaders'
 import Create from './pages/Create'
+import Home from './pages/Home'
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
       {
         path: 'create',
         element: <Create />
+      },
+      {
+        path: '',
+        element: <Home />
       }
     ]
   },

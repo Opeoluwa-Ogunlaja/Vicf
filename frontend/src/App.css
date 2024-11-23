@@ -36,6 +36,41 @@
     transition: all 1s ease;
   }
 
+  .sidenav {
+    grid-auto-rows: min-content;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .sidenav.closed .flex {
+      flex: 0 !important;
+    }
+
+    .sidenav.closed {
+      animation: sidenav-close 0.3s ease-out forwards;
+    }
+
+    .sidenav.open {
+      animation: sidenav-open 1s ease-out forwards;
+    }
+  }
+
+  @keyframes sidenav-open {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  @keyframes sidenav-close {
+    from {
+      clip-path: inset(0 0 0 0);
+    }
+    to {
+      clip-path: inset(0 100% 0 0);
+    }
+  }
+
   .animate-background {
     animation: fade-bg cubic-bezier(0.85, 0.055, 0.675, 0.2) 3s 0.5s alternate infinite;
   }

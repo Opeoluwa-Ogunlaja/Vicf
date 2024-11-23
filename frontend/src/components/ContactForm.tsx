@@ -20,6 +20,7 @@ import {
 } from './ui/form'
 import { Input } from './ui/input'
 import { Checkbox } from './ui/checkbox'
+// import { RefObject } from 'react'
 
 const ContactForm = () => {
   const formHook = useForm<ContactFormType>({
@@ -57,18 +58,20 @@ const ContactForm = () => {
               <FormField
                 control={formHook.control}
                 name="number"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Number</FormLabel>
-                    <FormControl className="-mt-2">
-                      <Input placeholder="+234 801 234 5678" {...field} />
-                    </FormControl>
-                    <FormDescription className="text-xs text-neutral-400">
-                      This should contain the contact's number.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>Number</FormLabel>
+                      <FormControl className="-mt-2">
+                        <Input placeholder="+234 801 234 5678" {...field} />
+                      </FormControl>
+                      <FormDescription className="text-xs text-neutral-400">
+                        This should contain the contact's number.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )
+                }}
               />
               <FormField
                 control={formHook.control}
