@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 export function useAsync(
-  promise: () => Promise<unknown> | Promise<unknown> = () => Promise.resolve(),
+  promise: () => Promise<unknown> | Promise<unknown>,
   dependencies: unknown[] = []
 ) {
   const [value, setValue] = useState<unknown>(null)
