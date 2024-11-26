@@ -11,13 +11,19 @@ import {
 import { twMerge } from 'tailwind-merge'
 import EditButton from './table-components/EditButton'
 import DeleteButton from './table-components/DeleteButton'
+import { useContacts } from '@/hooks/useContacts'
+import { phoneNumberType } from './../utils/form-schemas'
+import ContactsTableProvider from '@/hoc/ContactsTableProvider'
 
 function ContactsTable({ className }: { className?: string }) {
+  const contacts = useContacts()
   return (
-    <>
+    <ContactsTableProvider>
       <div className={twMerge('mx-auto h-16 rounded-t-lg bg-neutral-600', className)}></div>
       <Table className="overflow-x-auto border-y px-6 text-center [&_td]:px-6 [&_td]:py-4 [&_th]:px-6 [&_th]:py-4 [&_th]:!text-center">
-        <TableCaption>5 out of 5 contacts</TableCaption>
+        <TableCaption>
+          {contacts.length} out of {contacts.length} contacts
+        </TableCaption>
         <TableHeader className="sticky bg-muted/10 shadow-md shadow-neutral-50 [&_*]:!font-medium">
           <TableRow className="font-normal hover:bg-secondary">
             <TableHead className="w-fit text-sm font-normal">Number</TableHead>
@@ -28,16 +34,25 @@ function ContactsTable({ className }: { className?: string }) {
           </TableRow>
         </TableHeader>
         <TableBody className="text-center [&_td]:!text-center">
-          <TableRow className="transition-colors hover:bg-neutral-100">
-            <TableCell className="font-medium">+234 807 2660 055</TableCell>
-            <TableCell className="max-lg:hidden">1Adi</TableCell>
-            <TableCell>me@gmail.com</TableCell>
-            <TableCell className="text-right">300</TableCell>
-            <TableCell className="flex items-center justify-center gap-4 text-center">
-              <EditButton contactId="hello" />
-              <DeleteButton contactId="hello" />
-            </TableCell>
-          </TableRow>
+          {[...contacts].reverse().map(contact => {
+            return (
+              <TableRow
+                className="transition-colors hover:bg-neutral-100"
+                key={contact.number + contact.slug}
+              >
+                <TableCell className="font-medium">
+                  {phoneNumberType.parse(contact.number)}
+                </TableCell>
+                <TableCell className="max-lg:hidden">{contact.slug}</TableCell>
+                <TableCell>{contact.email || '--'}</TableCell>
+                <TableCell className="text-right">300</TableCell>
+                <TableCell className="flex items-center justify-center gap-4 text-center">
+                  <EditButton contactId="hello" />
+                  <DeleteButton contactId="hello" />
+                </TableCell>
+              </TableRow>
+            )
+          })}
         </TableBody>
         {/* <TableFooter>
           <TableRow className="text-start">
@@ -46,7 +61,7 @@ function ContactsTable({ className }: { className?: string }) {
           </TableRow>
         </TableFooter> */}
       </Table>
-    </>
+    </ContactsTableProvider>
   )
 }
 

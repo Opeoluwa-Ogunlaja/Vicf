@@ -20,21 +20,23 @@ import {
 } from './ui/form'
 import { Input } from './ui/input'
 import { Checkbox } from './ui/checkbox'
+import { useContactsUpdate } from '@/hooks/useContactsUpdate'
 // import { RefObject } from 'react'
 
 const ContactForm = () => {
+  const { add: addContact } = useContactsUpdate()
   const formHook = useForm<ContactFormType>({
     resolver: zodResolver(ContactFormSchema),
     defaultValues: {
       email: '',
-      number: '',
+      number: '08072660055',
       overwrite: false,
       overwrite_name: ''
     }
   })
 
   const onSubmit: SubmitHandler<ContactFormType> = data => {
-    console.log(data)
+    if (addContact) addContact(data)
   }
 
   return (

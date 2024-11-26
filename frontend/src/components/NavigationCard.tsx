@@ -11,23 +11,28 @@ import {
 import { ChevronDownIcon } from '@/assets/icons'
 import { cn } from '@/lib/utils'
 
-const NavigationCard: FC = () => {
+const NavigationCard: FC<{ className?: string }> = ({ className }) => {
   const [isOpen, toggle] = useToggle(false)
   return (
     <DropdownMenu defaultOpen={isOpen} open={isOpen} onOpenChange={toggle}>
-      <DropdownMenuTrigger className=" flex hover:scale-105 transition-transform items-center space-x-4 rounded-2xl border p-2 sm:p-4 bg-white">
+      <DropdownMenuTrigger
+        className={cn(
+          'flex items-center space-x-4 rounded-2xl border bg-white p-2 transition-transform hover:scale-105 sm:p-4',
+          className
+        )}
+      >
         <img
           src="https://res.cloudinary.com/maddope/image/upload/v1711923023/masyntech-mern-blog/uwcz3p8o75ozapa9pjf6.jpg"
           alt="Profile image"
-          className="w-10 aspect-square rounded-full shadow-inner"
+          className="aspect-square w-10 rounded-full shadow-inner"
         />
-        <div className="flex-1 space-y-1 text-left hidden md:block">
+        <div className="hidden flex-1 space-y-1 text-left md:block">
           <p className="text-sm font-medium leading-none">Opeoluwa</p>
           <p className="text-sm text-neutral-500">opeoluwa@gmail.com</p>
         </div>
         <ChevronDownIcon
           width={32}
-          className={cn({ '-rotate-180': isOpen }, 'transition-transform origin-center')}
+          className={cn({ '-rotate-180': isOpen }, 'origin-center transition-transform')}
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent

@@ -13,7 +13,7 @@ const router = createBrowserRouter([
     loader: checkAuthLoader,
     children: [
       {
-        path: 'create',
+        path: 'save',
         element: <Create />
       },
       {

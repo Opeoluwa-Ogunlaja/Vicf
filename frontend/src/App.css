@@ -46,7 +46,7 @@
     }
 
     .sidenav.closed {
-      animation: sidenav-close 0.3s ease-out forwards;
+      animation: sidenav-close 0.1s linear forwards;
     }
 
     .sidenav.open {

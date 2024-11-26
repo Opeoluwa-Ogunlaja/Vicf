@@ -6,36 +6,26 @@ import { BgPatternImage } from '@/assets/images'
 import ContactsTable from '@/components/ContactsTable'
 import Sidenav from '@/components/ui/Sidenav'
 
-import {
-  AnnouncementIcon,
-  BellIcon,
-  FacebookIcon,
-  InstagramIcon,
-  SettingsIcon,
-  VicfIcon
-} from '@/assets/icons'
+import { AnnouncementIcon, BellIcon, ChevronDownIcon, SettingsIcon, VicfIcon } from '@/assets/icons'
 import { cn } from '@/lib/utils'
 import NavigationCard from '@/components/NavigationCard'
 import ContactForm from '@/components/ContactForm'
 import { NavigationLink } from '@/components/ui/navigation-link'
-import { useSidenav } from '@/hooks/useSidenav'
-
-const SidenavToggle = () => {
-  const [, , setOpen] = useSidenav()
-  return (
-    <button
-      onClick={() => setOpen(true)}
-      className="text-lg font-bold text-white drop-shadow-sm md:hidden"
-      data-sidenav-toggle="true"
-    >
-      &#9776;
-    </button>
-  )
-}
+// import { useSidenav } from '@/hooks/useSidenav'
+// import { useContacts } from '@/hooks/useContacts'
+import ContactsProvider from '@/hoc/ContactsProvider'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import SidenavToggle from '@/components/SidenavToggle'
+import Footer from '@/components/Footer'
 
 const CreateLayout = ({ name }: { name: string }) => {
   const navIconClass = cn('w-8 max-md:w-6')
-  console.log(name)
+  if (!navIconClass) console.log(name)
+
   return (
     <div className="animate-in">
       <aside className="space-x-2 bg-secondary py-2 text-center font-medium max-md:text-xs">
@@ -52,7 +42,7 @@ const CreateLayout = ({ name }: { name: string }) => {
           </div>
 
           <nav className="contents">
-            <ul className="flex items-center gap-6">
+            <ul className="flex items-center gap-6 max-lg:gap-4">
               <li className="inline-flex max-md:hidden">
                 <NavigationLink
                   to="/"
@@ -67,9 +57,26 @@ const CreateLayout = ({ name }: { name: string }) => {
                 </a>
               </li>
               <li>
-                <a href="" className="text-white">
-                  <SettingsIcon className={navIconClass} />
-                </a>
+                <DropdownMenu defaultOpen={false}>
+                  <DropdownMenuTrigger className="flex items-center text-white lg:gap-1">
+                    <SettingsIcon className={navIconClass} />
+                    <ChevronDownIcon
+                      width={32}
+                      className={cn('origin-center transition-transform')}
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    style={{
+                      width: `var(--radix-popper-anchor-width)`
+                    }}
+                    className="mt-2 min-w-72 p-6 max-sm:min-w-48 max-sm:p-3"
+                  >
+                    <h4 className="font-semibold">Collection Settings</h4>
+                    <p className="text-neutral-400 max-sm:text-xs">
+                      Adjust <strong>Apo boiz</strong> collection settings
+                    </p>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </li>
               <li>
                 <NavigationCard />
@@ -95,49 +102,16 @@ const CreateLayout = ({ name }: { name: string }) => {
       </header>
       <main className="main-wrapper grid max-lg:grid-cols-1">
         <Sidenav />
-        <section className="my-4 overflow-hidden px-8">
-          <div className="form-container pointer-events-none absolute inset-0 z-50 grid h-full w-full grid-rows-12 place-content-center place-items-center overflow-hidden">
-            <div className="pointer-events-auto static z-[500] row-start-3 mx-auto mt-20 w-[520px] origin-top place-self-start rounded-xl bg-white px-12 py-5 shadow-neutral-300 drop-shadow-lg transition-all max-xl:mt-24 max-lg:row-start-4 max-lg:mt-10 max-sm:-mt-4 max-sm:w-10/12 max-sm:min-w-[300px] max-sm:px-8">
+        <section className="my-4 px-8">
+          <div className="form-container pointer-events-none absolute inset-0 z-50 grid h-[100dvh] w-full grid-rows-12 place-content-center place-items-center">
+            <div className="pointer-events-auto static z-[500] mx-auto mt-80 w-[520px] origin-top place-self-start rounded-xl bg-white px-12 py-5 shadow-neutral-300 drop-shadow-lg transition-all max-lg:mt-[19.5rem] max-sm:mt-72 max-sm:w-10/12 max-sm:min-w-[300px] max-sm:px-8">
               <ContactForm />
             </div>
           </div>
           <ContactsTable className="mt-24 max-sm:mt-4" />
         </section>
       </main>
-      <footer className="relative mt-20 flex items-center justify-center self-end bg-secondary/20 p-14 max-md:flex-col max-md:gap-8 max-sm:px-10">
-        <h2 className="inline-block text-6xl max-md:text-4xl">
-          <VicfIcon width={'1em'} />
-        </h2>
-        <nav className="text-sm font-medium text-muted md:ml-6">
-          <ul className="flex gap-4 text-center max-md:flex-col max-md:justify-center">
-            <li>
-              <NavigationLink to="/">Home</NavigationLink>
-            </li>
-            <li>
-              <NavigationLink to="/dashboard">Dashboard</NavigationLink>
-            </li>
-            <li>
-              <NavigationLink to="/create">Save Contacts</NavigationLink>
-            </li>
-          </ul>
-        </nav>
-        <ul className="max-md-justify-center flex gap-4 text-xl md:ml-auto">
-          <li>
-            <a>
-              <FacebookIcon width={'1em'} />
-            </a>
-          </li>
-          <li>
-            <a>
-              <InstagramIcon width={'1em'} />
-            </a>
-          </li>
-        </ul>
-        <span className="absolute inset-x-0 -bottom-2 m-4 mx-auto w-max text-center text-xs text-muted">
-          Copyright{' '}
-          <VicfIcon width="20px" className="inline-block align-baseline text-neutral-600" /> 2023
-        </span>
-      </footer>
+      <Footer />
     </div>
   )
 }
@@ -148,7 +122,11 @@ const Create = () => {
   return (
     <Suspense fallback={<LoadingScreen />}>
       <Await resolve={promise} errorElement={<>Error</>}>
-        {({ name }) => <CreateLayout name={name} />}
+        {({ name }) => (
+          <ContactsProvider>
+            <CreateLayout name={name} />
+          </ContactsProvider>
+        )}
       </Await>
     </Suspense>
   )

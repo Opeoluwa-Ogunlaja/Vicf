@@ -3,6 +3,7 @@ import parsePhoneNumber from 'libphonenumber-js'
 
 export const phoneNumberType = z.string().transform((value, ctx) => {
   const phoneNumber = parsePhoneNumber(value, {
+    extract: true,
     defaultCountry: 'NG'
   })
 

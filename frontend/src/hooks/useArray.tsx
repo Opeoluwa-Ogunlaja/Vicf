@@ -15,8 +15,9 @@ export function useArray<T>(initialValue?: T[]) {
   const pop = useCallback(() => {
     let item
     setValues(prevState => {
-      item = prevState.pop()
-      return prevState
+      item = prevState.at(-1)
+
+      return prevState.slice(0, -1)
     })
 
     return item
@@ -33,13 +34,14 @@ export function useArray<T>(initialValue?: T[]) {
 
   const shift = useCallback(() => {
     let item
+    let prev
     setValues(prevState => {
-      item = prevState.shift()
-      return prevState
+      ;[item, ...prev] = prevState
+      return prev
     })
 
     return item
   }, [setValues])
 
-  return { values, push, pop, shift, unshift }
+  return { values, push, pop, shift, unshift, setValues }
 }
