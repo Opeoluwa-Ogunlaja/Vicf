@@ -17,6 +17,17 @@
     grid-template-columns: minmax(0, max-content) 1fr;
   }
 
+  .auth-wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .patterns-bg::before {
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    background-position: 0 0;
+    background-blend-mode: color-dodge;
+  }
+
   .nav-link::after {
     position: absolute;
     content: '';

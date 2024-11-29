@@ -28,3 +28,23 @@ export const ContactFormSchema = z.object({
 })
 
 export type ContactFormType = z.infer<typeof ContactFormSchema>
+
+export const LoginFormSchema = z.object({
+  name: z.string(),
+  email: z
+    .optional(z.string().email(), { invalid_type_error: 'This must be a valid email' })
+    .or(z.literal('')),
+  password: z.string()
+})
+
+export type LoginFormType = z.infer<typeof LoginFormSchema>
+
+export const SignupFormSchema = z.object({
+  name: z.string(),
+  email: z
+    .optional(z.string().email(), { invalid_type_error: 'This must be a valid email' })
+    .or(z.literal('')),
+  password: z.string()
+})
+
+export type SignupFormType = z.infer<typeof SignupFormSchema>

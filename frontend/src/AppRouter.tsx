@@ -4,6 +4,9 @@ import Layout from './hoc/Layout'
 import { checkAuthLoader } from './utils/routeLoaders'
 import Create from './pages/Create'
 import Home from './pages/Home'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import AuthWrapper from './hoc/AuthWrapper'
 
 const router = createBrowserRouter([
   {
@@ -24,15 +27,19 @@ const router = createBrowserRouter([
   },
   {
     path: '/auth',
-    element: <>Dont play</>,
+    element: <AuthWrapper />,
     children: [
       {
         path: 'login',
-        element: <>Dont play</>
+        element: <Login />
       },
       {
-        path: 'login',
-        element: <>Dont play</>
+        path: 'signup',
+        element: <Signup />
+      },
+      {
+        path: '',
+        element: <Login />
       }
     ]
   },

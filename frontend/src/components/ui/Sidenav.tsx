@@ -9,6 +9,7 @@ import { useClickOutside } from '@/hooks/useClickOutside'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 import { useSidenav } from './../../hooks/useSidenav'
+
 const Sidenav = () => {
   const [open, , setOpen] = useSidenav()
   const openCount = useRef<number>(0)
@@ -40,7 +41,7 @@ const Sidenav = () => {
             'top-0 h-full w-full bg-black bg-opacity-50 bg-blend-screen transition-opacity duration-200 max-lg:z-[500000000]',
             {
               'pointer-events-none fixed opacity-100': open,
-              'invisible opacity-0': !open
+              'invisible absolute opacity-0': !open
             }
           )}
         ></div>,
@@ -109,7 +110,7 @@ const Sidenav = () => {
                 </NavigationLink>
               </li>
               <li>
-                <NavigationLink to="/create" className="after:!mix-blend-normal">
+                <NavigationLink to="/save" className="after:!mix-blend-normal">
                   Save Contacts
                 </NavigationLink>
               </li>
