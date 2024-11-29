@@ -65,6 +65,17 @@
     }
   }
 
+  @media screen and (max-width: 678px) {
+    .auth-wrapper {
+      grid-template-columns: initial;
+      grid-template-areas: stack;
+    }
+
+    .auth-wrapper > * {
+      grid-area: stack;
+    }
+  }
+
   @keyframes sidenav-open {
     from {
       clip-path: inset(0 100% 0 0);

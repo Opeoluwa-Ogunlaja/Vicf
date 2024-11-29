@@ -95,9 +95,17 @@ const SignupForm = () => {
               )
             }}
           />
-          <Button variant="secondary" className="mt-5 w-full py-6 text-lg font-normal">
+          <Button variant="secondary" className="mt-5 w-full py-4 font-bold">
             Save Contact
           </Button>
+
+          <div className="mx-auto mt-5 flex w-11/12 flex-col gap-3">
+            <h3 className="text-center">Or</h3>
+            <Button className="justify-start border bg-white py-4 shadow-md hover:bg-white hover:shadow-sm">
+              Sign up with Google
+            </Button>
+            <Button className="justify-start bg-black py-4 text-white">Sign up with Apple</Button>
+          </div>
         </form>
       </Form>
     </section>
