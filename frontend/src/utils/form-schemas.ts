@@ -30,21 +30,16 @@ export const ContactFormSchema = z.object({
 export type ContactFormType = z.infer<typeof ContactFormSchema>
 
 export const LoginFormSchema = z.object({
-  name: z.string(),
-  email: z
-    .optional(z.string().email(), { invalid_type_error: 'This must be a valid email' })
-    .or(z.literal('')),
-  password: z.string()
+  email: z.string().email(),
+  password: z.string().min(8, 'Password must be a minimum of 8 characters').max(32, 'Haba!')
 })
 
 export type LoginFormType = z.infer<typeof LoginFormSchema>
 
 export const SignupFormSchema = z.object({
-  name: z.string(),
-  email: z
-    .optional(z.string().email(), { invalid_type_error: 'This must be a valid email' })
-    .or(z.literal('')),
-  password: z.string()
+  name: z.string().min(2, 'Name must be at least 2 characters').max(32, 'Omo!!'),
+  email: z.string().email(),
+  password: z.string().min(8, 'Password must be a minimum of 8 characters').max(32, 'Haba!')
 })
 
 export type SignupFormType = z.infer<typeof SignupFormSchema>
