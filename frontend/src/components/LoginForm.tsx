@@ -30,7 +30,7 @@ const LoginForm = () => {
 
   return (
     <section
-      className="grid content-center items-center justify-items-center px-32"
+      className="grid content-center items-center justify-items-center lg:px-32"
       style={{ gridAutoRows: 'max-content' }}
     >
       <Form {...formHook}>

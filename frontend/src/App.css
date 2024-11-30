@@ -72,7 +72,7 @@
     }
 
     .auth-wrapper > * {
-      grid-area: stack;
+      grid-area: stack !important;
     }
   }
 
