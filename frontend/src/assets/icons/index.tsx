@@ -13,8 +13,12 @@ import InstagramIcon from './instagram.svg?react'
 import StyledUnderline from './styled-underline.svg?react'
 import EditIcon from './edit.svg?react'
 import TrashIcon from './trash.svg?react'
+import GoogleIcon from './google-logo.svg?react'
+import AppleIcon from './apple-logo.svg?react'
 
 export {
+  GoogleIcon,
+  AppleIcon,
   AnnouncementIcon,
   ClockRewindIcon,
   VicfIcon,
