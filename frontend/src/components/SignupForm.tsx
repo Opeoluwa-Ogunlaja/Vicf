@@ -14,8 +14,14 @@ import {
 } from './ui/form'
 import { Input } from './ui/input'
 import { AppleIcon, GoogleIcon } from '@/assets/icons'
+import { useMutation } from '@tanstack/react-query'
+import { signup_function } from '@/utils/requestUtils'
+import { wait } from '@/utils/promiseUtils'
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
 const SignupForm = () => {
+  const [success, setSuccess] = useState<boolean>(false)
   const formHook = useForm<SignupFormType>({
     resolver: zodResolver(SignupFormSchema),
     defaultValues: {
@@ -24,9 +30,35 @@ const SignupForm = () => {
       password: ''
     }
   })
+  const { isSubmitting, errors } = formHook.formState
 
-  const onSubmit: SubmitHandler<SignupFormType> = data => {
-    console.log(data)
+  const navigate = useNavigate()
+
+  const signUpMutation = useMutation({
+    mutationKey: ['signup'],
+    mutationFn: (variables: SignupFormType) => signup_function(variables)
+  })
+
+  const onSubmit: SubmitHandler<SignupFormType> = async data => {
+    try {
+      await signUpMutation.mutateAsync(data)
+      return await wait(500)
+        .then(() => {
+          setSuccess(true)
+          return wait(2000)
+        })
+        .then(() => navigate('/auth'))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      formHook.setError('root', {
+        message: err.message
+      })
+      return await wait(3000).then(() =>
+        formHook.setError('root', {
+          message: undefined
+        })
+      )
+    }
   }
 
   return (
@@ -45,6 +77,16 @@ const SignupForm = () => {
               Create an account and let’s save some contacts
             </p>
           </div>
+          {errors.root?.message && (
+            <div className="-mt-2 mb-2 bg-red-50 py-2 text-center text-sm font-medium text-destructive">
+              {errors.root?.message}
+            </div>
+          )}
+          {success && (
+            <div className="-mt-2 mb-2 bg-green-50 py-2 text-center text-sm font-medium text-accent">
+              Thank you for signing up
+            </div>
+          )}
           <FormField
             control={formHook.control}
             name="name"
@@ -89,15 +131,19 @@ const SignupForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl className="-mt-2">
-                    <Input placeholder="Password" {...field} />
+                    <Input placeholder="Password" type="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )
             }}
           />
-          <Button variant="secondary" className="mt-5 w-full py-4 font-bold">
-            Save Contact
+          <Button
+            variant="secondary"
+            className="mt-5 w-full py-4 font-bold"
+            disabled={isSubmitting}
+          >
+            Sign Up
           </Button>
 
           <div className="mx-auto mt-3 flex w-8/12 flex-col gap-3">

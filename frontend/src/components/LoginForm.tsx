@@ -14,6 +14,11 @@ import {
 } from './ui/form'
 import { Input } from './ui/input'
 import { AppleIcon, GoogleIcon } from '@/assets/icons'
+import { wait } from '@/utils/promiseUtils'
+import { useMutation } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { login_function } from '@/utils/requestUtils'
 
 const LoginForm = () => {
   const formHook = useForm<LoginFormType>({
@@ -24,8 +29,43 @@ const LoginForm = () => {
     }
   })
 
-  const onSubmit: SubmitHandler<LoginFormType> = data => {
-    console.log(data)
+  const [success, setSuccess] = useState<boolean>(false)
+  const { isSubmitting, errors } = formHook.formState
+
+  const navigate = useNavigate()
+
+  const loginMutation = useMutation({
+    mutationKey: ['signup'],
+    mutationFn: (variables: LoginFormType) => login_function(variables)
+  })
+
+  const onSubmit: SubmitHandler<LoginFormType> = async data => {
+    try {
+      await loginMutation.mutateAsync(data)
+      return await wait(500)
+        .then(() => {
+          formHook.setError('root', {
+            message: undefined
+          })
+          setSuccess(true)
+          return wait(2000)
+        })
+        .then(() => navigate('/'))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      formHook.setError('root', {
+        message: err.message
+      })
+      const promise = wait(2000)
+      promise
+        .then(() => wait(800))
+        .then(() =>
+          formHook.setError('root', {
+            message: undefined
+          })
+        )
+      return await promise
+    }
   }
 
   return (
@@ -44,6 +84,16 @@ const LoginForm = () => {
               Welcome Back. Login let's continue from where we left off
             </p>
           </div>
+          {errors.root?.message && (
+            <div className="-mt-2 mb-2 bg-red-50 py-2 text-center text-sm font-medium text-destructive">
+              {errors.root?.message}
+            </div>
+          )}
+          {success && (
+            <div className="-mt-2 mb-2 bg-green-50 py-2 text-center text-sm font-medium text-accent">
+              Login successful
+            </div>
+          )}
           <FormField
             control={formHook.control}
             name="email"
@@ -77,8 +127,12 @@ const LoginForm = () => {
               )
             }}
           />
-          <Button variant="secondary" className="mt-5 w-full py-4 font-bold">
-            Save Contact
+          <Button
+            variant="secondary"
+            className="mt-5 w-full py-4 font-bold"
+            disabled={isSubmitting}
+          >
+            Login
           </Button>
 
           <div className="mx-auto mt-3 flex w-8/12 flex-col gap-3">

@@ -1,0 +1,5 @@
+interface IUser {
+  email: string
+  id: string
+  name: string
+}
