@@ -14,6 +14,10 @@ const router = createBrowserRouter([
     element: <Layout />,
     id: 'root',
     loader: checkAuthLoader,
+    shouldRevalidate: ({ currentUrl, nextUrl, defaultShouldRevalidate }) => {
+      if (currentUrl.pathname == '/save' && nextUrl.pathname == '/save') return false
+      return defaultShouldRevalidate
+    },
     children: [
       {
         path: 'save',
