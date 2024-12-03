@@ -2,6 +2,7 @@ import { AxiosError } from 'axios'
 import { axiosInstance } from './axiosInstance'
 import CustomAppError from './customAppError'
 import { LoginFormType, SignupFormType } from '@/utils/form-schemas'
+import { IUser } from '@/types/user'
 
 const throwError = (error: AxiosError) => {
   throw new CustomAppError(error)
@@ -43,6 +44,17 @@ export const login_function = async ({
       email,
       password
     })
+
+    return newUser.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
+export const get_profile_function = async (): Promise<IUser | undefined> => {
+  try {
+    const newUser = await axiosInstance.get('/profile')
 
     return newUser.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

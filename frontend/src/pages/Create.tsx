@@ -1,6 +1,3 @@
-import { Suspense } from 'react'
-import { Await, useRouteLoaderData } from 'react-router-dom'
-import LoadingScreen from '../components/LoadingScreen'
 import { MultiBackgroundPatterns } from '@/components/ui/BackgroundPattern'
 import { BgPatternImage } from '@/assets/images'
 import ContactsTable from '@/components/ContactsTable'
@@ -21,10 +18,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import SidenavToggle from '@/components/SidenavToggle'
 import Footer from '@/components/Footer'
+import { useUser } from '@/hooks/useUser'
 
 const CreateLayout = ({ name }: { name: string }) => {
   const navIconClass = cn('w-8 max-md:w-6')
-  if (!navIconClass) console.log(name)
+  console.log(name)
 
   return (
     <div className="animate-in">
@@ -117,18 +115,12 @@ const CreateLayout = ({ name }: { name: string }) => {
 }
 
 const Create = () => {
-  const { promise } = useRouteLoaderData('root') as { promise: { name: string } }
+  const { user } = useUser()
 
   return (
-    <Suspense fallback={<LoadingScreen />}>
-      <Await resolve={promise} errorElement={<>Error</>}>
-        {({ name }) => (
-          <ContactsProvider>
-            <CreateLayout name={name} />
-          </ContactsProvider>
-        )}
-      </Await>
-    </Suspense>
+    <ContactsProvider>
+      <CreateLayout name={user?.name ?? ''} />
+    </ContactsProvider>
   )
 }
 

@@ -22,6 +22,7 @@ import './App.css'
 
 import AppRouter from './AppRouter'
 import SidenavProvider from './hoc/SidenavProvider'
+import UserProvider from './hoc/UserProvider'
 // import BackgroundPattern from './components/ui/BackgroundPattern'
 // import { BgPatternImage } from './assets/images'
 // import ContactsTable from './components/ContactsTable'
@@ -30,9 +31,11 @@ import SidenavProvider from './hoc/SidenavProvider'
 const App: FC = () => {
   return (
     <>
-      <SidenavProvider>
-        <AppRouter />
-      </SidenavProvider>
+      <UserProvider>
+        <SidenavProvider>
+          <AppRouter />
+        </SidenavProvider>
+      </UserProvider>
     </>
   )
 }
