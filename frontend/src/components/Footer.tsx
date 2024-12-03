@@ -16,7 +16,7 @@ const Footer = () => {
             <NavigationLink to="/dashboard">Dashboard</NavigationLink>
           </li>
           <li>
-            <NavigationLink to="/create">Save Contacts</NavigationLink>
+            <NavigationLink to="/save">Save Contacts</NavigationLink>
           </li>
         </ul>
       </nav>
