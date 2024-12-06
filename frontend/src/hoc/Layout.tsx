@@ -30,7 +30,7 @@ const Layout = () => {
             })
           }
         })
-        .catch(set_loaded)
+        .catch(() => set_loaded())
     }
     return () => {
       isMounted.current = false

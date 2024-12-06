@@ -26,7 +26,7 @@ const UserProvider: FC<{
             })),
           set_loaded() {
             return set(() => ({
-              isPending: true
+              isPending: false
             }))
           },
           logout_user() {
