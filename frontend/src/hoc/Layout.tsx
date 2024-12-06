@@ -13,27 +13,29 @@ const LayoutContent: FC<{ user?: PartialUser }> = () => {
 
 const Layout = () => {
   const { user_promise } = useRouteLoaderData('root') as { user_promise: Promise<IUser | null> }
-  const { login_user } = useUserUpdate()
+  const { login_user, set_loaded } = useUserUpdate()
 
   const isMounted = useRef(true)
 
   useLayoutEffect(() => {
     isMounted.current = true
     if (user_promise) {
-      user_promise.then(user => {
-        if (isMounted.current && user) {
-          // Update global state only if component is mounted
-          login_user({
-            name: user?.name,
-            email: user?.email
-          })
-        }
-      })
+      user_promise
+        .then(user => {
+          if (isMounted.current && user) {
+            // Update global state only if component is mounted
+            login_user({
+              name: user?.name,
+              email: user?.email
+            })
+          }
+        })
+        .catch(set_loaded)
     }
     return () => {
       isMounted.current = false
     }
-  }, [user_promise, login_user])
+  }, [user_promise, login_user, set_loaded])
   // }, [])
 
   return (

@@ -24,6 +24,11 @@ const UserProvider: FC<{
               loggedIn: true,
               isPending: false
             })),
+          set_loaded() {
+            return set(() => ({
+              isPending: true
+            }))
+          },
           logout_user() {
             return set(() => ({
               user: null,

@@ -12,6 +12,7 @@ export interface IUserState {
   user: PartialUser | null
   actions: {
     login_user: ({ id, email, name }: PartialUser) => void
+    set_loaded: () => void
     logout_user: () => void
   }
 }
