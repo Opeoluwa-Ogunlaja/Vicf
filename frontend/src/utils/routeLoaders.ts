@@ -1,4 +1,4 @@
-import { defer, LoaderFunction, redirect } from 'react-router-dom'
+import { defer, LoaderFunction } from 'react-router-dom'
 import { queryClient } from '@/queryClient'
 import { get_profile_function } from './requestUtils'
 
@@ -13,7 +13,7 @@ export const checkAuthLoader = (() => {
     queryFn: get_profile_function
   })
 
-  return defer({ user_promise: fetching_promise.catch(() => redirect('/auth')) })
+  return defer({ user_promise: fetching_promise })
 }) satisfies LoaderFunction
 
 export type checkAuthLoaderType = typeof checkAuthLoader

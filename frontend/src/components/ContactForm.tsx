@@ -21,23 +21,31 @@ import {
 import { Input } from './ui/input'
 import { Checkbox } from './ui/checkbox'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
-// import { RefObject } from 'react'
+import { useEffect } from 'react'
+import { wait } from '@/utils/promiseUtils'
 
 const ContactForm = () => {
   const { add: addContact } = useContactsUpdate()
   const formHook = useForm<ContactFormType>({
     resolver: zodResolver(ContactFormSchema),
     defaultValues: {
+      title: 'Apo boiz',
       email: '',
-      number: '08072660055',
+      number: '',
       overwrite: false,
       overwrite_name: ''
     }
   })
 
-  const onSubmit: SubmitHandler<ContactFormType> = data => {
+  const onSubmit: SubmitHandler<ContactFormType> = ({ title, ...data }) => {
+    console.log(title)
     if (addContact) addContact(data)
   }
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    wait(200).then(() => (document.querySelector('.title-field') as any)!.focus())
+  }, [])
 
   return (
     <Form {...formHook}>
@@ -46,7 +54,26 @@ const ContactForm = () => {
           <span className="inline-grid aspect-square w-max place-content-center rounded-full bg-neutral-200 px-3 text-center">
             <PhonePlusIcon className="shadow-neutral-300 drop-shadow-md" />
           </span>
-          <h2 className="text-2xl font-semibold">Apo boiz</h2>
+          <FormField
+            control={formHook.control}
+            name="title"
+            render={({ field }) => {
+              return (
+                <FormItem className="contents">
+                  <FormControl>
+                    <Input
+                      className="title-field inline min-w-[4ch] max-w-[20ch] self-start border-none p-1 font-semibold shadow-none focus-within:border max-md:text-lg md:text-2xl"
+                      autoCorrect="off"
+                      style={{
+                        width: `${field.value.length}ch`
+                      }}
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )
+            }}
+          />
           <p className="-mt-3 text-sm text-neutral-400">
             Click "Add Contact" and Fill the form below to add people to your collection
           </p>

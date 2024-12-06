@@ -2,12 +2,13 @@ import LoadingScreen from '@/components/LoadingScreen'
 import { useUser } from '@/hooks/useUser'
 import { useUserUpdate } from '@/hooks/useUserUpdate'
 import { IUser, PartialUser } from '@/types/user'
-import { Suspense, FC, useEffect, useRef } from 'react'
+import { Suspense, FC, useLayoutEffect, useRef } from 'react'
 import { Await, Outlet, useRouteLoaderData } from 'react-router-dom'
 
 const LayoutContent: FC<{ user?: PartialUser }> = () => {
   const { isPending } = useUser()
   return !isPending ? <Outlet /> : <LoadingScreen />
+  // return <Outlet />
 }
 
 const Layout = () => {
@@ -16,27 +17,24 @@ const Layout = () => {
 
   const isMounted = useRef(true)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     isMounted.current = true
     if (user_promise) {
-      user_promise
-        .then(user => {
-          if (isMounted.current && user) {
-            // Update global state only if component is mounted
-            login_user({
-              name: user?.name,
-              email: user?.email
-            })
-          }
-        })
-        .catch(error => {
-          console.error('Error resolving user promise:', error)
-        })
+      user_promise.then(user => {
+        if (isMounted.current && user) {
+          // Update global state only if component is mounted
+          login_user({
+            name: user?.name,
+            email: user?.email
+          })
+        }
+      })
     }
     return () => {
       isMounted.current = false
     }
   }, [user_promise, login_user])
+  // }, [])
 
   return (
     <Suspense fallback={<LoadingScreen />}>

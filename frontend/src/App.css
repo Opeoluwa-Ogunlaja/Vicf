@@ -51,6 +51,14 @@
     grid-auto-rows: min-content;
   }
 
+  .stacker {
+    grid-template-areas: 'stack';
+  }
+
+  .stacker > * {
+    grid-area: stack !important;
+  }
+
   @media screen and (max-width: 1024px) {
     .sidenav.closed .flex {
       flex: 0 !important;
@@ -68,7 +76,7 @@
   @media screen and (max-width: 678px) {
     .auth-wrapper {
       grid-template-columns: initial;
-      grid-template-areas: stack;
+      grid-template-areas: 'stack';
     }
 
     .auth-wrapper > * {

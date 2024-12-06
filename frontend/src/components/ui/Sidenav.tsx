@@ -1,4 +1,4 @@
-import { ClockRewindIcon, PhonePlusIcon, UserPlusIcon } from '@/assets/icons'
+import { ClockRewindIcon } from '@/assets/icons'
 import { Button } from './button'
 import { NavigationLink } from './navigation-link'
 import { cn } from '@/lib/utils'
@@ -9,6 +9,7 @@ import { useClickOutside } from '@/hooks/useClickOutside'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 import { useSidenav } from './../../hooks/useSidenav'
+import GroupCard from '../GroupCard'
 
 const Sidenav = () => {
   const [open, , setOpen] = useSidenav()
@@ -67,30 +68,14 @@ const Sidenav = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <div className="flex items-center space-x-4 rounded-2xl border border-neutral-100 bg-white p-3 transition-transform hover:scale-105 sm:p-4">
-                  <PhonePlusIcon className="w-5 self-start pt-2 drop-shadow-md" />
-                  <div className="flex flex-1 flex-col gap-1 text-left text-sm">
-                    <h4 className="text-lg font-semibold">Geology Department</h4>
-                    <p className="flex gap-2 font-medium leading-none text-neutral-400">
-                      <UserPlusIcon width={'1em'} /> Opeoluwa
-                    </p>
-                    <p className="mt-2 text-xs text-muted">
-                      Contacts not exported or saved to drive
-                    </p>
-                  </div>
-                </div>
+                <GroupCard
+                  group_name="Geology Department"
+                  status="not-uploaded"
+                  contacts_num={32}
+                />
               </li>
               <li>
-                <div className="flex items-center space-x-4 rounded-2xl border border-neutral-100 bg-white p-3 transition-transform hover:scale-105 sm:p-4">
-                  <PhonePlusIcon className="w-5 self-start pt-2 drop-shadow-md" />
-                  <div className="flex flex-1 flex-col gap-1 text-left text-sm">
-                    <h4 className="text-lg font-semibold">Choir Members</h4>
-                    <p className="flex gap-2 font-medium leading-none text-neutral-400">
-                      <UserPlusIcon width={'1em'} /> 32 members
-                    </p>
-                    <p className="mt-2 text-xs text-accent">Contacts saved to drive</p>
-                  </div>
-                </div>
+                <GroupCard group_name="Choir Members" status="uploaded" contacts_num={32} />
               </li>
             </ul>
           </section>

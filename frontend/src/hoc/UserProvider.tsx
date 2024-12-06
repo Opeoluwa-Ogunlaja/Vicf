@@ -5,7 +5,7 @@ import { createStore } from 'zustand'
 
 const UserProvider: FC<{
   children: ReactNode
-  initialUser: IUser | null
+  initialUser?: IUser | null
 }> = ({ children, initialUser = null }) => {
   const [store] = useState(
     createStore<IUserState>(set => {

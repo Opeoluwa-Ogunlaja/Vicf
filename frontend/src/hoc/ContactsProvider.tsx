@@ -1,11 +1,17 @@
 import { ContactsContext } from '@/contexts/ContactsContext'
 import { ContactsUpdateContext } from '@/contexts/ContactsUpdateContext'
 import { useArray } from '@/hooks/useArray'
+import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 import { IContact } from '@/types/contacts'
 import { FC, ReactNode } from 'react'
 
 const ContactsProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const contacts = useArray<IContact>()
+
+  useUpdateEffect(() => {
+    console.log('omo')
+  }, [contacts])
+
   return (
     <ContactsContext.Provider value={contacts.values}>
       <ContactsUpdateContext.Provider

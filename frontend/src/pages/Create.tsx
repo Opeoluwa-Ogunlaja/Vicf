@@ -115,11 +115,10 @@ const CreateLayout = ({ name }: { name: string }) => {
 }
 
 const Create = () => {
-  const { user } = useUser()
-
+  const { user, loggedIn } = useUser()
   return (
     <ContactsProvider>
-      <CreateLayout name={user?.name ?? ''} />
+      <CreateLayout name={loggedIn ? (user!.name as string) : ''} />
     </ContactsProvider>
   )
 }
