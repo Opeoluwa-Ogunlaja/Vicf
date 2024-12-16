@@ -12,9 +12,9 @@ const BlockCard = () => {
         gridTemplateRows: '200px max-content'
       }}
     >
-      <div className="relative bg-primary">
+      <div className="relative grid overflow-clip bg-primary">
         <MultiBackgroundPatterns
-          count={30}
+          count={35}
           className="absolute aspect-square w-20 opacity-20"
           source={BgPatternImage}
         />
