@@ -23,13 +23,15 @@ import { Checkbox } from './ui/checkbox'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
 import { useEffect } from 'react'
 import { wait } from '@/utils/promiseUtils'
+import { useUser } from '@/hooks/useUser'
 
 const ContactForm = () => {
   const { add: addContact } = useContactsUpdate()
+  const { user } = useUser()
   const formHook = useForm<ContactFormType>({
     resolver: zodResolver(ContactFormSchema),
     defaultValues: {
-      title: 'Apo boiz',
+      title: user ? 'Apo boiz' : '',
       email: '',
       number: '',
       overwrite: false,

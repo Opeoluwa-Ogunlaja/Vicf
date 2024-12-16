@@ -51,6 +51,11 @@
     grid-auto-rows: min-content;
   }
 
+  .contacts-grid {
+    grid-template-columns: repeat(auto-fit, minmax(256px, max-content));
+    grid-auto-rows: max-content;
+  }
+
   .stacker {
     grid-template-areas: 'stack';
   }

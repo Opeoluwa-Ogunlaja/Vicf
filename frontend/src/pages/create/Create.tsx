@@ -3,25 +3,17 @@ import { BgPatternImage } from '@/assets/images'
 import ContactsTable from '@/components/ContactsTable'
 import Sidenav from '@/components/ui/Sidenav'
 
-import { AnnouncementIcon, BellIcon, ChevronDownIcon, SettingsIcon, VicfIcon } from '@/assets/icons'
-import { cn } from '@/lib/utils'
-import NavigationCard from '@/components/NavigationCard'
+import { AnnouncementIcon, VicfIcon } from '@/assets/icons'
 import ContactForm from '@/components/ContactForm'
-import { NavigationLink } from '@/components/ui/navigation-link'
 // import { useSidenav } from '@/hooks/useSidenav'
 // import { useContacts } from '@/hooks/useContacts'
 import ContactsProvider from '@/hoc/ContactsProvider'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 import SidenavToggle from '@/components/SidenavToggle'
 import Footer from '@/components/Footer'
 import { useUser } from '@/hooks/useUser'
+import NavigationBar from './NavigationBar'
 
 const CreateLayout = ({ name }: { name: string }) => {
-  const navIconClass = cn('w-8 max-md:w-6')
   console.log(name)
 
   return (
@@ -38,49 +30,7 @@ const CreateLayout = ({ name }: { name: string }) => {
               <VicfIcon width={'1em'} />
             </a>
           </div>
-
-          <nav className="contents">
-            <ul className="flex items-center gap-6 max-lg:gap-4">
-              <li className="inline-flex max-md:hidden">
-                <NavigationLink
-                  to="/"
-                  className="font-medium text-white contrast-50 saturate-100 sepia after:filter"
-                >
-                  Home
-                </NavigationLink>
-              </li>
-              <li>
-                <a href="" className="text-white">
-                  <BellIcon className={navIconClass} />
-                </a>
-              </li>
-              <li>
-                <DropdownMenu defaultOpen={false}>
-                  <DropdownMenuTrigger className="flex items-center text-white lg:gap-1">
-                    <SettingsIcon className={navIconClass} />
-                    <ChevronDownIcon
-                      width={32}
-                      className={cn('origin-center transition-transform')}
-                    />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    style={{
-                      width: `var(--radix-popper-anchor-width)`
-                    }}
-                    className="mt-2 min-w-72 p-6 max-sm:min-w-48 max-sm:p-3"
-                  >
-                    <h4 className="font-semibold">Collection Settings</h4>
-                    <p className="text-neutral-400 max-sm:text-xs">
-                      Adjust <strong>Apo boiz</strong> collection settings
-                    </p>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </li>
-              <li>
-                <NavigationCard />
-              </li>
-            </ul>
-          </nav>
+          <NavigationBar />
         </div>
         <div className="absolute inset-0 space-y-2 self-center text-center text-white max-md:-mt-20">
           <h3 className="text-3xl font-bold max-sm:text-2xl">Let’s Save Some Contacts</h3>
