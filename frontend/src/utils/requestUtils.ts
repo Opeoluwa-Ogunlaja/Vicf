@@ -22,13 +22,13 @@ export const signup_function = async ({
   password
 }: SignupFormType): Promise<IUser | undefined> => {
   try {
-    const newUser = await axiosInstance.post('/signup', {
+    const newUser = await axiosInstance.post('/users/register', {
       email,
       name,
       password
     })
 
-    return newUser.data
+    return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     checkError(error)
@@ -40,12 +40,12 @@ export const login_function = async ({
   password
 }: LoginFormType): Promise<IUser | undefined> => {
   try {
-    const newUser = await axiosInstance.post('/login', {
+    const newUser = await axiosInstance.post('/users/login', {
       email,
       password
     })
 
-    return newUser.data
+    return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     checkError(error)
@@ -54,9 +54,9 @@ export const login_function = async ({
 
 export const get_profile_function = async (): Promise<IUser | undefined> => {
   try {
-    const newUser = await axiosInstance.get('/profile')
+    const newUser = await axiosInstance.get('/users/profile')
 
-    return newUser.data
+    return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     checkError(error)

@@ -19,6 +19,8 @@ import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { login_function } from '@/utils/requestUtils'
+import { queryClient } from '@/queryClient'
+import { IUser } from '@/types/user'
 
 const LoginForm = () => {
   const formHook = useForm<LoginFormType>({
@@ -41,13 +43,20 @@ const LoginForm = () => {
 
   const onSubmit: SubmitHandler<LoginFormType> = async data => {
     try {
-      await loginMutation.mutateAsync(data)
+      const res = await loginMutation.mutateAsync(data)
       return await wait(500)
         .then(() => {
           formHook.setError('root', {
             message: undefined
           })
           setSuccess(true)
+          queryClient.setQueryData<Partial<IUser>>(['user', 'logged_in'], () => {
+            return {
+              id: res?.id,
+              name: res?.name,
+              email: res?.email
+            }
+          })
           return wait(2000)
         })
         .then(() => navigate('/'))

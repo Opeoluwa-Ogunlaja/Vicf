@@ -1,12 +1,19 @@
 import LoadingScreen from '@/components/LoadingScreen'
 import { useUser } from '@/hooks/useUser'
 import { useUserUpdate } from '@/hooks/useUserUpdate'
+import { useWebSocketStore } from '@/hooks/useWebsocketStore'
 import { IUser, PartialUser } from '@/types/user'
-import { Suspense, FC, useLayoutEffect, useRef } from 'react'
+import { Suspense, FC, useLayoutEffect, useRef, useEffect } from 'react'
 import { Await, Outlet, useRouteLoaderData } from 'react-router-dom'
 
 const LayoutContent: FC<{ user?: PartialUser }> = () => {
   const { isPending } = useUser()
+  const { connect } = useWebSocketStore()
+
+  useEffect(() => {
+    connect('http://localhost:3002')
+  }, [connect])
+
   return !isPending ? <Outlet /> : <LoadingScreen />
   // return <Outlet />
 }

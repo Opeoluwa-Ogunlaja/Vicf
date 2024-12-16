@@ -10,9 +10,21 @@ import {
 } from './ui/dropdown-menu'
 import { ChevronDownIcon } from '@/assets/icons'
 import { cn } from '@/lib/utils'
+import { useWebSocketStore } from '@/hooks/useWebsocketStore'
+import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 
 const NavigationCard: FC<{ className?: string }> = ({ className }) => {
   const [isOpen, toggle] = useToggle(false)
+  const { sendMessage, canSendMessages } = useWebSocketStore()
+  const [hasSent, toggleSent] = useToggle(false)
+
+  useUpdateEffect(() => {
+    if (canSendMessages && !hasSent) {
+      sendMessage({ data: 'hello' }, 'message')
+      toggleSent()
+    }
+  }, [canSendMessages])
+
   return (
     <DropdownMenu defaultOpen={isOpen} open={isOpen} onOpenChange={toggle}>
       <DropdownMenuTrigger
