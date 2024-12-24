@@ -36,7 +36,7 @@ export const useWebSocketStore = create<WebSocketState>((set, get) => ({
     const socket = io(url, { withCredentials: true, retries: 5 })
     set({ socket })
 
-    socket.onAny((message, response) => {
+    socket.onAny((...[, response]) => {
       set({ lastMessage: response })
     })
 

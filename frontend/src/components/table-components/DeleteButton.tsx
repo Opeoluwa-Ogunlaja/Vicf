@@ -36,7 +36,7 @@ const DeleteButton: FC<{ contactId: IContact['id'] }> = ({ contactId }) => {
           <Button
             variant={'destructive'}
             className="text-white"
-            onClick={() => deleteContact(number)}
+            onClick={() => deleteContact && deleteContact(number)}
           >
             Yes
           </Button>
