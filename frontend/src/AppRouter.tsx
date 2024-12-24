@@ -31,6 +31,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/auth',
+    loader: checkAuthLoader,
     element: <AuthWrapper />,
     id: 'auth',
     children: [
