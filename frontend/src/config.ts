@@ -1,3 +1,3 @@
-export const GClient = import.meta.env.VITE_GCLIENT_ID
+export const GClient = import.meta.env.GCLIENT_ID
 
-export const GSecret = import.meta.env.VITE_GSECRET
+export const GSecret = import.meta.env.GSECRET
