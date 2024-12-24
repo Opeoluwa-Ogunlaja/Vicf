@@ -1,0 +1,122 @@
+@layer framework {
+  body {
+    container: body / block-size;
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .background-pattern {
+    top: var(--posY);
+    left: var(--posX);
+  }
+
+  .main-wrapper {
+    grid-template-columns: minmax(0, max-content) 1fr;
+  }
+
+  .auth-wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .patterns-bg::before {
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    background-position: 0 0;
+    background-blend-mode: color-dodge;
+  }
+
+  .nav-link::after {
+    position: absolute;
+    content: '';
+    height: 8px;
+    width: 100%;
+    left: 0;
+    bottom: -8px;
+    background: url('@/assets/icons/styled-underline.svg');
+    clip-path: inset(0 100% 0 0);
+    transition: all 0.5s ease;
+    mix-blend-mode: color-burn;
+  }
+
+  .nav-link:hover::after,
+  .nav-link:is(.active)::after {
+    clip-path: inset(0 0 0 0);
+    transition: all 1s ease;
+  }
+
+  .sidenav {
+    grid-auto-rows: min-content;
+  }
+
+  .contacts-grid {
+    grid-template-columns: repeat(auto-fit, minmax(256px, max-content));
+    grid-auto-rows: max-content;
+  }
+
+  .stacker {
+    grid-template-areas: 'stack';
+  }
+
+  .stacker > * {
+    grid-area: stack !important;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .sidenav.closed .flex {
+      flex: 0 !important;
+    }
+
+    .sidenav.closed {
+      animation: sidenav-close 0.1s linear forwards;
+    }
+
+    .sidenav.open {
+      animation: sidenav-open 1s ease-out forwards;
+    }
+
+    #save-contact-btn {
+      grid-row: 2 / 3;
+    }
+  }
+
+  @media screen and (max-width: 678px) {
+    .auth-wrapper {
+      grid-template-columns: initial;
+      grid-template-areas: 'stack';
+    }
+
+    .auth-wrapper > * {
+      grid-area: stack !important;
+    }
+  }
+
+  @keyframes sidenav-open {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  @keyframes sidenav-close {
+    from {
+      clip-path: inset(0 0 0 0);
+    }
+    to {
+      clip-path: inset(0 100% 0 0);
+    }
+  }
+
+  .animate-background {
+    animation: fade-bg cubic-bezier(0.85, 0.055, 0.675, 0.2) 3s 0.5s alternate infinite;
+  }
+
+  @keyframes fade-bg {
+    to {
+      opacity: 0.9;
+    }
+  }
+}

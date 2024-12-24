@@ -1,0 +1,31 @@
+@font-face {
+    font-family: 'Axiforma';
+    src: local('Axiforma Book'), local('Axiforma-Book'),
+        url('Axiforma-Book.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Axiforma';
+    src: local('Axiforma Medium'), local('Axiforma-Medium'),
+        url('Axiforma-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Axiforma';
+    src: local('Axiforma SemiBold'), local('Axiforma-SemiBold'),
+        url('Axiforma-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Axiforma';
+    src: local('Axiforma Bold'), local('Axiforma-Bold'),
+        url('Axiforma-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+}
