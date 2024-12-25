@@ -22,9 +22,7 @@ const AuthWrapper = () => {
             </main>
           }
         >
-          {() => {
-            return <Navigate replace to={'/'} />
-          }}
+          {() => <Navigate replace to={'/'} />}
         </Await>
       </Suspense>
     </>

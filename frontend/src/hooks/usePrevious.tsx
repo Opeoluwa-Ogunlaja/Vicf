@@ -1,13 +1,14 @@
-// import { useRef } from 'react'
+import { useRef } from 'react'
 
-// export default function usePrevious(state) {
-//   const currentStateRef = useRef()
-//   const previousStateRef = useRef()
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function usePrevious<T = any>(state: T) {
+  const currentStateRef = useRef<T>()
+  const previousStateRef = useRef<null | T>(null)
 
-//   if (currentStateRef.current !== state) {
-//     previousStateRef.current = currentStateRef.current
-//     currentStateRef.current = state
-//   }
+  if (currentStateRef.current !== state) {
+    previousStateRef.current = currentStateRef.current as T
+    currentStateRef.current = state
+  }
 
-//   return previousStateRef.current
-// }
+  return previousStateRef.current
+}

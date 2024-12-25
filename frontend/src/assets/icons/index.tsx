@@ -16,6 +16,7 @@ import TrashIcon from './trash.svg?react'
 import GoogleIcon from './google-logo.svg?react'
 import AppleIcon from './apple-logo.svg?react'
 import DotsHorizontalIcon from './dots-horizontal.svg?react'
+import PlusIcon from './plus.svg?react'
 
 export {
   GoogleIcon,
@@ -33,5 +34,6 @@ export {
   StyledUnderline,
   EditIcon,
   TrashIcon,
-  DotsHorizontalIcon
+  DotsHorizontalIcon,
+  PlusIcon
 }

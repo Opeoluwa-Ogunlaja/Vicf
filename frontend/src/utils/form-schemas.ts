@@ -18,12 +18,18 @@ export const phoneNumberType = z.string().transform((value, ctx) => {
   return phoneNumber.formatInternational()
 })
 
+export const addInfoFormSchema = z.array(
+  z.object({ name: z.string().min(1), description: z.string().min(1) })
+)
+export type addInfoFormSchemaType = z.infer<typeof addInfoFormSchema>
+
 export const ContactFormSchema = z.object({
   title: z.string(),
   number: phoneNumberType,
   email: z
     .optional(z.string().email(), { invalid_type_error: 'This must be a valid email' })
     .or(z.literal('')),
+  additional_info: addInfoFormSchema,
   overwrite: z.boolean().default(false),
   overwrite_name: z.optional(z.string())
 })
