@@ -1,9 +1,11 @@
+import { addInfoFormSchemaType } from '@/utils/form-schemas'
+
 export interface IContact {
   id?: string
   number: string
   slug?: string
   email?: string
-  additional_information?: Record<string, string | number>[]
+  additional_information?: addInfoFormSchemaType
   overwrite?: boolean
   overwrite_name?: string
 }

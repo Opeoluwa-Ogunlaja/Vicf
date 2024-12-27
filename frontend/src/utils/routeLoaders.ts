@@ -2,7 +2,7 @@ import { defer, LoaderFunction } from 'react-router-dom'
 import { queryClient } from '@/queryClient'
 import { get_profile } from './requestUtils'
 
-export const checkAuthLoader = (async () => {
+export const rootLoader = (async () => {
   try {
     const userData = queryClient.getQueryData(['user', 'logged_in'])
     if (userData) {
@@ -21,4 +21,4 @@ export const checkAuthLoader = (async () => {
   }
 }) satisfies LoaderFunction
 
-export type checkAuthLoaderType = typeof checkAuthLoader
+export type rootLoaderType = typeof rootLoader

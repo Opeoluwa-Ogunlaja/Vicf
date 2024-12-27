@@ -3,7 +3,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  // TableFooter,
   TableHead,
   TableHeader,
   TableRow
@@ -12,11 +11,12 @@ import { twMerge } from 'tailwind-merge'
 import EditButton from './table-components/EditButton'
 import DeleteButton from './table-components/DeleteButton'
 import { useContacts } from '@/hooks/useContacts'
-import { phoneNumberType } from './../utils/form-schemas'
+import { addInfoFormSchemaType, phoneNumberType } from './../utils/form-schemas'
 import ContactsTableProvider from '@/hoc/ContactsTableProvider'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { DotsHorizontalIcon } from '@/assets/icons'
+import AdditionalInfoTable from './AdditionalInfoTable'
 
 function ContactsTable({ className }: { className?: string }) {
   const contacts = useContacts()
@@ -56,7 +56,12 @@ function ContactsTable({ className }: { className?: string }) {
                     <PopoverTrigger>
                       <DotsHorizontalIcon />
                     </PopoverTrigger>
-                    <PopoverContent side="top">Place content for the popover here.</PopoverContent>
+                    <PopoverContent side="top">
+                      <h5 className="mb-3 font-medium">Additional info</h5>
+                      <AdditionalInfoTable
+                        additionalInfos={contact.additional_information as addInfoFormSchemaType}
+                      />
+                    </PopoverContent>
                   </Popover>
                 </TableCell>
                 <TableCell className="flex items-center justify-center gap-4 text-center">

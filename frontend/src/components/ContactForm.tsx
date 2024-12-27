@@ -24,7 +24,7 @@ import { useContactsUpdate } from '@/hooks/useContactsUpdate'
 import { useEffect } from 'react'
 import { wait } from '@/utils/promiseUtils'
 import { useUser } from '@/hooks/useUser'
-import AdditionalInfoTable from '@/pages/create/AdditionalInfoTable'
+import AdditionalInfoSection from '@/pages/create/AdditionalInfoSection'
 
 const ContactForm = () => {
   const { add: addContact } = useContactsUpdate()
@@ -41,8 +41,7 @@ const ContactForm = () => {
     }
   })
 
-  const onSubmit: SubmitHandler<ContactFormType> = ({ title, ...data }) => {
-    console.log(title)
+  const onSubmit: SubmitHandler<ContactFormType> = ({ ...data }) => {
     if (addContact) addContact(data)
   }
 
@@ -123,11 +122,11 @@ const ContactForm = () => {
                 )}
               />
               <section className="mt-3 grid gap-2">
-                <AdditionalInfoTable
-                  setAdditionalInfo={(value: addInfoFormSchemaType) =>
+                <AdditionalInfoSection
+                  setAdditionalInfo={(value: addInfoFormSchemaType) => {
                     formHook.setValue('additional_info', value)
-                  }
-                  additionalInfos={formHook.getValues('additional_info')}
+                  }}
+                  additionalInfos={formHook.watch().additional_info}
                 />
               </section>
               <Accordion type="multiple" className="mt-4">

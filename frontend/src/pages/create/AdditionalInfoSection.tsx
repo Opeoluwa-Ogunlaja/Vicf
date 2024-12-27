@@ -1,13 +1,5 @@
-import {
-  Table,
-  TableHead,
-  TableRow,
-  TableHeader,
-  TableBody,
-  TableCell
-} from '../../components/ui/table'
 import { ArrayElement } from '@/types'
-import { FC, memo, useState } from 'react'
+import { FC, useState } from 'react'
 import { addInfoFormSchema, addInfoFormSchemaType } from '@/utils/form-schemas'
 import { PlusIcon } from '@/assets/icons'
 import { useForm, SubmitHandler } from 'react-hook-form'
@@ -22,11 +14,13 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import AdditionalInfoTable from '@/components/AdditionalInfoTable'
 
-const AdditionalInfoTable: FC<{
+const AdditionalInfoSection: FC<{
   additionalInfos: addInfoFormSchemaType
   setAdditionalInfo: (infos: addInfoFormSchemaType) => void
-}> = memo(({ setAdditionalInfo, additionalInfos }) => {
+}> = ({ setAdditionalInfo, additionalInfos }) => {
+  console.log(additionalInfos)
   const formHook = useForm<addInfoFormSchemaType[number]>({
     resolver: zodResolver(addInfoFormSchema),
     defaultValues: {
@@ -38,9 +32,7 @@ const AdditionalInfoTable: FC<{
   const [showFields, setShowFields] = useState(additionalInfos.length > 0 ? true : false)
 
   const onSubmit: SubmitHandler<ArrayElement<addInfoFormSchemaType>> = data => {
-    console.log(data)
     const validator = addInfoFormSchema.safeParse([data])
-    console.log(validator)
     if (!validator.success) {
       validator.error.errors.forEach(error => {
         formHook.setError(error.path[1] as keyof addInfoFormSchemaType[number], {
@@ -51,8 +43,9 @@ const AdditionalInfoTable: FC<{
       return
     }
 
+    setAdditionalInfo([...additionalInfos, data])
     formHook.reset()
-    return setAdditionalInfo([...additionalInfos, data])
+    return
   }
 
   return (
@@ -116,37 +109,16 @@ const AdditionalInfoTable: FC<{
           </Form>
         )}
         {additionalInfos.length > 0 ? (
-          <Table className="border-none">
-            <TableHeader>
-              <TableRow className="font-normal hover:bg-neutral-300/70">
-                <TableHead className="w-fit text-xs font-normal">Name</TableHead>
-                <TableHead className="w-fit text-xs font-normal">Desc</TableHead>
-                <TableHead className="text-right text-xs font-normal">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {additionalInfos.map((info, index) => {
-                return (
-                  <TableRow
-                    className="transition-colors hover:bg-slate-100"
-                    key={info.name + index}
-                  >
-                    <TableCell>{info.name}</TableCell>
-                    <TableCell>{info.description}</TableCell>
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
+          <AdditionalInfoTable additionalInfos={additionalInfos} />
         ) : (
           <p className="mx-auto mt-2 max-w-[40ch] text-center text-xs text-muted">
-            You have given no additional information click the plus icon at my upper right to add
-            one
+            You have given no additional information click the plus icon at my upper right to start
+            adding
           </p>
         )}
       </div>
     </>
   )
-})
+}
 
-export default AdditionalInfoTable
+export default AdditionalInfoSection

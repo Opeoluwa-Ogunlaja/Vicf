@@ -7,13 +7,20 @@ import { FC, ReactNode } from 'react'
 
 const ContactsProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const contacts = useArray<IContact>([
-    { number: '+234 807 2466 0055', email: '', overwrite: false, overwrite_name: '', slug: '1' }
+    {
+      number: '+234 807 2466 0055',
+      email: '',
+      overwrite: false,
+      additional_information: [{ name: 'Name', description: 'Opeoluwa' }],
+      overwrite_name: '',
+      slug: '1'
+    }
   ])
   useDebounce(
     () => {
-      console.log('you don dey lazy')
+      localStorage.setItem('contacts', JSON.stringify(contacts.values))
     },
-    3000,
+    6000,
     [contacts]
   )
 

@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { FC } from 'react'
 import Layout from './hoc/Layout'
-import { checkAuthLoader } from './utils/routeLoaders'
+import { rootLoader } from './utils/routeLoaders'
 import Create from './pages/create/Create'
 import Home from './pages/home/Home'
 import Login from './pages/login/Login'
@@ -13,7 +13,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <Layout />,
     id: 'root',
-    loader: checkAuthLoader,
+    loader: rootLoader,
     shouldRevalidate: ({ currentUrl, nextUrl, defaultShouldRevalidate }) => {
       if (currentUrl.pathname == '/save' && nextUrl.pathname == '/save') return false
       return defaultShouldRevalidate
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/auth',
-    loader: checkAuthLoader,
+    loader: rootLoader,
     element: <AuthWrapper />,
     id: 'auth',
     children: [
