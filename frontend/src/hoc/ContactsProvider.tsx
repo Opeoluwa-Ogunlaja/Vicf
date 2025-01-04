@@ -1,40 +1,25 @@
 import { ContactsContext } from '@/contexts/ContactsContext'
 import { ContactsUpdateContext } from '@/contexts/ContactsUpdateContext'
 import { useArray } from '@/hooks/useArray'
-import useDebounce from '@/hooks/useDebounce'
 import { IContact } from '@/types/contacts'
 import { FC, ReactNode } from 'react'
+import { useParams } from 'react-router-dom'
 
 const ContactsProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const contacts = useArray<IContact>([
-    {
-      number: '+234 807 2466 0055',
-      email: '',
-      overwrite: false,
-      additional_information: [{ name: 'Name', description: 'Opeoluwa' }],
-      overwrite_name: '',
-      slug: '1'
-    }
-  ])
-  useDebounce(
-    () => {
-      localStorage.setItem('contacts', JSON.stringify(contacts.values))
-    },
-    6000,
-    [contacts]
-  )
+  const { id } = useParams()
+  const contacts = useArray<IContact>([])
 
   return (
-    <ContactsContext.Provider value={contacts.values}>
+    <ContactsContext.Provider value={{ url_id: id, contacts: contacts.values }}>
       <ContactsUpdateContext.Provider
         value={{
           add: contact => {
-            contacts.push({ ...contact, slug: String(contacts.values.length + 1) })
+            contacts.push({ ...contact })
             return contacts.values
           },
           edit: (id, data) => {
             const newContacts = contacts.values.map(contact => {
-              if (id === contact.id) return data
+              if (id === contact.contact_id) return data
               else return contact
             })
             contacts.setValues(newContacts)

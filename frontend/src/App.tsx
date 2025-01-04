@@ -5,6 +5,7 @@ import SidenavProvider from './hoc/SidenavProvider'
 import UserProvider from './hoc/UserProvider'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { GClient } from './config'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const App: FC = () => {
   return (

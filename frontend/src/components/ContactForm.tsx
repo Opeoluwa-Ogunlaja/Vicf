@@ -23,16 +23,17 @@ import { Checkbox } from './ui/checkbox'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
 import { useEffect } from 'react'
 import { wait } from '@/utils/promiseUtils'
-import { useUser } from '@/hooks/useUser'
-import AdditionalInfoSection from '@/pages/create/AdditionalInfoSection'
+import AdditionalInfoSection from '@/pages/save/AdditionalInfoSection'
+import { useManager } from '@/hooks/useManager'
+import { nanoid } from 'nanoid'
 
 const ContactForm = () => {
+  const manager = useManager()
   const { add: addContact } = useContactsUpdate()
-  const { user } = useUser()
   const formHook = useForm<ContactFormType>({
     resolver: zodResolver(ContactFormSchema),
     defaultValues: {
-      title: user ? 'Apo boiz' : 'New Group',
+      title: `New Group ${manager.length + 1}`,
       email: '',
       number: '',
       additional_info: [],
@@ -42,7 +43,7 @@ const ContactForm = () => {
   })
 
   const onSubmit: SubmitHandler<ContactFormType> = ({ ...data }) => {
-    if (addContact) addContact(data)
+    if (addContact) addContact({ ...data, contact_id: nanoid() })
   }
 
   useEffect(() => {

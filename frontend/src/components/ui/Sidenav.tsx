@@ -1,5 +1,4 @@
 import { ClockRewindIcon } from '@/assets/icons'
-import { Button } from './button'
 import { NavigationLink } from './navigation-link'
 import { cn } from '@/lib/utils'
 
@@ -10,6 +9,7 @@ import useMediaQuery from '@/hooks/useMediaQuery'
 import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 import { useSidenav } from './../../hooks/useSidenav'
 import GroupCard from '../GroupCard'
+import CreateNewButton from '../CreateNewButton'
 
 const Sidenav = () => {
   const [open, , setOpen] = useSidenav()
@@ -59,9 +59,8 @@ const Sidenav = () => {
             }
           )}
         >
-          <Button variant={'secondary'} className="-mb-10 py-6 max-lg:order-2 lg:mt-10">
-            Create New
-          </Button>
+          <CreateNewButton className="-mb-10 py-6 max-lg:order-2 lg:mt-10" />
+
           <section className="flex flex-col max-lg:order-3 max-lg:mt-8">
             <h3 className="mb-4 border-b border-b-neutral-200 pb-2 text-2xl font-medium max-lg:text-lg">
               Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />

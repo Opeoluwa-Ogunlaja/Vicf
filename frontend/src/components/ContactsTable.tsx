@@ -19,8 +19,9 @@ import { DotsHorizontalIcon } from '@/assets/icons'
 import AdditionalInfoTable from './AdditionalInfoTable'
 
 function ContactsTable({ className }: { className?: string }) {
-  const contacts = useContacts()
+  const { contacts } = useContacts()
   const lgScreen = useMediaQuery('(min-width: 1024px)')
+
   return (
     <ContactsTableProvider>
       <div className={twMerge('mx-auto h-16 rounded-t-lg bg-neutral-600', className)}></div>
@@ -44,12 +45,12 @@ function ContactsTable({ className }: { className?: string }) {
             return (
               <TableRow
                 className="transition-colors hover:bg-neutral-100"
-                key={contact.number + contact.slug}
+                key={contact.number + contact.contact_id}
               >
                 <TableCell className="font-medium">
                   {phoneNumberType.parse(contact.number)}
                 </TableCell>
-                <TableCell className="max-lg:hidden">{contact.slug}</TableCell>
+                <TableCell className="max-lg:hidden">{contact.contact_id}</TableCell>
                 <TableCell className="max-lg:hidden">{contact.email || '--'}</TableCell>
                 <TableCell className="text-right">
                   <Popover>

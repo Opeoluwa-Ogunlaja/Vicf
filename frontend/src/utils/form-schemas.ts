@@ -24,6 +24,7 @@ export const addInfoFormSchema = z.array(
 export type addInfoFormSchemaType = z.infer<typeof addInfoFormSchema>
 
 export const ContactFormSchema = z.object({
+  contactId: z.string(),
   title: z.string(),
   number: phoneNumberType,
   email: z

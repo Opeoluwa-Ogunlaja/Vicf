@@ -5,6 +5,7 @@ import { BellIcon, VicfIcon } from '@/assets/icons'
 import { cn } from '@/lib/utils'
 import { useUser } from '@/hooks/useUser'
 import { useNavigate } from 'react-router-dom'
+import CreateNewButton from '@/components/CreateNewButton'
 
 const NavigationBar = () => {
   const navIconClass = cn('w-8 max-md:w-6')
@@ -24,7 +25,7 @@ const NavigationBar = () => {
         <nav className="contents">
           <ul className="flex items-center gap-6 max-lg:gap-4">
             <li className="inline-flex max-md:hidden">
-              <Button variant={'secondary'}>Create New</Button>
+              <CreateNewButton />
             </li>
             <li>
               <a href="">

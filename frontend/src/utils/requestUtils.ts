@@ -3,6 +3,7 @@ import { axiosInstance } from './axiosInstance'
 import CustomAppError from './customAppError'
 import { LoginFormType, SignupFormType } from '@/utils/form-schemas'
 import { IUser } from '@/types/user'
+import { ContactManagerEntry } from '@/types/contacts_manager'
 
 const throwError = (error: AxiosError) => {
   throw new CustomAppError(error)
@@ -68,6 +69,17 @@ export const google_login = async ({ code }: { code: string }): Promise<IUser | 
 export const get_profile = async (): Promise<IUser | undefined> => {
   try {
     const newUser = await axiosInstance.get('/users/profile')
+
+    return newUser.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
+export const get_contacts_manager = async (): Promise<ContactManagerEntry[] | undefined> => {
+  try {
+    const newUser = await axiosInstance.get('/contacts/manager')
 
     return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
