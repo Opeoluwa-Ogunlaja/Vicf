@@ -3,8 +3,8 @@ import { Button } from './ui/button'
 import { cx } from 'class-variance-authority'
 import Loader from './ui/loader'
 import { useToggle } from '@/hooks/useToggle'
-import { nanoid } from 'nanoid'
 import { useNavigate } from 'react-router-dom'
+import { generateListingId } from '@/utils/idUtils'
 
 const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const [isProcessing, toggle] = useToggle(false)
@@ -12,7 +12,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
 
   const handleNewListing = () => {
     toggle()
-    const id = nanoid(10)
+    const id = generateListingId()
     navigate(`/save/${id}?new=true`)
   }
   return (

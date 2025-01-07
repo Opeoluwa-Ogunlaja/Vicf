@@ -21,7 +21,7 @@ import AdditionalInfoTable from './AdditionalInfoTable'
 function ContactsTable({ className }: { className?: string }) {
   const { contacts } = useContacts()
   const lgScreen = useMediaQuery('(min-width: 1024px)')
-
+  console.log(contacts)
   return (
     <ContactsTableProvider>
       <div className={twMerge('mx-auto h-16 rounded-t-lg bg-neutral-600', className)}></div>
@@ -59,9 +59,16 @@ function ContactsTable({ className }: { className?: string }) {
                     </PopoverTrigger>
                     <PopoverContent side="top">
                       <h5 className="mb-3 font-medium">Additional info</h5>
-                      <AdditionalInfoTable
-                        additionalInfos={contact.additional_information as addInfoFormSchemaType}
-                      />
+                      {contact.additional_information &&
+                      contact.additional_information?.length > 0 ? (
+                        <AdditionalInfoTable
+                          additionalInfos={contact.additional_information as addInfoFormSchemaType}
+                        />
+                      ) : (
+                        <p className="text-xs text-neutral-400">
+                          No additional information assigned
+                        </p>
+                      )}
                     </PopoverContent>
                   </Popover>
                 </TableCell>

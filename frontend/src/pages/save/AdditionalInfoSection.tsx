@@ -20,7 +20,6 @@ const AdditionalInfoSection: FC<{
   additionalInfos: addInfoFormSchemaType
   setAdditionalInfo: (infos: addInfoFormSchemaType) => void
 }> = ({ setAdditionalInfo, additionalInfos }) => {
-  console.log(additionalInfos)
   const formHook = useForm<addInfoFormSchemaType[number]>({
     resolver: zodResolver(addInfoFormSchema),
     defaultValues: {

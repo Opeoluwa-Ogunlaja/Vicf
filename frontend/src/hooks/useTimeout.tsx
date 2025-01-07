@@ -2,19 +2,16 @@ import { Timeout } from '@/types/index'
 import { useCallback, useEffect, useRef } from 'react'
 
 export const useTimeout = (
-  callback: (...args: unknown[]) => void,
+  given_callback: (...args: unknown[]) => void,
   delay: number,
-  startOnInit: boolean
+  startOnInit: boolean,
+  dependencies: unknown[] = []
 ) => {
-  const callbackRef = useRef(callback)
+  const callback = useCallback(given_callback, [...dependencies])
   const timeoutRef = useRef<Timeout>()
 
-  useEffect(() => {
-    callbackRef.current = callback
-  }, [callback])
-
   const set = useCallback(() => {
-    timeoutRef.current = setTimeout(() => callbackRef.current(), delay)
+    timeoutRef.current = setTimeout(() => callback, delay)
   }, [delay])
 
   const clear = useCallback(() => {

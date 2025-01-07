@@ -13,7 +13,7 @@ import Footer from '@/components/Footer'
 import { useUser } from '@/hooks/useUser'
 import NavigationBar from './NavigationBar'
 
-const CreateLayout = ({ name }: { name: string }) => {
+const SaveLayout = ({ name }: { name: string }) => {
   console.log(name)
 
   return (
@@ -64,13 +64,14 @@ const CreateLayout = ({ name }: { name: string }) => {
   )
 }
 
-const Create = () => {
+const Save = () => {
   const { user, loggedIn } = useUser()
+
   return (
     <ContactsProvider>
-      <CreateLayout name={loggedIn ? (user!.name as string) : ''} />
+      <SaveLayout name={loggedIn ? (user!.name as string) : ''} />
     </ContactsProvider>
   )
 }
 
-export default Create
+export default Save

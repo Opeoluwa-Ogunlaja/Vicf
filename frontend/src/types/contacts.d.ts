@@ -5,8 +5,7 @@ export interface IContact {
   number: string
   email?: string
   additional_information?: addInfoFormSchemaType
-  overwrite?: boolean
-  overwrite_name?: string
+  name: string
 }
 
 export type contactsArray = IContact[]

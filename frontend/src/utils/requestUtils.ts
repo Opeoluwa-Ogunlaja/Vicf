@@ -87,3 +87,36 @@ export const get_contacts_manager = async (): Promise<ContactManagerEntry[] | un
     checkError(error)
   }
 }
+
+export const create_contact_listing = async ({
+  url_id,
+  name
+}: {
+  url_id: string
+  name?: string
+}) => {
+  try {
+    const newUser = await axiosInstance.post('/contacts/create', {
+      url_id,
+      name
+    })
+
+    return newUser.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
+export const get_contacts = async (
+  listing_id: string
+): Promise<ContactManagerEntry[] | undefined> => {
+  try {
+    const newUser = await axiosInstance.get(`/contacts/${listing_id}`)
+
+    return newUser.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}

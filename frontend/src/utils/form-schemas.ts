@@ -24,13 +24,12 @@ export const addInfoFormSchema = z.array(
 export type addInfoFormSchemaType = z.infer<typeof addInfoFormSchema>
 
 export const ContactFormSchema = z.object({
-  contactId: z.string(),
-  title: z.string(),
+  name: z.string(),
   number: phoneNumberType,
   email: z
     .optional(z.string().email(), { invalid_type_error: 'This must be a valid email' })
     .or(z.literal('')),
-  additional_info: addInfoFormSchema,
+  additional_information: addInfoFormSchema,
   overwrite: z.boolean().default(false),
   overwrite_name: z.optional(z.string())
 })

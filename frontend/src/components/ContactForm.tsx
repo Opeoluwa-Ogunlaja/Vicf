@@ -25,25 +25,38 @@ import { useEffect } from 'react'
 import { wait } from '@/utils/promiseUtils'
 import AdditionalInfoSection from '@/pages/save/AdditionalInfoSection'
 import { useManager } from '@/hooks/useManager'
-import { nanoid } from 'nanoid'
+import { generateListingId, slugifiedId } from '@/utils/idUtils'
+import { useContacts } from '@/hooks/useContacts'
 
 const ContactForm = () => {
   const manager = useManager()
   const { add: addContact } = useContactsUpdate()
+
   const formHook = useForm<ContactFormType>({
     resolver: zodResolver(ContactFormSchema),
     defaultValues: {
-      title: `New Group ${manager.length + 1}`,
+      name: `New Group ${manager.length + 1}`,
       email: '',
       number: '',
-      additional_info: [],
+      additional_information: [],
       overwrite: false,
       overwrite_name: ''
     }
   })
+  const contacts = useContacts()
 
   const onSubmit: SubmitHandler<ContactFormType> = ({ ...data }) => {
-    if (addContact) addContact({ ...data, contact_id: nanoid() })
+    if (addContact)
+      addContact({
+        additional_information: data.additional_information,
+        number: data.number,
+        contact_id: generateListingId(),
+        name: !data.overwrite
+          ? slugifiedId(data.name, contacts.contacts.length)
+          : (data.overwrite_name as string),
+        email: data?.email
+      })
+    formHook.reset()
   }
 
   useEffect(() => {
@@ -60,7 +73,7 @@ const ContactForm = () => {
           </span>
           <FormField
             control={formHook.control}
-            name="title"
+            name="name"
             render={({ field }) => {
               return (
                 <FormItem className="contents">
@@ -125,9 +138,9 @@ const ContactForm = () => {
               <section className="mt-3 grid gap-2">
                 <AdditionalInfoSection
                   setAdditionalInfo={(value: addInfoFormSchemaType) => {
-                    formHook.setValue('additional_info', value)
+                    formHook.setValue('additional_information', value)
                   }}
-                  additionalInfos={formHook.watch().additional_info}
+                  additionalInfos={formHook.watch().additional_information}
                 />
               </section>
               <Accordion type="multiple" className="mt-4">
@@ -180,6 +193,7 @@ const ContactForm = () => {
               <div className="form-footer mt-6 contents">
                 <Button
                   variant="secondary"
+                  type="submit"
                   className="w-max px-5 text-lg font-normal max-md:w-full"
                 >
                   Save Contact
@@ -189,6 +203,7 @@ const ContactForm = () => {
                 <Button
                   id="save-contact-btn"
                   variant="secondary"
+                  type="submit"
                   className="w-max bg-secondary/50 px-5 text-base font-normal max-md:absolute max-md:mx-auto max-md:mt-28 max-md:w-4/5"
                 >
                   Save just number

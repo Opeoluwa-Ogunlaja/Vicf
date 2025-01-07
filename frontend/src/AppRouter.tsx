@@ -7,6 +7,9 @@ import Home from './pages/home/Home'
 import Login from './pages/login/Login'
 import Signup from './pages/signup/Signup'
 import AuthWrapper from './hoc/AuthWrapper'
+import { saveLoader } from './pages/save/saveLoaders'
+import { redirect } from 'react-router-dom'
+import { generateListingId } from './utils/idUtils'
 
 const router = createBrowserRouter([
   {
@@ -20,7 +23,13 @@ const router = createBrowserRouter([
     },
     children: [
       {
+        path: 'save',
+        loader: () => redirect(`/save/${generateListingId()}?new=true`),
+        element: <></>
+      },
+      {
         path: 'save/:id',
+        loader: saveLoader,
         element: <Save />
       },
       {
