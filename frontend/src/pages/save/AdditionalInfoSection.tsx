@@ -1,4 +1,4 @@
-import { ArrayElement } from '@/types'
+import { additionalInfoValue, ArrayElement } from '@/types'
 import { FC, useState } from 'react'
 import { addInfoFormSchema, addInfoFormSchemaType } from '@/lib/utils/form-schemas'
 import { PlusIcon } from '@/assets/icons'
@@ -17,8 +17,8 @@ import { Input } from '@/components/ui/input'
 import AdditionalInfoTable from '@/components/AdditionalInfoTable'
 
 const AdditionalInfoSection: FC<{
-  additionalInfos: addInfoFormSchemaType
-  setAdditionalInfo: (infos: addInfoFormSchemaType) => void
+  additionalInfos: additionalInfoValue
+  setAdditionalInfo: (infos: additionalInfoValue) => void
 }> = ({ setAdditionalInfo, additionalInfos }) => {
   const formHook = useForm<addInfoFormSchemaType[number]>({
     resolver: zodResolver(addInfoFormSchema),
@@ -28,7 +28,9 @@ const AdditionalInfoSection: FC<{
     }
   })
 
-  const [showFields, setShowFields] = useState(additionalInfos.length > 0 ? true : false)
+  const [showFields, setShowFields] = useState(
+    Object.values(additionalInfos).length > 0 ? true : false
+  )
 
   const onSubmit: SubmitHandler<ArrayElement<addInfoFormSchemaType>> = data => {
     const validator = addInfoFormSchema.safeParse([data])
@@ -42,7 +44,7 @@ const AdditionalInfoSection: FC<{
       return
     }
 
-    setAdditionalInfo([...additionalInfos, data])
+    setAdditionalInfo({ ...additionalInfos, [data.name]: data.description })
     formHook.reset()
     return
   }
@@ -107,7 +109,7 @@ const AdditionalInfoSection: FC<{
             </div>
           </Form>
         )}
-        {additionalInfos.length > 0 ? (
+        {Object.values(additionalInfos).length > 0 ? (
           <AdditionalInfoTable additionalInfos={additionalInfos} />
         ) : (
           <p className="mx-auto mt-2 max-w-[40ch] text-center text-xs text-muted">

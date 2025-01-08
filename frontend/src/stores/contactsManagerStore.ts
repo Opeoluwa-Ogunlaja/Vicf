@@ -12,10 +12,9 @@ export const useContactManagerStore = create<ContactManager>()(set => ({
       last_backup: JSON.stringify({
         number: '08012',
         email: '',
-        additional_information: [],
+        additional_information: { Level: 200 },
         overwrite: false,
-        overwrite_name: '',
-        name: 'Classmates'
+        overwrite_name: ''
       }),
       name: 'Classmates'
     }
@@ -44,7 +43,23 @@ export const useContactManagerStore = create<ContactManager>()(set => ({
     },
     createManager(data) {
       set(state => {
+        console.log(state)
         const manager = [...state.manager, data]
+        console.log(manager)
+        return { manager }
+      })
+    },
+    updateBackup(id, backup) {
+      set(state => {
+        const manager = state.manager.map(entry => {
+          if (entry._id === id) {
+            return {
+              ...entry,
+              last_backup: JSON.stringify({ ...backup, name: undefined })
+            }
+          }
+          return entry
+        })
         return { manager }
       })
     }

@@ -11,7 +11,7 @@ import { twMerge } from 'tailwind-merge'
 import EditButton from './table-components/EditButton'
 import DeleteButton from './table-components/DeleteButton'
 import { useContacts } from '@/hooks/useContacts'
-import { addInfoFormSchemaType, phoneNumberType } from '../lib/utils/form-schemas'
+import { phoneNumberType } from '../lib/utils/form-schemas'
 import ContactsTableProvider from '@/hoc/ContactsTableProvider'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -21,7 +21,6 @@ import AdditionalInfoTable from './AdditionalInfoTable'
 function ContactsTable({ className }: { className?: string }) {
   const { contacts } = useContacts()
   const lgScreen = useMediaQuery('(min-width: 1024px)')
-  console.log(contacts)
   return (
     <ContactsTableProvider>
       <div className={twMerge('mx-auto h-16 rounded-t-lg bg-neutral-600', className)}></div>
@@ -60,10 +59,8 @@ function ContactsTable({ className }: { className?: string }) {
                     <PopoverContent side="top">
                       <h5 className="mb-3 font-medium">Additional info</h5>
                       {contact.additional_information &&
-                      contact.additional_information?.length > 0 ? (
-                        <AdditionalInfoTable
-                          additionalInfos={contact.additional_information as addInfoFormSchemaType}
-                        />
+                      Object.values(contact.additional_information)?.length > 0 ? (
+                        <AdditionalInfoTable additionalInfos={contact.additional_information} />
                       ) : (
                         <p className="text-xs text-neutral-400">
                           No additional information assigned

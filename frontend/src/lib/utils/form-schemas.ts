@@ -29,7 +29,7 @@ export const ContactFormSchema = z.object({
   email: z
     .optional(z.string().email(), { invalid_type_error: 'This must be a valid email' })
     .or(z.literal('')),
-  additional_information: addInfoFormSchema,
+  additional_information: z.record(z.string().or(z.number())),
   overwrite: z.boolean().default(false),
   overwrite_name: z.optional(z.string())
 })

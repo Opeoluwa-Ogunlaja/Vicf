@@ -1,10 +1,9 @@
-import { addInfoFormSchemaType } from '@/lib/utils/form-schemas'
-
+export type additionalInfoValue = Record<string, string | number>
 export interface IContact {
   _id: string
   number: string
   email?: string
-  additional_information?: addInfoFormSchemaType
+  additional_information?: additionalInfoValue
   name: string
 }
 

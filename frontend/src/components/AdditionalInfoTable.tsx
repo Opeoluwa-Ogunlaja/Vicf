@@ -1,10 +1,8 @@
-import { addInfoFormSchemaType } from '@/lib/utils/form-schemas'
 import { FC } from 'react'
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table'
+import { additionalInfoValue } from '@/types'
 
-const AdditionalInfoTable: FC<{ additionalInfos: addInfoFormSchemaType }> = ({
-  additionalInfos
-}) => {
+const AdditionalInfoTable: FC<{ additionalInfos: additionalInfoValue }> = ({ additionalInfos }) => {
   return (
     <Table className="border-none">
       <TableHeader>
@@ -16,11 +14,11 @@ const AdditionalInfoTable: FC<{ additionalInfos: addInfoFormSchemaType }> = ({
       </TableHeader>
       <TableBody>
         {additionalInfos &&
-          additionalInfos.map((info, index) => {
+          Object.entries(additionalInfos).map((info, index) => {
             return (
-              <TableRow className="transition-colors hover:bg-slate-100" key={info.name + index}>
-                <TableCell>{info.name}</TableCell>
-                <TableCell>{info.description}</TableCell>
+              <TableRow className="transition-colors hover:bg-slate-100" key={info[0] + index}>
+                <TableCell>{info[0]}</TableCell>
+                <TableCell>{info[1]}</TableCell>
                 <TableCell>Icon</TableCell>
               </TableRow>
             )

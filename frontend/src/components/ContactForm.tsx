@@ -1,4 +1,4 @@
-import { addInfoFormSchemaType, ContactFormSchema, ContactFormType } from '@/lib/utils/form-schemas'
+import { ContactFormSchema, ContactFormType } from '@/lib/utils/form-schemas'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { Button } from './ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -21,13 +21,15 @@ import {
 import { Input } from './ui/input'
 import { Checkbox } from './ui/checkbox'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
-import { useLayoutEffect, useMemo } from 'react'
+import { useEffect, useLayoutEffect, useMemo } from 'react'
 import { wait } from '@/lib/utils/promiseUtils'
 import AdditionalInfoSection from '@/pages/save/AdditionalInfoSection'
 import { useManager } from '@/hooks/useManager'
 import { generateMongoId, slugifiedId } from '@/lib/utils/idUtils'
 import { useContacts } from '@/hooks/useContacts'
 import { useTimeout } from '@/hooks/useTimeout'
+import { additionalInfoValue } from '@/types'
+import { useManagerActions } from '@/hooks/useManagerActions'
 
 const ContactForm = () => {
   const manager = useManager()
@@ -38,32 +40,39 @@ const ContactForm = () => {
     return manager.find(mngr => mngr.url_id == contacts.url_id)
   }, [manager, contacts])
 
+  const { updateBackup, createManager } = useManagerActions()
   const isInManager = Boolean(contactManager)
-
-  const [startManagerCreationTimeout] = useTimeout(
-    () => {
-      console.log(isInManager)
-    },
-    2000,
-    false,
-    [contactManager]
-  )
-
-  console.log(startManagerCreationTimeout)
 
   const formHook = useForm<ContactFormType>({
     resolver: zodResolver(ContactFormSchema),
     defaultValues: isInManager
-      ? JSON.parse(contactManager?.last_backup as string)
+      ? { ...JSON.parse(contactManager?.last_backup as string), name: contactManager?.name }
       : {
           name: `New Group ${manager.length + 1}`,
           email: '',
           number: '',
-          additional_information: [],
+          additional_information: {},
           overwrite: false,
           overwrite_name: ''
         }
   })
+
+  const [startManagerCreationTimeout] = useTimeout(
+    () => {
+      console.log('omo')
+      createManager({
+        _id: generateMongoId(),
+        backed_up: false,
+        contacts_count: contacts.contacts.length,
+        url_id: contacts.url_id as string,
+        last_backup: JSON.stringify({ ...formHook.getValues(), name: undefined }),
+        name: formHook.getValues().name
+      })
+    },
+    2000,
+    false,
+    [contactManager, formHook]
+  )
 
   const onSubmit: SubmitHandler<ContactFormType> = ({ ...data }) => {
     if (addContact)
@@ -76,12 +85,24 @@ const ContactForm = () => {
           : (data.overwrite_name as string),
         email: data?.email
       })
-    formHook.reset()
+    formHook.reset({
+      email: '',
+      number: '',
+      additional_information: {},
+      overwrite: false,
+      overwrite_name: ''
+    })
+    updateBackup(contactManager?._id as string, { ...formHook.watch() })
   }
 
   useLayoutEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     wait(200).then(() => (document.querySelector('.title-field') as any)!.focus())
+  }, [])
+
+  useEffect(() => {
+    if (!isInManager) startManagerCreationTimeout()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -157,7 +178,7 @@ const ContactForm = () => {
               />
               <section className="mt-3 grid gap-2">
                 <AdditionalInfoSection
-                  setAdditionalInfo={(value: addInfoFormSchemaType) => {
+                  setAdditionalInfo={(value: additionalInfoValue) => {
                     formHook.setValue('additional_information', value)
                   }}
                   additionalInfos={formHook.watch().additional_information}

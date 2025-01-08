@@ -7,11 +7,11 @@ export const useTimeout = (
   startOnInit: boolean,
   dependencies: unknown[] = []
 ) => {
-  const callback = useCallback(given_callback, [...dependencies])
+  const callback = useCallback(given_callback, [...dependencies, given_callback])
   const timeoutRef = useRef<Timeout>()
 
   const set = useCallback(() => {
-    timeoutRef.current = setTimeout(() => callback, delay)
+    timeoutRef.current = setTimeout(() => callback(), delay)
   }, [delay])
 
   const clear = useCallback(() => {
