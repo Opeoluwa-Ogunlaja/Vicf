@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios'
 import { axiosInstance } from './axiosInstance'
 import CustomAppError from './customAppError'
-import { LoginFormType, SignupFormType } from '@/utils/form-schemas'
+import { LoginFormType, SignupFormType } from '@/lib/utils/form-schemas'
 import { IUser } from '@/types/user'
 import { ContactManagerEntry } from '@/types/contacts_manager'
 

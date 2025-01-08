@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { FC } from 'react'
 import Layout from './hoc/Layout'
-import { rootLoader } from './utils/routeLoaders'
+import { rootLoader } from './lib/utils/routeLoaders'
 import Save from './pages/save/Save'
 import Home from './pages/home/Home'
 import Login from './pages/login/Login'
@@ -9,7 +9,7 @@ import Signup from './pages/signup/Signup'
 import AuthWrapper from './hoc/AuthWrapper'
 import { saveLoader } from './pages/save/saveLoaders'
 import { redirect } from 'react-router-dom'
-import { generateListingId } from './utils/idUtils'
+import { generateListingId } from './lib/utils/idUtils'
 
 const router = createBrowserRouter([
   {

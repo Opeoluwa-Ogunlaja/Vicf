@@ -4,7 +4,7 @@ import { cx } from 'class-variance-authority'
 import Loader from './ui/loader'
 import { useToggle } from '@/hooks/useToggle'
 import { useNavigate } from 'react-router-dom'
-import { generateListingId } from '@/utils/idUtils'
+import { generateListingId } from '@/lib/utils/idUtils'
 
 const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const [isProcessing, toggle] = useToggle(false)

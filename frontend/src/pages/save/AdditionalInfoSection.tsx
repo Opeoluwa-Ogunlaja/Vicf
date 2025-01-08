@@ -1,6 +1,6 @@
 import { ArrayElement } from '@/types'
 import { FC, useState } from 'react'
-import { addInfoFormSchema, addInfoFormSchemaType } from '@/utils/form-schemas'
+import { addInfoFormSchema, addInfoFormSchemaType } from '@/lib/utils/form-schemas'
 import { PlusIcon } from '@/assets/icons'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'

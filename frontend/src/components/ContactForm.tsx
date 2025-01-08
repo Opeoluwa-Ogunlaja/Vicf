@@ -1,4 +1,4 @@
-import { addInfoFormSchemaType, ContactFormSchema, ContactFormType } from '@/utils/form-schemas'
+import { addInfoFormSchemaType, ContactFormSchema, ContactFormType } from '@/lib/utils/form-schemas'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { Button } from './ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -22,10 +22,10 @@ import { Input } from './ui/input'
 import { Checkbox } from './ui/checkbox'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
 import { useLayoutEffect, useMemo } from 'react'
-import { wait } from '@/utils/promiseUtils'
+import { wait } from '@/lib/utils/promiseUtils'
 import AdditionalInfoSection from '@/pages/save/AdditionalInfoSection'
 import { useManager } from '@/hooks/useManager'
-import { generateListingId, slugifiedId } from '@/utils/idUtils'
+import { generateMongoId, slugifiedId } from '@/lib/utils/idUtils'
 import { useContacts } from '@/hooks/useContacts'
 import { useTimeout } from '@/hooks/useTimeout'
 
@@ -70,7 +70,7 @@ const ContactForm = () => {
       addContact({
         additional_information: data.additional_information,
         number: data.number,
-        contact_id: generateListingId(),
+        _id: generateMongoId(),
         name: !data.overwrite
           ? slugifiedId(data.name, contacts.contacts.length)
           : (data.overwrite_name as string),

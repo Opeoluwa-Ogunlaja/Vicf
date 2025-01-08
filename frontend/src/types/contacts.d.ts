@@ -1,7 +1,7 @@
-import { addInfoFormSchemaType } from '@/utils/form-schemas'
+import { addInfoFormSchemaType } from '@/lib/utils/form-schemas'
 
 export interface IContact {
-  contact_id: string
+  _id: string
   number: string
   email?: string
   additional_information?: addInfoFormSchemaType

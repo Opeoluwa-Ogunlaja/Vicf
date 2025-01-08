@@ -1,4 +1,4 @@
-import { SignupFormSchema, SignupFormType } from '@/utils/form-schemas'
+import { SignupFormSchema, SignupFormType } from '@/lib/utils/form-schemas'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { Button } from './ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,8 +15,8 @@ import {
 import { Input } from './ui/input'
 import { AppleIcon, GoogleIcon, VicfIcon } from '@/assets/icons'
 import { useMutation } from '@tanstack/react-query'
-import { signup_user } from '@/utils/requestUtils'
-import { wait } from '@/utils/promiseUtils'
+import { signup_user } from '@/lib/utils/requestUtils'
+import { wait } from '@/lib/utils/promiseUtils'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 

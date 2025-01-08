@@ -3,7 +3,7 @@ export type Preferences = {
 }
 
 export type ContactManagerEntry = {
-  id: string
+  _id: string
   name: string
   url_id: string
   backed_up: boolean

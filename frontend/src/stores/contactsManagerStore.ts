@@ -1,3 +1,4 @@
+import { generateMongoId } from '@/lib/utils/idUtils'
 import { ContactManager } from '@/types/contacts_manager'
 import { create } from 'zustand'
 
@@ -6,7 +7,7 @@ export const useContactManagerStore = create<ContactManager>()(set => ({
     {
       url_id: 'abcdef',
       backed_up: false,
-      id: '12uwiufew0302rfquu',
+      _id: generateMongoId(),
       contacts_count: 0,
       last_backup: JSON.stringify({
         number: '08012',
@@ -26,7 +27,7 @@ export const useContactManagerStore = create<ContactManager>()(set => ({
     setPreferences(id, preferences) {
       set(state => {
         const manager = state.manager.map(entry => {
-          if (entry.id === id) {
+          if (entry._id === id) {
             return {
               ...entry,
               preferences: {

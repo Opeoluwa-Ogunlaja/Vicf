@@ -11,7 +11,7 @@ import { twMerge } from 'tailwind-merge'
 import EditButton from './table-components/EditButton'
 import DeleteButton from './table-components/DeleteButton'
 import { useContacts } from '@/hooks/useContacts'
-import { addInfoFormSchemaType, phoneNumberType } from './../utils/form-schemas'
+import { addInfoFormSchemaType, phoneNumberType } from '../lib/utils/form-schemas'
 import ContactsTableProvider from '@/hoc/ContactsTableProvider'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -45,12 +45,12 @@ function ContactsTable({ className }: { className?: string }) {
             return (
               <TableRow
                 className="transition-colors hover:bg-neutral-100"
-                key={contact.number + contact.contact_id}
+                key={contact.number + contact._id}
               >
                 <TableCell className="font-medium">
                   {phoneNumberType.parse(contact.number)}
                 </TableCell>
-                <TableCell className="max-lg:hidden">{contact.contact_id}</TableCell>
+                <TableCell className="max-lg:hidden">{contact._id}</TableCell>
                 <TableCell className="max-lg:hidden">{contact.email || '--'}</TableCell>
                 <TableCell className="text-right">
                   <Popover>

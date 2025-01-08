@@ -1,4 +1,4 @@
-import { addInfoFormSchemaType } from '@/utils/form-schemas'
+import { addInfoFormSchemaType } from '@/lib/utils/form-schemas'
 import { FC } from 'react'
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table'
 

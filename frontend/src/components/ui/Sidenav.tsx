@@ -10,11 +10,13 @@ import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 import { useSidenav } from './../../hooks/useSidenav'
 import GroupCard from '../GroupCard'
 import CreateNewButton from '../CreateNewButton'
+import { useManager } from '@/hooks/useManager'
 
 const Sidenav = () => {
   const [open, , setOpen] = useSidenav()
   const openCount = useRef<number>(0)
   const sidenavRef = useRef<HTMLDivElement>(null)
+  const manager = useManager()
 
   useEffect(() => {
     if (open) openCount.current += 1
@@ -39,7 +41,7 @@ const Sidenav = () => {
       {createPortal(
         <div
           className={cn(
-            'top-0 h-full w-full bg-black bg-opacity-50 bg-blend-screen transition-opacity duration-200 max-lg:z-[500000000]',
+            'top-0 h-full w-full bg-black bg-opacity-50 bg-blend-screen transition-opacity duration-75 max-lg:z-[500000000]',
             {
               'pointer-events-none fixed opacity-100': open,
               'invisible absolute opacity-0': !open
@@ -66,16 +68,17 @@ const Sidenav = () => {
               Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
             <ul className="space-y-2">
-              <li>
-                <GroupCard
-                  group_name="Geology Department"
-                  status="not-uploaded"
-                  contacts_num={32}
-                />
-              </li>
-              <li>
-                <GroupCard group_name="Choir Members" status="uploaded" contacts_num={32} />
-              </li>
+              {manager.map(entry => {
+                return (
+                  <li key={entry._id}>
+                    <GroupCard
+                      group_name={entry.name}
+                      status={!entry.backed_up ? 'not-uploaded' : 'uploaded'}
+                      contacts_num={entry.contacts_count}
+                    />
+                  </li>
+                )
+              })}
             </ul>
           </section>
           <section className="flex flex-col max-lg:order-1">

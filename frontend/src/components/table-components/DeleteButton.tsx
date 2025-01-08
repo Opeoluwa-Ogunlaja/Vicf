@@ -6,7 +6,7 @@ import { Button } from '../ui/button'
 import { useToggle } from '@/hooks/useToggle'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
 
-const DeleteButton: FC<{ contactId: IContact['contact_id'] }> = ({ contactId }) => {
+const DeleteButton: FC<{ contactId: IContact['_id'] }> = ({ contactId }) => {
   const [open, , set] = useToggle(false)
   const { delete: deleteContact } = useContactsUpdate()
   const number = contactId?.split('_')[0] ?? ''

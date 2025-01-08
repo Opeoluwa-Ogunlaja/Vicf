@@ -19,7 +19,7 @@ const ContactsProvider: FC<{ children: ReactNode }> = ({ children }) => {
           },
           edit: (id, data) => {
             const newContacts = contacts.values.map(contact => {
-              if (id === contact.contact_id) return data
+              if (id === contact._id) return data
               else return contact
             })
             contacts.setValues(newContacts)

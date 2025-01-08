@@ -1,5 +1,5 @@
 import { queryClient } from '@/queryClient'
-import { get_contacts } from '@/utils/requestUtils'
+import { get_contacts } from '@/lib/utils/requestUtils'
 import { defer, LoaderFunction } from 'react-router-dom'
 
 export const saveLoader = (({ params }) => {
