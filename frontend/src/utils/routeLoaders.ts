@@ -1,8 +1,8 @@
 import { defer, LoaderFunction } from 'react-router-dom'
 import { queryClient } from '@/queryClient'
 import { get_contacts_manager, get_profile } from './requestUtils'
-import { useContactManagerStore } from '@/stores/contactsManagerStore'
-import { ContactManagerEntry } from '@/types/contacts_manager'
+// import { useContactManagerStore } from '@/stores/contactsManagerStore'
+// import { ContactManagerEntry } from '@/types/contacts_manager'
 
 export const rootLoader = (async () => {
   let userPromise!: Promise<unknown>
@@ -41,9 +41,9 @@ export const rootLoader = (async () => {
     contactsManagerPromise = Promise.reject(error)
   }
 
-  contactsManagerPromise.then(contacts_manager => {
-    const setManager = useContactManagerStore.getState().actions.setManager
-    setManager(contacts_manager as ContactManagerEntry[])
+  contactsManagerPromise.then(() => {
+    // const setManager = useContactManagerStore.getState().actions.setManager
+    // setManager(contacts_manager as ContactManagerEntry[])
   })
 
   return defer({ user_promise: userPromise, contacts_manager_promise: contactsManagerPromise })

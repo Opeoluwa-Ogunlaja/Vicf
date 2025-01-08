@@ -21,29 +21,49 @@ import {
 import { Input } from './ui/input'
 import { Checkbox } from './ui/checkbox'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
-import { useEffect } from 'react'
+import { useLayoutEffect, useMemo } from 'react'
 import { wait } from '@/utils/promiseUtils'
 import AdditionalInfoSection from '@/pages/save/AdditionalInfoSection'
 import { useManager } from '@/hooks/useManager'
 import { generateListingId, slugifiedId } from '@/utils/idUtils'
 import { useContacts } from '@/hooks/useContacts'
+import { useTimeout } from '@/hooks/useTimeout'
 
 const ContactForm = () => {
   const manager = useManager()
   const { add: addContact } = useContactsUpdate()
+  const contacts = useContacts()
+
+  const contactManager = useMemo(() => {
+    return manager.find(mngr => mngr.url_id == contacts.url_id)
+  }, [manager, contacts])
+
+  const isInManager = Boolean(contactManager)
+
+  const [startManagerCreationTimeout] = useTimeout(
+    () => {
+      console.log(isInManager)
+    },
+    2000,
+    false,
+    [contactManager]
+  )
+
+  console.log(startManagerCreationTimeout)
 
   const formHook = useForm<ContactFormType>({
     resolver: zodResolver(ContactFormSchema),
-    defaultValues: {
-      name: `New Group ${manager.length + 1}`,
-      email: '',
-      number: '',
-      additional_information: [],
-      overwrite: false,
-      overwrite_name: ''
-    }
+    defaultValues: isInManager
+      ? JSON.parse(contactManager?.last_backup as string)
+      : {
+          name: `New Group ${manager.length + 1}`,
+          email: '',
+          number: '',
+          additional_information: [],
+          overwrite: false,
+          overwrite_name: ''
+        }
   })
-  const contacts = useContacts()
 
   const onSubmit: SubmitHandler<ContactFormType> = ({ ...data }) => {
     if (addContact)
@@ -59,7 +79,7 @@ const ContactForm = () => {
     formHook.reset()
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     wait(200).then(() => (document.querySelector('.title-field') as any)!.focus())
   }, [])
