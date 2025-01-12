@@ -12,9 +12,12 @@ import SidenavToggle from '@/components/SidenavToggle'
 import Footer from '@/components/Footer'
 import { useUser } from '@/hooks/useUser'
 import NavigationBar from './NavigationBar'
+import { useParams } from 'react-router-dom'
+import { FC } from 'react'
+import { useContacts } from '@/hooks/useContacts'
 
-const SaveLayout = ({ name }: { name: string }) => {
-  console.log(name)
+const SaveLayout: FC<{ name?: string }> = () => {
+  const contacts = useContacts()
   return (
     <div className="animate-in">
       <aside className="space-x-2 bg-secondary py-2 text-center font-medium max-md:text-xs">
@@ -55,7 +58,7 @@ const SaveLayout = ({ name }: { name: string }) => {
               <ContactForm />
             </div>
           </div>
-          <ContactsTable className="mt-24 max-sm:mt-4" />
+          <ContactsTable contacts={contacts.contacts} className="mt-24 max-sm:mt-4" />
         </section>
       </main>
       <Footer />
@@ -65,9 +68,10 @@ const SaveLayout = ({ name }: { name: string }) => {
 
 const Save = () => {
   const { user, loggedIn } = useUser()
+  const { id } = useParams()
 
   return (
-    <ContactsProvider>
+    <ContactsProvider url_id={id as string} key={id as string}>
       <SaveLayout name={loggedIn ? (user!.name as string) : ''} />
     </ContactsProvider>
   )

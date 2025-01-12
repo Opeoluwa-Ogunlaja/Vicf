@@ -24,13 +24,17 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'save',
-        loader: () => redirect(`/save/${generateListingId()}?new=true`),
-        element: <></>
-      },
-      {
-        path: 'save/:id',
-        loader: saveLoader,
-        element: <Save />
+        children: [
+          {
+            path: ':id',
+            loader: saveLoader,
+            element: <Save key={window.location.pathname} />
+          },
+          {
+            path: '',
+            loader: () => redirect(`/save/${generateListingId()}?new=true`)
+          }
+        ]
       },
       {
         path: '',

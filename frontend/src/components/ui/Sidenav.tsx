@@ -72,6 +72,7 @@ const Sidenav = () => {
                 return (
                   <li key={entry._id}>
                     <GroupCard
+                      url_id={entry.url_id}
                       group_name={entry.name}
                       status={!entry.backed_up ? 'not-uploaded' : 'uploaded'}
                       contacts_num={entry.contacts_count}

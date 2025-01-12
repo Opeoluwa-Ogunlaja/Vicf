@@ -18,8 +18,13 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { DotsHorizontalIcon } from '@/assets/icons'
 import AdditionalInfoTable from './AdditionalInfoTable'
 
-function ContactsTable({ className }: { className?: string }) {
-  const { contacts } = useContacts()
+function ContactsTable({
+  className,
+  contacts
+}: {
+  className?: string
+  contacts: ReturnType<typeof useContacts>['contacts']
+}) {
   const lgScreen = useMediaQuery('(min-width: 1024px)')
   return (
     <ContactsTableProvider>

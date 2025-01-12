@@ -3,14 +3,12 @@ import { ContactsUpdateContext } from '@/contexts/ContactsUpdateContext'
 import { useArray } from '@/hooks/useArray'
 import { IContact } from '@/types/contacts'
 import { FC, ReactNode } from 'react'
-import { useParams } from 'react-router-dom'
 
-const ContactsProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const { id } = useParams()
+const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ children, url_id }) => {
   const contacts = useArray<IContact>([])
 
   return (
-    <ContactsContext.Provider value={{ url_id: id, contacts: contacts.values }}>
+    <ContactsContext.Provider value={{ url_id, contacts: contacts.values }}>
       <ContactsUpdateContext.Provider
         value={{
           add: contact => {

@@ -30,6 +30,7 @@ import { useContacts } from '@/hooks/useContacts'
 import { useTimeout } from '@/hooks/useTimeout'
 import { additionalInfoValue } from '@/types'
 import { useManagerActions } from '@/hooks/useManagerActions'
+import { useFormValueChangeDebounce } from '@/hooks/useFormValueChangeDebounce'
 
 const ContactForm = () => {
   const manager = useManager()
@@ -38,7 +39,7 @@ const ContactForm = () => {
 
   const contactManager = useMemo(() => {
     return manager.find(mngr => mngr.url_id == contacts.url_id)
-  }, [manager, contacts])
+  }, [manager, contacts.url_id])
 
   const { updateBackup, createManager } = useManagerActions()
   const isInManager = Boolean(contactManager)
@@ -57,9 +58,16 @@ const ContactForm = () => {
         }
   })
 
+  useFormValueChangeDebounce({
+    formHook,
+    delay: isInManager ? 2000 : 4000,
+    callback: () => {
+      updateBackup(contactManager?._id as string, formHook.watch())
+    }
+  })
+
   const [startManagerCreationTimeout] = useTimeout(
     () => {
-      console.log('omo')
       createManager({
         _id: generateMongoId(),
         backed_up: false,
@@ -69,7 +77,7 @@ const ContactForm = () => {
         name: formHook.getValues().name
       })
     },
-    2000,
+    2500,
     false,
     [contactManager, formHook]
   )

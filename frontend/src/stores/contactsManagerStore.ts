@@ -43,9 +43,7 @@ export const useContactManagerStore = create<ContactManager>()(set => ({
     },
     createManager(data) {
       set(state => {
-        console.log(state)
         const manager = [...state.manager, data]
-        console.log(manager)
         return { manager }
       })
     },
