@@ -68,18 +68,21 @@ const Sidenav = () => {
               Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
             <ul className="space-y-2">
-              {manager.map(entry => {
-                return (
-                  <li key={entry._id}>
-                    <GroupCard
-                      url_id={entry.url_id}
-                      group_name={entry.name}
-                      status={!entry.backed_up ? 'not-uploaded' : 'uploaded'}
-                      contacts_num={entry.contacts_count}
-                    />
-                  </li>
-                )
-              })}
+              {manager
+                .slice(0, 2)
+                .reverse()
+                .map(entry => {
+                  return (
+                    <li key={entry._id}>
+                      <GroupCard
+                        url_id={entry.url_id}
+                        group_name={entry.name}
+                        status={!entry.backed_up ? 'not-uploaded' : 'uploaded'}
+                        contacts_num={entry.contacts_count}
+                      />
+                    </li>
+                  )
+                })}
             </ul>
           </section>
           <section className="flex flex-col max-lg:order-1">

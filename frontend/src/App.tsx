@@ -6,6 +6,7 @@ import UserProvider from './hoc/UserProvider'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { GClient } from './config'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { Toaster } from './components/ui/toaster'
 
 const App: FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: FC = () => {
         <UserProvider>
           <SidenavProvider>
             <AppRouter />
+            <Toaster />
           </SidenavProvider>
         </UserProvider>
       </GoogleOAuthProvider>

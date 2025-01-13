@@ -31,11 +31,13 @@ import { useTimeout } from '@/hooks/useTimeout'
 import { additionalInfoValue } from '@/types'
 import { useManagerActions } from '@/hooks/useManagerActions'
 import { useFormValueChangeDebounce } from '@/hooks/useFormValueChangeDebounce'
+import { useToast } from '@/hooks/use-toast'
 
 const ContactForm = () => {
   const manager = useManager()
   const { add: addContact } = useContactsUpdate()
   const contacts = useContacts()
+  const { toast } = useToast()
 
   const contactManager = useMemo(() => {
     return manager.find(mngr => mngr.url_id == contacts.url_id)
@@ -110,6 +112,8 @@ const ContactForm = () => {
 
   useEffect(() => {
     if (!isInManager) startManagerCreationTimeout()
+
+    if (contactManager) toast({ title: 'Listing synced', description: 'From yesterday' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
