@@ -49,7 +49,7 @@ const ContactForm = () => {
   const formHook = useForm<ContactFormType>({
     resolver: zodResolver(ContactFormSchema),
     defaultValues: isInManager
-      ? { ...JSON.parse(contactManager?.last_backup as string), name: contactManager?.name }
+      ? { ...JSON.parse(contactManager?.input_backup as string), name: contactManager?.name }
       : {
           name: `New Group ${manager.length + 1}`,
           email: '',
@@ -75,7 +75,7 @@ const ContactForm = () => {
         backed_up: false,
         contacts_count: contacts.contacts.length,
         url_id: contacts.url_id as string,
-        last_backup: JSON.stringify({ ...formHook.getValues(), name: undefined }),
+        input_backup: JSON.stringify({ ...formHook.getValues(), name: undefined }),
         name: formHook.getValues().name
       })
     },

@@ -10,20 +10,11 @@ import {
 } from './ui/dropdown-menu'
 import { ChevronDownIcon } from '@/assets/icons'
 import { cn } from '@/lib/utils'
-import { useWebSocketStore } from '@/hooks/useWebsocketStore'
-import { useUpdateEffect } from '@/hooks/useUpdateEffect'
+import { useUser } from '@/hooks/useUser'
 
 const NavigationCard: FC<{ className?: string }> = ({ className }) => {
   const [isOpen, toggle] = useToggle(false)
-  const { sendMessage, canSendMessages } = useWebSocketStore()
-  const [hasSent, toggleSent] = useToggle(false)
-
-  useUpdateEffect(() => {
-    if (canSendMessages && !hasSent) {
-      sendMessage({ data: 'hello' }, 'message')
-      toggleSent()
-    }
-  }, [canSendMessages])
+  const { user } = useUser()
 
   return (
     <DropdownMenu defaultOpen={isOpen} open={isOpen} onOpenChange={toggle}>
@@ -39,8 +30,10 @@ const NavigationCard: FC<{ className?: string }> = ({ className }) => {
           className="aspect-square w-10 rounded-full shadow-inner"
         />
         <div className="hidden flex-1 space-y-1 text-left md:block">
-          <p className="text-sm font-medium leading-none">Opeoluwa</p>
-          <p className="text-sm text-neutral-500">opeoluwa@gmail.com</p>
+          <p className="text-sm font-medium leading-none">{user && user?.name}</p>
+          <p className="w-[20ch] overflow-hidden text-ellipsis text-sm text-neutral-500">
+            {user && user?.email}
+          </p>
         </div>
         <ChevronDownIcon
           width={32}

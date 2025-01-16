@@ -11,12 +11,15 @@ import { useSidenav } from './../../hooks/useSidenav'
 import GroupCard from '../GroupCard'
 import CreateNewButton from '../CreateNewButton'
 import { useManager } from '@/hooks/useManager'
+import { useLocation } from 'react-router-dom'
 
 const Sidenav = () => {
   const [open, , setOpen] = useSidenav()
   const openCount = useRef<number>(0)
   const sidenavRef = useRef<HTMLDivElement>(null)
   const manager = useManager()
+  const location = useLocation()
+  const isOnSave = location.pathname.includes('/save')
 
   useEffect(() => {
     if (open) openCount.current += 1
@@ -68,21 +71,18 @@ const Sidenav = () => {
               Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
             <ul className="space-y-2">
-              {manager
-                .slice(0, 2)
-                .reverse()
-                .map(entry => {
-                  return (
-                    <li key={entry._id}>
-                      <GroupCard
-                        url_id={entry.url_id}
-                        group_name={entry.name}
-                        status={!entry.backed_up ? 'not-uploaded' : 'uploaded'}
-                        contacts_num={entry.contacts_count}
-                      />
-                    </li>
-                  )
-                })}
+              {manager.slice(0, 2).map(entry => {
+                return (
+                  <li key={entry._id}>
+                    <GroupCard
+                      url_id={entry.url_id}
+                      group_name={entry.name}
+                      status={!entry.backed_up ? 'not-uploaded' : 'uploaded'}
+                      contacts_num={entry.contacts_count}
+                    />
+                  </li>
+                )
+              })}
             </ul>
           </section>
           <section className="flex flex-col max-lg:order-1">
@@ -100,11 +100,13 @@ const Sidenav = () => {
                   Dashboard
                 </NavigationLink>
               </li>
-              <li>
-                <NavigationLink to="/save" className="after:!mix-blend-normal">
-                  Save Contacts
-                </NavigationLink>
-              </li>
+              {!isOnSave && (
+                <li>
+                  <NavigationLink to="/save" className="after:!mix-blend-normal">
+                    Save Contacts
+                  </NavigationLink>
+                </li>
+              )}
             </ul>
           </section>
         </aside>{' '}

@@ -10,7 +10,7 @@ export type ContactManagerEntry = {
   url_id: string
   backed_up: boolean
   contacts_count: number
-  last_backup: string
+  input_backup: string
   preferences?: Preferences
 }
 

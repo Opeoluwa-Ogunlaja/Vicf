@@ -6,6 +6,7 @@ import { useManager } from '@/hooks/useManager'
 
 const Home = () => {
   const managers = useManager()
+
   return (
     <>
       <div className="contents h-full w-full overflow-hidden animate-in">

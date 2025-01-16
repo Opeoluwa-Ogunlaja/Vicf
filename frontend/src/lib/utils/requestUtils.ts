@@ -90,18 +90,21 @@ export const get_contacts_manager = async (): Promise<ContactManagerEntry[] | un
 
 export const create_contact_listing = async ({
   url_id,
-  name
+  name,
+  input_backup
 }: {
   url_id: string
   name?: string
+  input_backup?: string
 }) => {
   try {
-    const newUser = await axiosInstance.post('/contacts/create', {
+    const newListing = await axiosInstance.post('/contacts/create', {
       url_id,
-      name
+      name,
+      input_backup
     })
 
-    return newUser.data.data
+    return newListing.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     checkError(error)

@@ -12,12 +12,20 @@ import SidenavToggle from '@/components/SidenavToggle'
 import Footer from '@/components/Footer'
 import { useUser } from '@/hooks/useUser'
 import NavigationBar from './NavigationBar'
-import { useParams } from 'react-router-dom'
-import { FC } from 'react'
+import { Await, useParams, useRouteLoaderData } from 'react-router-dom'
+import { FC, Suspense } from 'react'
 import { useContacts } from '@/hooks/useContacts'
+import { ContactManager } from '@/types/contacts_manager'
 
 const SaveLayout: FC<{ name?: string }> = () => {
   const contacts = useContacts()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { contacts_manager_promise } = useRouteLoaderData('root') as {
+    contacts_manager_promise: Promise<ContactManager | null>
+  }
+
+  console.log(contacts_manager_promise)
+
   return (
     <div className="animate-in">
       <aside className="space-x-2 bg-secondary py-2 text-center font-medium max-md:text-xs">
@@ -55,7 +63,11 @@ const SaveLayout: FC<{ name?: string }> = () => {
         <section className="my-4 px-8">
           <div className="form-container pointer-events-none absolute inset-0 z-50 grid h-[100dvh] w-full grid-rows-12 place-content-center place-items-center">
             <div className="pointer-events-auto static z-[500] mx-auto mt-80 w-[520px] origin-top place-self-start rounded-xl bg-white px-12 py-5 shadow-neutral-300 drop-shadow-lg transition-all max-lg:mt-[19.5rem] max-sm:mt-72 max-sm:w-10/12 max-sm:min-w-[300px] max-sm:px-8">
-              <ContactForm />
+              <Suspense fallback={<>Loading</>}>
+                <Await resolve={contacts_manager_promise} errorElement={<ContactForm />}>
+                  {() => <ContactForm />}
+                </Await>
+              </Suspense>
             </div>
           </div>
           <ContactsTable contacts={contacts.contacts} className="mt-24 max-sm:mt-4" />
