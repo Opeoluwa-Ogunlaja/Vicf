@@ -24,8 +24,6 @@ const SaveLayout: FC<{ name?: string }> = () => {
     contacts_manager_promise: Promise<ContactManager | null>
   }
 
-  console.log(contacts_manager_promise)
-
   return (
     <div className="animate-in">
       <aside className="space-x-2 bg-secondary py-2 text-center font-medium max-md:text-xs">
