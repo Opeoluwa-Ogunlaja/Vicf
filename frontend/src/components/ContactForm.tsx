@@ -32,12 +32,14 @@ import { additionalInfoValue } from '@/types'
 import { useManagerActions } from '@/hooks/useManagerActions'
 import { useFormValueChangeDebounce } from '@/hooks/useFormValueChangeDebounce'
 import { useToast } from '@/hooks/use-toast'
+import { useUser } from '@/hooks/useUser'
 
 const ContactForm = () => {
   const manager = useManager()
   const { add: addContact } = useContactsUpdate()
   const contacts = useContacts()
   const { toast } = useToast()
+  const user = useUser()
 
   const contactManager = useMemo(() => {
     return manager.find(mngr => mngr.url_id == contacts.url_id)
@@ -51,7 +53,7 @@ const ContactForm = () => {
     defaultValues: isInManager
       ? { ...JSON.parse(contactManager?.input_backup as string), name: contactManager?.name }
       : {
-          name: `New Group ${manager.length + 1}`,
+          name: `New Contacts ${manager.length + 1}`,
           email: '',
           number: '',
           additional_information: {},
@@ -64,24 +66,29 @@ const ContactForm = () => {
     formHook,
     delay: isInManager ? 2000 : 4000,
     callback: () => {
-      updateBackup(contactManager?._id as string, formHook.watch())
+      updateBackup(contactManager?._id as string, formHook.watch(), user.loggedIn)
     }
   })
 
   const [startManagerCreationTimeout] = useTimeout(
     () => {
-      createManager({
-        _id: generateMongoId(),
-        backed_up: false,
-        contacts_count: contacts.contacts.length,
-        url_id: contacts.url_id as string,
-        input_backup: JSON.stringify({ ...formHook.getValues(), name: undefined }),
-        name: formHook.getValues().name
-      })
+      if (!user.loggedIn) {
+        createManager(
+          {
+            _id: generateMongoId(),
+            backed_up: false,
+            contacts_count: contacts.contacts.length,
+            url_id: contacts.url_id as string,
+            input_backup: JSON.stringify({ ...formHook.getValues(), name: undefined }),
+            name: formHook.getValues().name
+          },
+          user.loggedIn
+        )
+      }
     },
     2500,
     false,
-    [contactManager, formHook]
+    [contactManager, formHook, user.loggedIn]
   )
 
   const onSubmit: SubmitHandler<ContactFormType> = ({ ...data }) => {
@@ -113,7 +120,7 @@ const ContactForm = () => {
   useEffect(() => {
     if (!isInManager) startManagerCreationTimeout()
 
-    if (contactManager) toast({ title: 'Listing synced', description: 'From yesterday' })
+    if (contactManager) toast({ title: 'Syncing listing...', description: 'Syncing...' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

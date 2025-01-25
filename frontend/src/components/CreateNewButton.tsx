@@ -4,7 +4,7 @@ import { cx } from 'class-variance-authority'
 import Loader from './ui/loader'
 import { useToggle } from '@/hooks/useToggle'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { generateListingId } from '@/lib/utils/idUtils'
+import { generateListingId, generateMongoId } from '@/lib/utils/idUtils'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,6 +16,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
+import { useManagerActions } from '@/hooks/useManagerActions'
+import { useUser } from '@/hooks/useUser'
+import { useManager } from '@/hooks/useManager'
+import { useToast } from '@/hooks/use-toast'
 
 const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const [isProcessing, toggle] = useToggle(false)
@@ -23,11 +27,46 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const location = useLocation()
   const isOnSave = location.pathname.includes('/save')
   const [open, setOpen] = useState(false)
+  const { loggedIn } = useUser()
+  const manager = useManager()
 
-  const handleNewListing = () => {
+  const { createManager } = useManagerActions()
+  const { toast } = useToast()
+
+  const handleNewListing = async () => {
     toggle()
     const id = generateListingId()
-    navigate(`/save/${id}?new=true`)
+    if (loggedIn) {
+      ;(
+        createManager(
+          {
+            _id: generateMongoId(),
+            backed_up: false,
+            contacts_count: 0,
+            url_id: id as string,
+            input_backup: JSON.stringify({ name: undefined }),
+            name: `New Contact ${manager.length + 1}`
+          },
+          loggedIn
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ) as any
+      )
+        .then(() => {
+          toggle()
+          navigate(`/save/${id}?new=true`)
+        })
+        .catch(() => {
+          toast({
+            title: 'Listing creation failed',
+            description: 'Please check your internet connection',
+            variant: 'destructive',
+            className: 'text-white scale-110'
+          })
+          toggle()
+        })
+    } else {
+      navigate(`/save/${id}?new=true`)
+    }
   }
 
   return (

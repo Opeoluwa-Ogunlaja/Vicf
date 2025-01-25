@@ -20,9 +20,10 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { google_login, login_user } from '@/lib/utils/requestUtils'
 import { queryClient } from '@/queryClient'
-import { IUser } from '@/types/user'
+import { IUser, PartialUser } from '@/types/user'
 import { useGoogleLogin } from '@react-oauth/google'
 import { useToggle } from '@/hooks/useToggle'
+import { useUserUpdate } from '@/hooks/useUserUpdate'
 
 const LoginForm = () => {
   const formHook = useForm<LoginFormType>({
@@ -50,6 +51,8 @@ const LoginForm = () => {
     mutationFn: (variables: { code: string }) => google_login(variables)
   })
 
+  const { login_user: update_user_state } = useUserUpdate()
+
   const login = useGoogleLogin({
     onSuccess: async codeResponse => {
       console.log(codeResponse)
@@ -68,6 +71,7 @@ const LoginForm = () => {
               email: res?.email
             }
           })
+          update_user_state({ id: res?.id, name: res?.name, email: res?.email })
           return wait(2000)
         })
         .then(() => navigate('/'))
@@ -91,7 +95,7 @@ const LoginForm = () => {
 
   const onSubmit: SubmitHandler<LoginFormType> = async data => {
     try {
-      const res = await loginMutation.mutateAsync(data)
+      const res = (await loginMutation.mutateAsync(data)) as PartialUser
       return await wait(500)
         .then(() => {
           formHook.setError('root', {
@@ -105,9 +109,12 @@ const LoginForm = () => {
               email: res?.email
             }
           })
+          update_user_state({ id: res?.id, name: res?.name, email: res?.email })
           return wait(2000)
         })
-        .then(() => navigate('/'))
+        .then(() => {
+          navigate('/')
+        })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       formHook.setError('root', {

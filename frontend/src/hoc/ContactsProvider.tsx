@@ -1,17 +1,32 @@
 import { ContactsContext } from '@/contexts/ContactsContext'
 import { ContactsUpdateContext } from '@/contexts/ContactsUpdateContext'
+import { useToast } from '@/hooks/use-toast'
 import { useArray } from '@/hooks/useArray'
+import { useSocketActions } from '@/hooks/useSocketActions'
+import { useUser } from '@/hooks/useUser'
 import { IContact } from '@/types/contacts'
 import { FC, ReactNode } from 'react'
 
 const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ children, url_id }) => {
   const contacts = useArray<IContact>([])
+  const { sendMessage } = useSocketActions()
+  const { toast } = useToast()
+  const { loggedIn } = useUser()
 
   return (
     <ContactsContext.Provider value={{ url_id, contacts: contacts.values }}>
       <ContactsUpdateContext.Provider
         value={{
           add: contact => {
+            if (loggedIn) {
+              sendMessage(contact, 'contacts', contact => {
+                console.log(contact)
+                toast({
+                  title: 'Contacts synced',
+                  description: `${(contact as IContact).number} Synced`
+                })
+              })
+            }
             contacts.push({ ...contact })
             return contacts.values
           },

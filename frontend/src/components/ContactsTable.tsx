@@ -17,6 +17,8 @@ import useMediaQuery from '@/hooks/useMediaQuery'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { DotsHorizontalIcon } from '@/assets/icons'
 import AdditionalInfoTable from './AdditionalInfoTable'
+import { useSocketEvent } from '@/hooks/useSocketEvent'
+import { useToast } from '@/hooks/use-toast'
 
 function ContactsTable({
   className,
@@ -25,6 +27,10 @@ function ContactsTable({
   className?: string
   contacts: ReturnType<typeof useContacts>['contacts']
 }) {
+  const { toast } = useToast()
+  useSocketEvent('contacts', () => {
+    toast({ title: 'Contacts Added' })
+  })
   const lgScreen = useMediaQuery('(min-width: 1024px)')
   return (
     <ContactsTableProvider>

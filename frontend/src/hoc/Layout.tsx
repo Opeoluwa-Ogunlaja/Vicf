@@ -1,26 +1,28 @@
 import LoadingScreen from '@/components/LoadingScreen'
 import { useUser } from '@/hooks/useUser'
 import { useUserUpdate } from '@/hooks/useUserUpdate'
-import { useWebSocketStore } from '@/hooks/useWebsocketStore'
 import { IUser, PartialUser } from '@/types/user'
-import { Suspense, FC, useLayoutEffect, useRef, useEffect } from 'react'
+import { Suspense, FC, useLayoutEffect, useRef } from 'react'
 import { Await, Outlet, useRouteLoaderData } from 'react-router-dom'
+import SocketProvider from './SocketProvider'
 
 const LayoutContent: FC<{ user?: PartialUser }> = () => {
   const { isPending } = useUser()
-  const { connect } = useWebSocketStore()
 
-  useEffect(() => {
-    connect('http://localhost:3002')
-  }, [connect])
-
-  return !isPending ? <Outlet /> : <LoadingScreen />
+  return !isPending ? (
+    <SocketProvider>
+      <Outlet />
+    </SocketProvider>
+  ) : (
+    <LoadingScreen />
+  )
   // return <Outlet />
 }
 
 const Layout = () => {
   const { user_promise } = useRouteLoaderData('root') as { user_promise: Promise<IUser | null> }
   const { login_user, set_loaded } = useUserUpdate()
+  const { user: logged_in_user } = useUser()
 
   const isMounted = useRef(true)
 
@@ -31,10 +33,11 @@ const Layout = () => {
         .then(user => {
           if (isMounted.current && user) {
             // Update global state only if component is mounted
-            login_user({
-              name: user?.name,
-              email: user?.email
-            })
+            if (!logged_in_user)
+              login_user({
+                name: user?.name,
+                email: user?.email
+              })
           }
         })
         .catch(() => set_loaded())

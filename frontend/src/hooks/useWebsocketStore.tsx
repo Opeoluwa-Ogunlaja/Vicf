@@ -1,39 +1,32 @@
 import { create } from 'zustand'
-import { io, Socket } from 'socket.io-client'
-
-interface Message {
-  type: string
-  data: unknown
-}
-
-interface WebSocketState {
-  socket: Socket | null
-  lastMessage: Message | null
-  canSendMessages: boolean
-  sendMessage: (content: Record<string, unknown>, customEventName?: string) => void
-  connect: (url: string) => void
-  disconnect: () => void
-}
+import { io } from 'socket.io-client'
+import { WebSocketState } from '@/types'
 
 export const useWebSocketStore = create<WebSocketState>((set, get) => ({
   socket: null,
   lastMessage: null,
   canSendMessages: false,
 
-  sendMessage: (content, customEventName) => {
+  sendMessage: (content, customEventName, ackCallback) => {
     const { socket } = get()
     if (!socket) return
 
     const message = JSON.stringify(content)
-    if (customEventName) {
-      socket.emit(customEventName, message)
-    } else {
-      socket.send(message)
+    if (socket.connected) {
+      if (customEventName) {
+        if (ackCallback) socket.emit(customEventName, message, ackCallback)
+        else socket.emit(customEventName, message)
+      } else {
+        socket.send(message)
+      }
     }
   },
 
   connect: url => {
-    const socket = io(url, { withCredentials: true, retries: 5 })
+    const socket = io(url, {
+      withCredentials: true,
+      transports: ['websocket']
+    })
     set({ socket })
 
     socket.onAny((...[, response]) => {

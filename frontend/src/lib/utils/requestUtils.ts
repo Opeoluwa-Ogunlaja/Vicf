@@ -4,6 +4,7 @@ import CustomAppError from './customAppError'
 import { LoginFormType, SignupFormType } from '@/lib/utils/form-schemas'
 import { IUser } from '@/types/user'
 import { ContactManagerEntry } from '@/types/contacts_manager'
+import { IContact } from '@/types'
 
 const throwError = (error: AxiosError) => {
   throw new CustomAppError(error)
@@ -105,6 +106,17 @@ export const create_contact_listing = async ({
     })
 
     return newListing.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
+export const update_contact_input_backup = async (id: string, backup: Partial<IContact>) => {
+  try {
+    const newListing = await axiosInstance.patch(`/contacts/backup-input/${id}`, backup)
+
+    return newListing.data.data.input_backup
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     checkError(error)

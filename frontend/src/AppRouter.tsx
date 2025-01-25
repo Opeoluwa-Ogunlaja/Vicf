@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { FC } from 'react'
 import Layout from './hoc/Layout'
-import { rootLoader } from './lib/utils/routeLoaders'
+import { authLoader, rootLoader } from './lib/utils/routeLoaders'
 import Save from './pages/save/Save'
 import Home from './pages/home/Home'
 import Login from './pages/login/Login'
@@ -12,6 +12,27 @@ import { redirect } from 'react-router-dom'
 import { generateListingId } from './lib/utils/idUtils'
 
 const router = createBrowserRouter([
+  {
+    path: '/auth',
+    loader: authLoader,
+    shouldRevalidate: () => true,
+    element: <AuthWrapper />,
+    id: 'auth',
+    children: [
+      {
+        path: 'login',
+        element: <Login />
+      },
+      {
+        path: 'signup',
+        element: <Signup />
+      },
+      {
+        path: '',
+        element: <Login />
+      }
+    ]
+  },
   {
     path: '/',
     element: <Layout />,
@@ -38,27 +59,10 @@ const router = createBrowserRouter([
       },
       {
         path: '',
+        shouldRevalidate: () => {
+          return true
+        },
         element: <Home />
-      }
-    ]
-  },
-  {
-    path: '/auth',
-    loader: rootLoader,
-    element: <AuthWrapper />,
-    id: 'auth',
-    children: [
-      {
-        path: 'login',
-        element: <Login />
-      },
-      {
-        path: 'signup',
-        element: <Signup />
-      },
-      {
-        path: '',
-        element: <Login />
       }
     ]
   },
