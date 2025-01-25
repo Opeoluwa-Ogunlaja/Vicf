@@ -33,6 +33,7 @@ import { useManagerActions } from '@/hooks/useManagerActions'
 import { useFormValueChangeDebounce } from '@/hooks/useFormValueChangeDebounce'
 import { useToast } from '@/hooks/use-toast'
 import { useUser } from '@/hooks/useUser'
+import { emptyBaseContact } from '@/lib/consts'
 
 const ContactForm = () => {
   const manager = useManager()
@@ -44,9 +45,9 @@ const ContactForm = () => {
   const contactManager = useMemo(() => {
     return manager.find(mngr => mngr.url_id == contacts.url_id)
   }, [manager, contacts.url_id])
+  const isInManager = Boolean(contactManager)
 
   const { updateBackup, createManager } = useManagerActions()
-  const isInManager = Boolean(contactManager)
 
   const formHook = useForm<ContactFormType>({
     resolver: zodResolver(ContactFormSchema),
@@ -54,11 +55,7 @@ const ContactForm = () => {
       ? { ...JSON.parse(contactManager?.input_backup as string), name: contactManager?.name }
       : {
           name: `New Contacts ${manager.length + 1}`,
-          email: '',
-          number: '',
-          additional_information: {},
-          overwrite: false,
-          overwrite_name: ''
+          ...emptyBaseContact
         }
   })
 
@@ -102,6 +99,7 @@ const ContactForm = () => {
           : (data.overwrite_name as string),
         email: data?.email
       })
+    toast({ title: 'Contact Added' })
     formHook.reset({
       email: '',
       number: '',
@@ -151,7 +149,7 @@ const ContactForm = () => {
               )
             }}
           />
-          <p className="-mt-3 text-sm text-neutral-400">
+          <p className="-mt-3 text-sm font-bold text-neutral-400">
             Click "Add Contact" and Fill the form below to add people to your collection
           </p>
         </section>
@@ -254,6 +252,7 @@ const ContactForm = () => {
                 <Button
                   variant="secondary"
                   type="submit"
+                  disabled={!isInManager}
                   className="w-max px-5 text-lg font-normal max-md:w-full"
                 >
                   Save Contact
@@ -264,6 +263,7 @@ const ContactForm = () => {
                   id="save-contact-btn"
                   variant="secondary"
                   type="submit"
+                  disabled={!isInManager}
                   className="w-max bg-secondary/50 px-5 text-base font-normal max-md:absolute max-md:mx-auto max-md:mt-28 max-md:w-4/5"
                 >
                   Save just number

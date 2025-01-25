@@ -20,6 +20,7 @@ import { useManagerActions } from '@/hooks/useManagerActions'
 import { useUser } from '@/hooks/useUser'
 import { useManager } from '@/hooks/useManager'
 import { useToast } from '@/hooks/use-toast'
+import { emptyBaseContactManager } from '@/lib/consts'
 
 const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const [isProcessing, toggle] = useToggle(false)
@@ -65,6 +66,16 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
           toggle()
         })
     } else {
+      createManager(
+        {
+          _id: generateMongoId(),
+          url_id: id as string,
+          name: `New Contact ${manager.length + 1}`,
+          ...emptyBaseContactManager
+        },
+        loggedIn
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ) as any
       navigate(`/save/${id}?new=true`)
     }
   }

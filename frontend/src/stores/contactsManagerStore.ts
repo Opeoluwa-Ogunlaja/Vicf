@@ -39,22 +39,28 @@ export const useContactManagerStore = create<ContactManager>()(set => {
       },
       async createManager(data, upstream = false) {
         let errorsPresent = false
+        let new_manager = !upstream && data
         const newManagerFlow = async () => {
           try {
-            const new_manager = !upstream
-              ? data
-              : await create_contact_listing({
-                  url_id: data.url_id,
-                  name: data.name,
-                  input_backup: data.input_backup
-                })
+            if (upstream) {
+              new_manager = await create_contact_listing({
+                url_id: data.url_id,
+                name: data.name,
+                input_backup: data.input_backup
+              })
+            }
 
             set(state => {
               return { manager: [new_manager, ...state.manager] as ContactManagerEntry[] }
             })
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (e: unknown) {
-            errorsPresent = true
+            if (upstream) {
+              errorsPresent = true
+            }
+            set(state => {
+              return { manager: [new_manager, ...state.manager] as ContactManagerEntry[] }
+            })
           }
         }
 

@@ -71,7 +71,7 @@ const Sidenav = () => {
               Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
             <ul className="space-y-2">
-              {[...manager.slice(-2)].reverse().map(entry => {
+              {[...manager.slice(-2)].map(entry => {
                 return (
                   <li key={entry._id}>
                     <GroupCard

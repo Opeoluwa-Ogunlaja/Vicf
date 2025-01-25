@@ -55,7 +55,6 @@ const LoginForm = () => {
 
   const login = useGoogleLogin({
     onSuccess: async codeResponse => {
-      console.log(codeResponse)
       const res = await googleLoginMutation.mutateAsync({ code: codeResponse.code })
       return await wait(500)
         .then(() => {
@@ -63,7 +62,6 @@ const LoginForm = () => {
             message: undefined
           })
           setSuccess(true)
-          console.log(res)
           queryClient.setQueryData<Partial<IUser>>(['user', 'logged_in'], () => {
             return {
               id: res?.id,

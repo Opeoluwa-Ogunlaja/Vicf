@@ -20,7 +20,6 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
           add: contact => {
             if (loggedIn) {
               sendMessage(contact, 'contacts', contact => {
-                console.log(contact)
                 toast({
                   title: 'Contacts synced',
                   description: `${(contact as IContact).number} Synced`

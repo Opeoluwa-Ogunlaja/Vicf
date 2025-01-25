@@ -51,7 +51,7 @@ function ContactsTable({
           </TableRow>
         </TableHeader>
         <TableBody className="text-center [&_td]:!text-center">
-          {[...contacts].reverse().map(contact => {
+          {[...contacts].map(contact => {
             return (
               <TableRow
                 className="transition-colors hover:bg-neutral-100"
