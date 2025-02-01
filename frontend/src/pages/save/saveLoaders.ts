@@ -1,5 +1,5 @@
 import { queryClient } from '@/queryClient'
-import { get_contacts } from '@/lib/utils/requestUtils'
+import { get_contact_listing } from '@/lib/utils/requestUtils'
 import { defer, LoaderFunction } from 'react-router-dom'
 
 export const saveLoader = (({ params }) => {
@@ -12,7 +12,7 @@ export const saveLoader = (({ params }) => {
     } else {
       const fetching_promise = queryClient.fetchQuery({
         queryKey: ['user', 'logged_in'],
-        queryFn: () => get_contacts(params?.id as string)
+        queryFn: () => get_contact_listing(params?.id as string)
       })
 
       contactPromise = fetching_promise

@@ -9,9 +9,10 @@ export interface IContact {
 
 export type contactsArray = IContact[]
 
-export type contactsReadProperty = 'contacts' | 'url_id'
+export type contactsReadProperty = 'contacts' | 'url_id' | 'loading'
 
 export type contactsContext = {
+  loading: boolean
   url_id?: string
   contacts: contactsArray
   add?: (contact: IContact) => contactsArray

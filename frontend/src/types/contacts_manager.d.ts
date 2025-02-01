@@ -21,8 +21,14 @@ export type ContactManagerState = {
 export type ContactManagerActions = {
   setManager: (manager: ContactManagerEntry[]) => void
   setPreferences: (id: string, preferences: Partial<Preferences>) => void
-  createManager: (data: ContactManagerEntry, upstream?: boolean) => void
-  updateBackup: (id: string, backup: Omit<ContactFormType, 'name'>, upstream?: boolean) => void
+  createManager: (data: ContactManagerEntry, upstream?: boolean) => Promise<void>
+  updateBackup: (
+    id: string,
+    backup: Omit<ContactFormType, 'name'>,
+    upstream?: boolean
+  ) => Promise<void>
+  updateListingName: (id: string, newName: string, upstream?: boolean) => Promise<void>
+  updateContactCount: (id: string) => void
 }
 
 export type ContactManager = ContactManagerState & { actions: ContactManagerActions }

@@ -12,14 +12,15 @@ import SidenavToggle from '@/components/SidenavToggle'
 import Footer from '@/components/Footer'
 import { useUser } from '@/hooks/useUser'
 import NavigationBar from './NavigationBar'
-import { Await, useParams, useRouteLoaderData } from 'react-router-dom'
-import { FC, Suspense } from 'react'
+import { Await, useParams, Navigate, useRouteLoaderData, useSearchParams } from 'react-router-dom'
+import { FC, ReactNode, Suspense } from 'react'
 import { useContacts } from '@/hooks/useContacts'
 import { ContactManager } from '@/types/contacts_manager'
+import { Button } from '@/components/ui/button'
+import LoadingScreen from '@/components/LoadingScreen'
 
 const SaveLayout: FC<{ name?: string }> = () => {
   const contacts = useContacts()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { contacts_manager_promise } = useRouteLoaderData('root') as {
     contacts_manager_promise: Promise<ContactManager | null>
   }
@@ -69,10 +70,45 @@ const SaveLayout: FC<{ name?: string }> = () => {
             </div>
           </div>
           <ContactsTable contacts={contacts.contacts} className="mt-24 max-sm:mt-4" />
+          <div className="mt-10 border border-dashed border-primary p-2 lg:max-w-max">
+            <h3 className="font-medium">Export Contacts As:</h3>
+            <div className="mt-2 flex flex-1 flex-wrap gap-x-2 gap-y-3 max-lg:flex-col">
+              <Button variant={'outline'}>Virtual Contact File (.vcf)</Button>
+              <Button variant={'outline'}>JSON (.json)</Button>
+              <Button variant={'outline'}>CSV (.csv)</Button>
+              <Button className="bg-green-500 text-white">Excel Document (.xlsx)</Button>
+            </div>
+          </div>
         </section>
       </main>
       <Footer />
     </div>
+  )
+}
+
+const SaveHOC: FC<{ children: ReactNode }> = ({ children }) => {
+  const { id } = useParams()
+  const params = useSearchParams()
+
+  const { contacts_manager_promise } = useRouteLoaderData('root') as {
+    contacts_manager_promise: Promise<ContactManager | null>
+  }
+
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <Await resolve={contacts_manager_promise} errorElement={children}>
+        {manager => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const contactManager = manager.find((mngr: any) => mngr.url_id == id)
+          const isInManager = Boolean(contactManager)
+          const isNew = params[0].has('new')
+          if (!isNew) {
+            if (!isInManager) return <Navigate to={'/home'} />
+          }
+          return children
+        }}
+      </Await>
+    </Suspense>
   )
 }
 
@@ -81,9 +117,11 @@ const Save = () => {
   const { id } = useParams()
 
   return (
-    <ContactsProvider url_id={id as string} key={id as string}>
-      <SaveLayout name={loggedIn ? (user!.name as string) : ''} />
-    </ContactsProvider>
+    <SaveHOC>
+      <ContactsProvider url_id={id as string} key={id as string}>
+        <SaveLayout name={loggedIn ? (user!.name as string) : ''} />
+      </ContactsProvider>
+    </SaveHOC>
   )
 }
 

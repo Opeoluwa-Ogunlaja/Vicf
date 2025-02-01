@@ -1,4 +1,8 @@
-import { create_contact_listing, update_contact_input_backup } from '@/lib/utils/requestUtils'
+import {
+  create_contact_listing,
+  update_contact_input_backup,
+  update_contact_name_backup
+} from '@/lib/utils/requestUtils'
 import { ContactManager, ContactManagerEntry } from '@/types/contacts_manager'
 import { create } from 'zustand'
 
@@ -68,30 +72,105 @@ export const useContactManagerStore = create<ContactManager>()(set => {
 
         if (errorsPresent) throw new Error('Something occured')
       },
-      updateBackup(id, backup, upstream = false) {
-        const updateManagerFlow = async () => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          let updated_backup: any
-          if (!upstream) {
-            updated_backup = backup
-          } else {
-            updated_backup = await update_contact_input_backup(id, backup)
-          }
-
-          set(state => {
-            const manager = state.manager.map(entry => {
-              if (entry._id === id) {
-                return {
-                  ...entry,
-                  input_backup: JSON.stringify({ ...updated_backup, name: undefined })
-                }
+      updateContactCount(id) {
+        set(state => {
+          const manager = state.manager.map(entry => {
+            if (entry._id === id) {
+              return {
+                ...entry,
+                contacts_count: entry.contacts_count + 1
               }
-              return entry
-            })
-            return { manager }
+            }
+            return entry
           })
+          return { manager }
+        })
+      },
+      async updateBackup(id, backup, upstream = false) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let updated_backup: any
+        let errorsPresent = false
+        updated_backup = !upstream && backup
+        const updateManagerFlow = async () => {
+          try {
+            if (upstream) updated_backup = await update_contact_input_backup(id, backup)
+
+            set(state => {
+              const manager = state.manager.map(entry => {
+                if (entry._id === id) {
+                  return {
+                    ...entry,
+                    input_backup: JSON.stringify({ ...updated_backup, name: undefined })
+                  }
+                }
+                return entry
+              })
+              return { manager }
+            })
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (error) {
+            errorsPresent = true
+            set(state => {
+              const manager = state.manager.map(entry => {
+                if (entry._id === id) {
+                  return {
+                    ...entry,
+                    input_backup: JSON.stringify({ ...updated_backup, name: undefined })
+                  }
+                }
+                return entry
+              })
+              return { manager }
+            })
+          }
         }
-        updateManagerFlow()
+
+        await updateManagerFlow()
+
+        if (errorsPresent) throw new Error('There was an error updating the listing')
+      },
+      async updateListingName(id, newName, upstream = false) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let updated_name: any
+        let errorsPresent = false
+        updated_name = !upstream && newName
+        const updateManagerFlow = async () => {
+          try {
+            if (upstream) updated_name = await update_contact_name_backup(id, newName)
+
+            set(state => {
+              const manager = state.manager.map(entry => {
+                if (entry._id === id) {
+                  return {
+                    ...entry,
+                    name: updated_name
+                  }
+                }
+                return entry
+              })
+              return { manager }
+            })
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (error) {
+            errorsPresent = true
+            set(state => {
+              const manager = state.manager.map(entry => {
+                if (entry._id === id) {
+                  return {
+                    ...entry,
+                    name: updated_name
+                  }
+                }
+                return entry
+              })
+              return { manager }
+            })
+          }
+        }
+
+        await updateManagerFlow()
+
+        if (errorsPresent) throw new Error('There was an error updating the listing')
       }
     }
   }

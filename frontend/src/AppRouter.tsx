@@ -58,10 +58,7 @@ const router = createBrowserRouter([
         ]
       },
       {
-        path: '',
-        shouldRevalidate: () => {
-          return true
-        },
+        path: 'home',
         element: <Home />
       }
     ]

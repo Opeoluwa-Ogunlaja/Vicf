@@ -49,6 +49,7 @@ const NavigationCard: FC<{ className?: string }> = ({ className }) => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Profile</DropdownMenuItem>
+        <DropdownMenuItem>Organizations</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

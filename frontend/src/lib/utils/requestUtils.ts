@@ -123,13 +123,39 @@ export const update_contact_input_backup = async (id: string, backup: Partial<IC
   }
 }
 
-export const get_contacts = async (
+export const update_contact_name_backup = async (id: string, newName: string) => {
+  try {
+    const newListing = await axiosInstance.patch(`/contacts/name/${id}`, { name: newName })
+
+    return newListing.data.data.input_backup
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
+export const get_contact_listing = async (
   listing_id: string
 ): Promise<ContactManagerEntry[] | undefined> => {
   try {
     const newUser = await axiosInstance.get(`/contacts/${listing_id}`)
 
     return newUser.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
+export const get_contacts = async (listing_id: string): Promise<IContact[] | undefined> => {
+  try {
+    const newUser = await axiosInstance.get(`/contacts/${listing_id}/contacts`)
+
+    return (
+      newUser.data.data.flatMap((contact: { contacts: IContact }) => {
+        return contact.contacts
+      }) || []
+    )
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     checkError(error)

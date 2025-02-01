@@ -34,12 +34,14 @@ import { useFormValueChangeDebounce } from '@/hooks/useFormValueChangeDebounce'
 import { useToast } from '@/hooks/use-toast'
 import { useUser } from '@/hooks/useUser'
 import { emptyBaseContact } from '@/lib/consts'
+import { useMutation } from '@tanstack/react-query'
 
 const ContactForm = () => {
   const manager = useManager()
   const { add: addContact } = useContactsUpdate()
   const contacts = useContacts()
   const { toast } = useToast()
+  const { toast: backupInputToast } = useToast()
   const user = useUser()
 
   const contactManager = useMemo(() => {
@@ -48,6 +50,22 @@ const ContactForm = () => {
   const isInManager = Boolean(contactManager)
 
   const { updateBackup, createManager } = useManagerActions()
+  const updateUserBackupMutation = useMutation({
+    mutationKey: ['updated_contacts', contacts.url_id],
+    mutationFn: (data: {
+      id: string
+      formState: Parameters<typeof updateBackup>[1]
+      upstream?: boolean
+    }) => {
+      return updateBackup(data.id, data.formState, data.upstream)
+      // return Promise.resolve(data)
+    },
+    retry: 0,
+    networkMode: 'always',
+    onSuccess: () => {
+      backupInputToast({ title: 'Contact form', description: 'Backup successful' })
+    }
+  })
 
   const formHook = useForm<ContactFormType>({
     resolver: zodResolver(ContactFormSchema),
@@ -63,7 +81,11 @@ const ContactForm = () => {
     formHook,
     delay: isInManager ? 2000 : 4000,
     callback: () => {
-      updateBackup(contactManager?._id as string, formHook.watch(), user.loggedIn)
+      updateUserBackupMutation.mutate({
+        id: contactManager?._id as string,
+        formState: formHook.watch(),
+        upstream: user.loggedIn
+      })
     }
   })
 
@@ -85,7 +107,7 @@ const ContactForm = () => {
     },
     2500,
     false,
-    [contactManager, formHook, user.loggedIn]
+    [contactManager, formHook, user.loggedIn, contacts]
   )
 
   const onSubmit: SubmitHandler<ContactFormType> = ({ ...data }) => {
@@ -107,7 +129,11 @@ const ContactForm = () => {
       overwrite: false,
       overwrite_name: ''
     })
-    updateBackup(contactManager?._id as string, { ...formHook.watch() })
+    updateUserBackupMutation.mutate({
+      id: contactManager?._id as string,
+      formState: { ...formHook.watch() },
+      upstream: user.loggedIn
+    })
   }
 
   useLayoutEffect(() => {

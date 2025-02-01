@@ -17,7 +17,7 @@ const NavigationBar = () => {
       <div className="flex items-center justify-between self-start border-b border-b-neutral-200 pb-4">
         <div className="gap-4 max-md:flex md:contents">
           <SidenavToggle className="text-neutral-600" />
-          <a href="/" className="text-5xl">
+          <a href="/home" className="text-5xl">
             <VicfIcon width={'1em'} />
           </a>
         </div>

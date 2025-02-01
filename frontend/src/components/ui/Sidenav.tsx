@@ -20,6 +20,7 @@ const Sidenav = () => {
   const manager = useManager()
   const location = useLocation()
   const isOnSave = location.pathname.includes('/save')
+  const isOnHome = location.pathname.includes('/home')
 
   useEffect(() => {
     if (open) openCount.current += 1
@@ -64,7 +65,9 @@ const Sidenav = () => {
             }
           )}
         >
-          <CreateNewButton className="-mb-10 py-6 max-lg:order-2 lg:mt-10" />
+          <div onClick={() => setOpen(false)}>
+            <CreateNewButton className="-mb-10 py-6 max-lg:order-2 lg:mt-10" />
+          </div>
 
           <section className="flex flex-col max-lg:order-3 max-lg:mt-8">
             <h3 className="mb-4 border-b border-b-neutral-200 pb-2 text-2xl font-medium max-lg:text-lg">
@@ -100,6 +103,13 @@ const Sidenav = () => {
                   Dashboard
                 </NavigationLink>
               </li>
+              {isOnHome && (
+                <li>
+                  <NavigationLink to="/save" className="after:!mix-blend-normal">
+                    Organizations
+                  </NavigationLink>
+                </li>
+              )}
               {!isOnSave && (
                 <li>
                   <NavigationLink to="/save" className="after:!mix-blend-normal">

@@ -20,7 +20,7 @@ const NavigationBar = () => {
       <ul className="flex items-center gap-6 max-lg:gap-4">
         <li className="inline-flex max-md:hidden">
           <NavigationLink
-            to="/"
+            to="/home"
             className="font-medium text-white contrast-50 saturate-100 sepia after:filter"
           >
             Home

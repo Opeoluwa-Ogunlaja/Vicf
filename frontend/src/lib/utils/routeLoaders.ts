@@ -32,8 +32,10 @@ export const rootLoader = (async () => {
       staleTime: 0
     })
     fetching_promise.then(contacts_manager => {
-      const setManager = useContactManagerStore.getState().actions.setManager
-      setManager(contacts_manager as ContactManagerEntry[])
+      if ((contacts_manager as Array<unknown>)?.length > 0) {
+        const setManager = useContactManagerStore.getState().actions.setManager
+        setManager(contacts_manager as ContactManagerEntry[])
+      }
     })
 
     contactsManagerPromise = fetching_promise

@@ -28,10 +28,15 @@ function ContactsTable({
   contacts: ReturnType<typeof useContacts>['contacts']
 }) {
   const { toast } = useToast()
-  useSocketEvent('contacts', () => {
+  useSocketEvent('add-contacts', () => {
     toast({ title: 'Contacts Added' })
   })
   const lgScreen = useMediaQuery('(min-width: 1024px)')
+
+  const { loading } = useContacts()
+
+  if (loading) return <>Loading Table</>
+
   return (
     <ContactsTableProvider>
       <div className={twMerge('mx-auto h-16 rounded-t-lg bg-neutral-600', className)}></div>
