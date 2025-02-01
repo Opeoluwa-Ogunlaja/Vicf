@@ -58,6 +58,7 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
             return queryClient.getQueryData(['contacts', url_id]) as contactsArray
           },
           edit: (id, data) => {
+            console.log(id)
             return data
           },
           delete: (number: string) => {
