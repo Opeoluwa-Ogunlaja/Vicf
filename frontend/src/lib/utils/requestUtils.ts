@@ -161,3 +161,21 @@ export const get_contacts = async (listing_id: string): Promise<IContact[] | und
     checkError(error)
   }
 }
+
+export const delete_contact = async (
+  listing_id: string,
+  contact_id: string
+): Promise<IContact[] | undefined> => {
+  try {
+    const newUser = await axiosInstance.delete(`/contacts/${listing_id}/${contact_id}`)
+
+    return (
+      newUser.data.data.flatMap((contact: { contacts: IContact }) => {
+        return contact.contacts
+      }) || []
+    )
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}

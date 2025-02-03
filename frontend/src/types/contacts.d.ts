@@ -18,5 +18,5 @@ export type contactsContext = {
   add?: (contact: IContact) => contactsArray
   remove?: (id: IContact['id']) => IContact
   edit?: (id: string, data: IContact) => IContact
-  delete?: (number: string) => contactsArray
+  delete: (listing_id: string, contact_id: string) => Promise<contactsArray>
 }

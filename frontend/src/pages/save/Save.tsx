@@ -69,7 +69,11 @@ const SaveLayout: FC<{ name?: string }> = () => {
               </Suspense>
             </div>
           </div>
-          <ContactsTable contacts={contacts.contacts} className="mt-24 max-sm:mt-4" />
+          <ContactsTable
+            url_id={contacts.url_id || ''}
+            contacts={contacts.contacts}
+            className="mt-24 max-sm:mt-4"
+          />
           <div className="mt-10 border border-dashed border-primary p-2 lg:max-w-max">
             <h3 className="font-medium">Export Contacts As:</h3>
             <div className="mt-2 flex flex-1 flex-wrap gap-x-2 gap-y-3 max-lg:flex-col">

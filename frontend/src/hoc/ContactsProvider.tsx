@@ -5,7 +5,7 @@ import { useManager } from '@/hooks/useManager'
 import { useManagerActions } from '@/hooks/useManagerActions'
 import { useSocketActions } from '@/hooks/useSocketActions'
 import { useUser } from '@/hooks/useUser'
-import { get_contacts } from '@/lib/utils/requestUtils'
+import { delete_contact, get_contacts } from '@/lib/utils/requestUtils'
 import { contactsArray, IContact } from '@/types/contacts'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { FC, ReactNode } from 'react'
@@ -61,11 +61,23 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
             console.log(id)
             return data
           },
-          delete: (number: string) => {
-            const contacts = queryClient.getQueryData(['contacts', url_id]) as IContact[]
-            const currentContacts = contacts.filter(contact => contact.number !== number)
-            queryClient.setQueryData(['contacts', url_id], currentContacts)
-            return queryClient.getQueryData(['contacts', url_id]) as contactsArray
+          delete: async (listing_id: string, contact_id: string) => {
+            function remove() {
+              const contacts = queryClient.getQueryData(['contacts', url_id]) as IContact[]
+              const currentContacts = contacts.filter(contact => contact._id !== contact_id)
+              queryClient.setQueryData(['contacts', url_id], currentContacts)
+              updateContactCount(contactManager?._id as string, true)
+              return queryClient.getQueryData(['contacts', url_id]) as contactsArray
+            }
+
+            try {
+              await delete_contact(listing_id, contact_id)
+              return remove()
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            } catch (error) {
+              remove()
+              throw new Error("It didn't  delete successfully")
+            }
           }
         }}
       >

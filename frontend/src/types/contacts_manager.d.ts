@@ -28,7 +28,7 @@ export type ContactManagerActions = {
     upstream?: boolean
   ) => Promise<void>
   updateListingName: (id: string, newName: string, upstream?: boolean) => Promise<void>
-  updateContactCount: (id: string) => void
+  updateContactCount: (id: string, dec?: boolean = false) => void
 }
 
 export type ContactManager = ContactManagerState & { actions: ContactManagerActions }

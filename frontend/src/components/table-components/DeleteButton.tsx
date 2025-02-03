@@ -5,19 +5,37 @@ import { TrashIcon } from '@/assets/icons'
 import { Button } from '../ui/button'
 import { useToggle } from '@/hooks/useToggle'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
+import { useToast } from '@/hooks/use-toast'
+import { useMutation } from '@tanstack/react-query'
+import Loader from '../ui/loader'
 
-const DeleteButton: FC<{ contactId: IContact['_id'] }> = ({ contactId }) => {
+const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string }> = props => {
+  const { _id, number } = props.contact
+  const listing_id = props.listing_id
   const [open, , set] = useToggle(false)
   const { delete: deleteContact } = useContactsUpdate()
-  const number = contactId?.split('_')[0] ?? ''
+  const { toast } = useToast()
+
+  const deleteMutation = useMutation({
+    mutationKey: ['delete_contact', _id],
+    mutationFn: () => {
+      return deleteContact(listing_id, _id || '')
+    },
+    onSuccess() {
+      toast({ title: 'Contact Deleted', description: `Deleted ${number}` })
+    },
+    retry: 0
+  })
+
+  const { isPending: deleting } = deleteMutation
 
   return (
     <Popover open={open} onOpenChange={set}>
       <PopoverTrigger
-        onClick={() => set(true)}
+        onClick={() => !deleting && set(true)}
         className="-pb-1 border-b-2 border-dotted border-neutral-400 bg-clip-padding text-neutral-600 transition-colors hover:border-neutral-600"
       >
-        <TrashIcon />
+        {!deleting ? <TrashIcon /> : <Loader className="w-2" />}
       </PopoverTrigger>
       <PopoverContent className="grid text-sm">
         <p className="text-neutral-500">
@@ -36,7 +54,10 @@ const DeleteButton: FC<{ contactId: IContact['_id'] }> = ({ contactId }) => {
           <Button
             variant={'destructive'}
             className="text-white"
-            onClick={() => deleteContact && deleteContact(number)}
+            onClick={() => {
+              toast({ title: `Delete ${number}`, description: 'deleting...' })
+              deleteMutation.mutate()
+            }}
           >
             Yes
           </Button>

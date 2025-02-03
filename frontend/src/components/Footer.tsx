@@ -10,7 +10,7 @@ const Footer = () => {
       <nav className="text-sm font-medium text-muted md:ml-6">
         <ul className="flex gap-4 text-center max-md:flex-col max-md:justify-center">
           <li>
-            <NavigationLink to="/">Home</NavigationLink>
+            <NavigationLink to="/home">Home</NavigationLink>
           </li>
           <li>
             <NavigationLink to="/dashboard">Dashboard</NavigationLink>

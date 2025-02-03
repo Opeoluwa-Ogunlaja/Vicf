@@ -94,7 +94,7 @@ const Sidenav = () => {
             </h3>
             <ul className="flex flex-col gap-4 text-neutral-500">
               <li>
-                <NavigationLink to="/" className="after:!mix-blend-normal">
+                <NavigationLink to="/home" className="after:!mix-blend-normal">
                   Home
                 </NavigationLink>
               </li>

@@ -72,13 +72,13 @@ export const useContactManagerStore = create<ContactManager>()(set => {
 
         if (errorsPresent) throw new Error('Something occured')
       },
-      updateContactCount(id) {
+      updateContactCount(id, dec) {
         set(state => {
           const manager = state.manager.map(entry => {
             if (entry._id === id) {
               return {
                 ...entry,
-                contacts_count: entry.contacts_count + 1
+                contacts_count: !dec ? entry.contacts_count + 1 : entry.contacts_count - 1
               }
             }
             return entry

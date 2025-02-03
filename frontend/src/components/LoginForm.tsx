@@ -72,7 +72,7 @@ const LoginForm = () => {
           update_user_state({ id: res?.id, name: res?.name, email: res?.email })
           return wait(2000)
         })
-        .then(() => navigate('/'))
+        .then(() => navigate('/home'))
     },
     onError: async err => {
       formHook.setError('root', {
@@ -111,7 +111,7 @@ const LoginForm = () => {
           return wait(2000)
         })
         .then(() => {
-          navigate('/')
+          navigate('/home')
         })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
