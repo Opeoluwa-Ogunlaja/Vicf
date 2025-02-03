@@ -55,7 +55,7 @@ const ContactsTable = memo(
           <TableHeader className="sticky bg-muted/10 shadow-md shadow-neutral-50 [&_*]:!font-medium">
             <TableRow className="font-normal hover:bg-secondary">
               <TableHead className="w-fit text-sm font-normal">Number</TableHead>
-              <TableHead className="w-fit text-sm font-normal max-lg:hidden">Slug</TableHead>
+              <TableHead className="w-fit text-sm font-normal max-lg:hidden">Name</TableHead>
               <TableHead className="w-fit text-sm font-normal max-lg:hidden">Email</TableHead>
               <TableHead className="w-fit text-sm font-normal">
                 {lgScreen ? 'Additional Information' : 'Info'}
@@ -73,7 +73,7 @@ const ContactsTable = memo(
                   <TableCell className="font-medium">
                     {phoneNumberType.parse(contact.number)}
                   </TableCell>
-                  <TableCell className="max-lg:hidden">{contact._id}</TableCell>
+                  <TableCell className="max-lg:hidden">{contact.name}</TableCell>
                   <TableCell className="max-lg:hidden">{contact.email || '--'}</TableCell>
                   <TableCell className="text-right">
                     <Popover>
@@ -94,7 +94,7 @@ const ContactsTable = memo(
                     </Popover>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-4 text-center">
-                    <EditButton contactId={`${contact.number}_${contact.email}`} />
+                    <EditButton listing_id={contactManager?._id || ''} contact={contact} />
                     <DeleteButton listing_id={contactManager?._id || ''} contact={contact} />
                   </TableCell>
                 </TableRow>

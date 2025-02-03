@@ -39,6 +39,7 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
       <ContactsUpdateContext.Provider
         value={{
           add: contact => {
+            console.log(contact)
             if (loggedIn) {
               sendMessage(
                 { listingId: contactManager?._id, ...contact },

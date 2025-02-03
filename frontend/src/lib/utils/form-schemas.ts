@@ -36,6 +36,18 @@ export const ContactFormSchema = z.object({
 
 export type ContactFormType = z.infer<typeof ContactFormSchema>
 
+export const EditContactFormSchema = z.object({
+  number: phoneNumberType,
+  email: z
+    .optional(z.string().email(), { invalid_type_error: 'This must be a valid email' })
+    .or(z.literal('')),
+  additional_information: z.record(z.string().or(z.number())),
+  overwrite: z.boolean().default(false),
+  overwrite_name: z.optional(z.string())
+})
+
+export type EditContactFormType = z.infer<typeof EditContactFormSchema>
+
 export const LoginFormSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8, 'Password must be a minimum of 8 characters').max(32, 'Haba!')
