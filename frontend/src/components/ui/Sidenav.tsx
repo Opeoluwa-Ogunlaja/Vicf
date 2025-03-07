@@ -76,7 +76,7 @@ const Sidenav = () => {
           </div>
 
           <section className="flex flex-col max-lg:order-3 max-lg:mt-8">
-            <h3 className="mb-4 border-b border-b-neutral-200 pb-2 text-2xl font-medium max-lg:text-lg">
+            <h3 className="mb-4 border-b border-b-neutral-200 pb-2 text-xl font-medium max-lg:text-lg">
               Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
             <ul className="space-y-2">
@@ -95,7 +95,7 @@ const Sidenav = () => {
             </ul>
           </section>
           <section className="flex flex-col max-lg:order-1">
-            <h3 className="mb-4 border-b border-b-neutral-200 pb-2 text-2xl font-medium max-lg:text-lg">
+            <h3 className="mb-4 border-b border-b-neutral-200 pb-2 text-xl font-medium max-lg:text-lg">
               Goto <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
             <ul className="flex flex-col gap-4 text-neutral-500">
