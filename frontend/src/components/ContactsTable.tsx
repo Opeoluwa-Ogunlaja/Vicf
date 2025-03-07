@@ -47,12 +47,12 @@ const ContactsTable = memo(
 
     return (
       <ContactsTableProvider>
-        <div className={twMerge('mx-auto h-16 rounded-t-lg bg-neutral-600', className)}></div>
+        <div className={twMerge('mx-auto h-20 rounded-t-lg bg-neutral-600', className)}></div>
         <Table className="overflow-x-auto border-y px-6 text-center [&_td]:px-6 [&_td]:py-4 [&_th]:px-6 [&_th]:py-4 [&_th]:!text-center">
           <TableCaption>
             {contacts.length} out of {contacts.length} contacts
           </TableCaption>
-          <TableHeader className="sticky bg-muted/10 shadow-md shadow-neutral-50 [&_*]:!font-medium">
+          <TableHeader className="sticky bg-muted/10 shadow-lg shadow-neutral-50 [&_*]:!font-medium">
             <TableRow className="font-normal hover:bg-secondary">
               <TableHead className="w-fit text-sm font-normal">Number</TableHead>
               <TableHead className="w-fit text-sm font-normal max-lg:hidden">Name</TableHead>

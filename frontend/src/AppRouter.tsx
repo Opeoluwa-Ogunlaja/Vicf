@@ -10,6 +10,7 @@ import AuthWrapper from './hoc/AuthWrapper'
 import { saveLoader } from './pages/save/saveLoaders'
 import { redirect } from 'react-router-dom'
 import { generateListingId } from './lib/utils/idUtils'
+import Organisations from './pages/organisations/Organisations'
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
             loader: () => redirect(`/save/${generateListingId()}?new=true`)
           }
         ]
+      },
+      {
+        path: 'organisations',
+        element: <Organisations />
       },
       {
         path: 'home',

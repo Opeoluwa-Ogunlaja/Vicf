@@ -12,6 +12,12 @@ export function useArray<T>(initialValue?: T[]) {
     [setValues]
   )
 
+  const removeExact = useCallback((item: T) => {
+    setValues(prevState => {
+      return prevState.filter((i) => item != i)
+    })
+  }, [setValues])
+
   const pop = useCallback(() => {
     let item
     setValues(prevState => {
@@ -43,5 +49,5 @@ export function useArray<T>(initialValue?: T[]) {
     return item
   }, [setValues])
 
-  return { values, push, pop, shift, unshift, setValues }
+  return { values, push, pop, shift, unshift, setValues, removeExact }
 }

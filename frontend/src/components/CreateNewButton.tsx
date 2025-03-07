@@ -21,6 +21,7 @@ import { useUser } from '@/hooks/useUser'
 import { useManager } from '@/hooks/useManager'
 import { useToast } from '@/hooks/use-toast'
 import { emptyBaseContactManager } from '@/lib/consts'
+import { useThrottleAsync } from '@/hooks/useThrottleAsync'
 
 const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const [isProcessing, toggle] = useToggle(false)
@@ -34,7 +35,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const { createManager } = useManagerActions()
   const { toast } = useToast()
 
-  const handleNewListing = async () => {
+  const handleNewListing = useThrottleAsync(async () => {
     toggle()
     const id = generateListingId()
     if (loggedIn) {
@@ -78,7 +79,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
       ) as any
       navigate(`/save/${id}?new=true`)
     }
-  }
+  }, 5000)
 
   return (
     <AlertDialog open={open} onOpenChange={isOpen => (isOnSave ? setOpen(isOpen) : null)}>
@@ -88,7 +89,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
           className={cx(className)}
           onClick={() => (isOnSave ? null : handleNewListing())}
         >
-          Create New {isProcessing && <Loader className="w-3" />}
+          Create New Listing {isProcessing && <Loader className="w-3" />}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -101,7 +102,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={handleNewListing} className="text-white">
-            Create New {isProcessing && <Loader className="w-3" />}
+            Create {isProcessing && <Loader className="w-3" />}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

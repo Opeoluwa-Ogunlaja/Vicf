@@ -32,7 +32,9 @@ const BlockCard: FC<{
         <div className="flex flex-1 flex-col gap-1 text-left text-sm">
           <h4 className="text-lg font-semibold">{manager.name}</h4>
           <p className="flex gap-2 font-medium leading-none text-neutral-400">
-            <UserPlusIcon width={'1em'} /> {manager.contacts_count} Contacts
+            <UserPlusIcon width={'1em'} />{' '}
+            {manager.contacts_count && manager?.contacts_count > 0 ? manager.contacts_count : 'No'}{' '}
+            contacts
           </p>
           <p className={cn('mt-1 text-xs text-muted', { 'text-accent': status == 'uploaded' })}>
             {status !== 'uploaded'

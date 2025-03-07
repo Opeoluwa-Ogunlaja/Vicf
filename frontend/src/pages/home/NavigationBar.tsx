@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils'
 import { useUser } from '@/hooks/useUser'
 import { useNavigate } from 'react-router-dom'
 import CreateNewButton from '@/components/CreateNewButton'
+import { Link } from 'react-router-dom'
 
 const NavigationBar = () => {
   const navIconClass = cn('w-8 max-md:w-6')
@@ -17,28 +18,27 @@ const NavigationBar = () => {
       <div className="flex items-center justify-between self-start border-b border-b-neutral-200 pb-4">
         <div className="gap-4 max-md:flex md:contents">
           <SidenavToggle className="text-neutral-600" />
-          <a href="/home" className="text-5xl">
+          <Link to="/home" className="text-5xl">
             <VicfIcon width={'1em'} />
-          </a>
+          </Link>
         </div>
 
         <nav className="contents">
           <ul className="flex items-center gap-6 max-lg:gap-4">
-            <li className="inline-flex max-md:hidden">
-              <CreateNewButton />
-            </li>
             <li>
               <a href="">
                 <BellIcon className={navIconClass} />
               </a>
+            </li>
+            <li className="inline-flex max-md:hidden">
+              <CreateNewButton />
             </li>
             <li>
               {loggedIn ? (
                 <NavigationCard />
               ) : (
                 <Button
-                  variant={'secondary'}
-                  className="px-8 shadow-sm"
+                  className="bg-blue-500 px-8 text-white shadow-sm"
                   onClick={() => navigate('/auth')}
                 >
                   Login

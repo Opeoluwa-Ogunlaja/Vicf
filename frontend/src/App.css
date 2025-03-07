@@ -54,6 +54,15 @@
   .contacts-grid {
     grid-template-columns: repeat(auto-fit, minmax(256px, max-content));
     grid-auto-rows: max-content;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .app-footer {
+    background-image: url('./assets/illustrations/footer-wave.svg');
+    background-position: bottom left;
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-blend-mode: color-dodge;
   }
 
   .stacker {

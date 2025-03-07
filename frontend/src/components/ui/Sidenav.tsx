@@ -1,4 +1,4 @@
-import { ClockRewindIcon } from '@/assets/icons'
+import { ClockRewindIcon, VicfIcon } from '@/assets/icons'
 import { NavigationLink } from './navigation-link'
 import { cn } from '@/lib/utils'
 
@@ -12,6 +12,7 @@ import GroupCard from '../GroupCard'
 import CreateNewButton from '../CreateNewButton'
 import { useManager } from '@/hooks/useManager'
 import { useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const Sidenav = () => {
   const [open, , setOpen] = useSidenav()
@@ -57,7 +58,7 @@ const Sidenav = () => {
       <div className="contents" ref={sidenavRef}>
         <aside
           className={cn(
-            'sidenav grid gap-20 overflow-y-auto scroll-smooth bg-white px-12 py-10 transition-all duration-500 max-lg:pointer-events-auto max-lg:fixed max-lg:inset-x-0 max-lg:left-0 max-lg:top-0 max-lg:z-[50000000000] max-lg:h-full max-lg:w-[300px] max-lg:gap-10 max-lg:justify-self-stretch',
+            'sidenav grid gap-20 overflow-y-auto scroll-smooth bg-white px-8 py-10 transition-all duration-500 max-lg:pointer-events-auto max-lg:fixed max-lg:inset-x-0 max-lg:left-0 max-lg:top-0 max-lg:z-[50000000000] max-lg:h-full max-lg:w-[300px] max-lg:gap-10 max-lg:justify-self-stretch',
             {
               'max-lg:invisible max-lg:max-w-0 max-lg:overflow-hidden max-lg:opacity-0': !open,
               closed: !open,
@@ -65,6 +66,11 @@ const Sidenav = () => {
             }
           )}
         >
+          {!lgScreen && (
+            <Link to="/home" className="text-5xl">
+              <VicfIcon width={'1em'} />
+            </Link>
+          )}
           <div onClick={() => setOpen(false)}>
             <CreateNewButton className="-mb-10 py-6 max-lg:order-2 lg:mt-10" />
           </div>
@@ -105,8 +111,8 @@ const Sidenav = () => {
               </li>
               {isOnHome && (
                 <li>
-                  <NavigationLink to="/save" className="after:!mix-blend-normal">
-                    Organizations
+                  <NavigationLink to="/organisations" className="after:!mix-blend-normal">
+                    Organisations
                   </NavigationLink>
                 </li>
               )}

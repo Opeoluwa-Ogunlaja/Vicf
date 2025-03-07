@@ -6,6 +6,27 @@ import { useManager } from '@/hooks/useManager'
 import { Await, useRouteLoaderData } from 'react-router-dom'
 import { ContactManager } from '@/types/contacts_manager'
 import { Suspense } from 'react'
+import Skeleton from 'react-loading-skeleton'
+
+const SkeletonCon = () => {
+  return (
+    <>
+      {new Array(6).fill(null).map(() => {
+        return (
+          <div
+            className="relative isolate grid min-h-[200px] opacity-40 animate-in"
+            style={{
+              gridTemplateRows: '170px 1fr'
+            }}
+          >
+            <Skeleton height={'100%'} className="rounded-t-md" />
+            <Skeleton count={3} />
+          </div>
+        )
+      })}
+    </>
+  )
+}
 
 const Home = () => {
   const managers = useManager()
@@ -20,7 +41,7 @@ const Home = () => {
         <main className="main-wrapper grid max-lg:grid-cols-1">
           <Sidenav />
           <section className="contacts-grid grid gap-8 px-5 pb-10 pt-16 max-md:justify-center">
-            <Suspense fallback={<>Loading please wait...</>}>
+            <Suspense fallback={<SkeletonCon />}>
               <Await
                 resolve={contacts_manager_promise}
                 errorElement={

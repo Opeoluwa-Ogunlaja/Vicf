@@ -20,7 +20,7 @@ const GroupCard: FC<{
       <div className="flex flex-1 flex-col gap-1 text-left text-sm">
         <h4 className="text-lg font-semibold">{group_name}</h4>
         <p className="flex gap-2 font-medium leading-none text-neutral-400">
-          <UserPlusIcon width={'1em'} /> {contacts_num} Members
+          <UserPlusIcon width={'1em'} /> {contacts_num > 0 ? contacts_num : 'No'} contacts
         </p>
         <p className={cn('mt-2 text-xs text-muted', { 'text-accent': status == 'uploaded' })}>
           {status !== 'uploaded'

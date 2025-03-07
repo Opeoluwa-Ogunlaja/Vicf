@@ -29,6 +29,7 @@ import AdditionalInfoSection from '@/pages/save/AdditionalInfoSection'
 import { additionalInfoValue } from '@/types'
 import { Button } from '../ui/button'
 import { useToggle } from '@/hooks/useToggle'
+import { useContactsUpdate } from '@/hooks/useContactsUpdate'
 
 const EditButton = memo((props: { contact: Partial<IContact>; listing_id: string }) => {
   const { contact } = props
@@ -37,10 +38,21 @@ const EditButton = memo((props: { contact: Partial<IContact>; listing_id: string
     defaultValues: { ...emptyBaseContact, ...contact }
   })
   const [dialogOpen, toggle] = useToggle(false)
+  const { edit } = useContactsUpdate()
 
-  const onSubmit: SubmitHandler<EditContactFormType> = () => {}
-
+  const onSubmit: SubmitHandler<EditContactFormType> = async ({ ...data }) => {
+    if (edit)
+      edit(contact?._id || '', {
+        ...data,
+        _id: contact._id as string,
+        name: formHook.getValues().overwrite
+          ? (formHook.getValues().overwrite_name as string)
+          : (contact.name as string)
+      })
+    toggle()
+  }
   const { name } = contact
+
   return (
     <Dialog open={dialogOpen} onOpenChange={toggle}>
       <DialogTrigger className="-pb-1 border-b-2 border-dotted border-neutral-400 bg-clip-padding text-neutral-600 transition-colors hover:border-neutral-600">
@@ -49,7 +61,7 @@ const EditButton = memo((props: { contact: Partial<IContact>; listing_id: string
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Edit Contact{' '}
+            Edit Contact{' -'}
             <span className="pl-2 text-lg font-normal text-neutral-600 underline underline-offset-4">
               '{name}'
             </span>

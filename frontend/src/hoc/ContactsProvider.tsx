@@ -39,7 +39,6 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
       <ContactsUpdateContext.Provider
         value={{
           add: contact => {
-            console.log(contact)
             if (loggedIn) {
               sendMessage(
                 { listingId: contactManager?._id, ...contact },
@@ -58,9 +57,18 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
             updateContactCount(contactManager?._id as string)
             return queryClient.getQueryData(['contacts', url_id]) as contactsArray
           },
-          edit: (id, data) => {
-            console.log(id)
-            return data
+          edit: async (id, data) => {
+            let contact!: IContact
+            queryClient.setQueryData(['contacts', url_id], (formerProps: IContact[]) => {
+              return formerProps.map(ct => {
+                if (ct._id !== id) return ct
+                else {
+                  contact = { ...ct, ...data }
+                  return contact
+                }
+              })
+            })
+            return contact
           },
           delete: async (listing_id: string, contact_id: string) => {
             function remove() {

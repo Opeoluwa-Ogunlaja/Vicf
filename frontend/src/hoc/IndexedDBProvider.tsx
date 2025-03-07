@@ -2,18 +2,23 @@ import { useEffect, useRef, useState } from 'react'
 
 const IndexedDBProvider = ({ dbName }: { dbName: string }) => {
   const dbRef = useRef<IDBDatabase>()
-  const [error, setErrors] = useState<string | null>(null)
+  const [error, setErrors] = useState<unknown>(null)
 
   useEffect(() => {
     const request = indexedDB.open('MyTestDatabase')
-    request.onerror = () => {
-      setErrors('Could not connect to IndexedDB')
+    const onError = (err: unknown) => {
+      setErrors(err)
     }
-    request.onsuccess = event => {
+    const onSuccess = (event: Event) => {
       dbRef.current = (event?.target as EventTarget & { result: IDBDatabase })!.result
     }
+    request.onerror = onError
+    request.onsuccess = onSuccess
 
-    return () => {}
+    return () => {
+      request.removeEventListener('error', onError)
+      request.removeEventListener('success', onSuccess)
+    }
   }, [dbName])
   return { error, db: dbRef.current }
 }

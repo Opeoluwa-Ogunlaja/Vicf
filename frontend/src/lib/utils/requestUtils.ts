@@ -5,6 +5,7 @@ import { LoginFormType, SignupFormType } from '@/lib/utils/form-schemas'
 import { IUser } from '@/types/user'
 import { ContactManagerEntry } from '@/types/contacts_manager'
 import { IContact } from '@/types'
+import { wait } from './promiseUtils'
 
 const throwError = (error: AxiosError) => {
   throw new CustomAppError(error)
@@ -177,5 +178,14 @@ export const delete_contact = async (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     checkError(error)
+  }
+}
+
+export const testPromise = async () => {
+  await wait(Math.random() * 15000)
+  if (Math.random() < 0.7) {
+    return true
+  } else {
+    return false
   }
 }

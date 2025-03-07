@@ -21,7 +21,7 @@ import {
 import { Input } from './ui/input'
 import { Checkbox } from './ui/checkbox'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
-import { useEffect, useLayoutEffect, useMemo } from 'react'
+import { FocusEvent, FocusEventHandler, useEffect, useLayoutEffect, useMemo } from 'react'
 import { wait } from '@/lib/utils/promiseUtils'
 import AdditionalInfoSection from '@/pages/save/AdditionalInfoSection'
 import { useManager } from '@/hooks/useManager'
@@ -148,6 +148,13 @@ const ContactForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function handleTitleBlur<T extends FocusEventHandler<HTMLInputElement> = any>(fieldBlur: T) {
+    return (e: FocusEvent<HTMLInputElement>) => {
+      fieldBlur(e)
+    }
+  }
+
   return (
     <Form {...formHook}>
       <form className="flex flex-col gap-2" onSubmit={formHook.handleSubmit(onSubmit)}>
@@ -168,7 +175,8 @@ const ContactForm = () => {
                       style={{
                         width: `${field.value.length}ch`
                       }}
-                      {...field}
+                      {...{ ...field, onBlur: undefined }}
+                      onBlur={handleTitleBlur<typeof field.onBlur>(field.onBlur)}
                     />
                   </FormControl>
                 </FormItem>

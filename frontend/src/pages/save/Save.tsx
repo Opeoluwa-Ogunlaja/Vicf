@@ -18,6 +18,7 @@ import { useContacts } from '@/hooks/useContacts'
 import { ContactManager } from '@/types/contacts_manager'
 import { Button } from '@/components/ui/button'
 import LoadingScreen from '@/components/LoadingScreen'
+import { Link } from 'react-router-dom'
 
 const SaveLayout: FC<{ name?: string }> = () => {
   const contacts = useContacts()
@@ -35,9 +36,9 @@ const SaveLayout: FC<{ name?: string }> = () => {
         <div className="flex items-center justify-between self-start">
           <div className="max-md flex gap-4 md:contents">
             <SidenavToggle />
-            <a href="/" className="text-5xl text-secondary">
+            <Link to="/home" className="text-5xl text-secondary">
               <VicfIcon width={'1em'} />
-            </a>
+            </Link>
           </div>
           <NavigationBar />
         </div>
@@ -59,7 +60,7 @@ const SaveLayout: FC<{ name?: string }> = () => {
       </header>
       <main className="main-wrapper grid max-lg:grid-cols-1">
         <Sidenav />
-        <section className="my-4 px-8">
+        <section className="px-8">
           <div className="form-container pointer-events-none absolute inset-0 z-50 grid h-[100dvh] w-full grid-rows-12 place-content-center place-items-center">
             <div className="pointer-events-auto static z-[500] mx-auto mt-80 w-[520px] origin-top place-self-start rounded-xl bg-white px-12 py-5 shadow-neutral-300 drop-shadow-lg transition-all max-lg:mt-[19.5rem] max-sm:mt-72 max-sm:w-10/12 max-sm:min-w-[300px] max-sm:px-8">
               <Suspense fallback={<>Loading</>}>
@@ -72,7 +73,7 @@ const SaveLayout: FC<{ name?: string }> = () => {
           <ContactsTable
             url_id={contacts.url_id || ''}
             contacts={contacts.contacts}
-            className="mt-24 max-sm:mt-4"
+            className="mt-16 max-sm:mt-4"
           />
           <div className="mt-10 border border-dashed border-primary p-2 lg:max-w-max">
             <h3 className="font-medium">Export Contacts As:</h3>

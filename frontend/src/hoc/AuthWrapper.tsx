@@ -22,7 +22,7 @@ const AuthWrapper = () => {
             </main>
           }
         >
-          {() => <Navigate replace to={'/'} />}
+          {() => <Navigate replace to={'/home'} />}
         </Await>
       </Suspense>
     </>
