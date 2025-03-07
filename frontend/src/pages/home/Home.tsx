@@ -7,6 +7,7 @@ import { Await, useRouteLoaderData } from 'react-router-dom'
 import { ContactManager } from '@/types/contacts_manager'
 import { Suspense } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import { AnnouncementIcon } from '@/assets/icons'
 
 const SkeletonCon = () => {
   return (
@@ -37,39 +38,56 @@ const Home = () => {
   return (
     <>
       <div className="contents h-full w-full overflow-hidden animate-in">
+        <aside className="space-x-2 bg-secondary py-2 text-center font-medium max-md:text-xs">
+          <AnnouncementIcon className="inline-block w-5 align-middle max-md:w-3" />
+          <p className="inline-block">Tip: Use the settings page to customise your display</p>
+        </aside>
         <NavigationBar />
         <main className="main-wrapper grid max-lg:grid-cols-1">
           <Sidenav />
-          <section className="contacts-grid grid gap-8 px-5 pb-10 pt-16 max-md:justify-center">
-            <Suspense fallback={<SkeletonCon />}>
-              <Await
-                resolve={contacts_manager_promise}
-                errorElement={
-                  managers.length > 0 ? (
-                    [...managers]
-                      .reverse()
-                      .map(manager => <BlockCard manager={manager} key={manager._id} />)
-                  ) : (
-                    <p className="font-medium text-neutral-400">You don't have any listinga</p>
-                  )
-                }
-              >
-                {() => {
-                  return (
-                    <>
-                      {managers.length > 0 ? (
-                        [...managers]
-                          .reverse()
-                          .map(manager => <BlockCard manager={manager} key={manager._id} />)
-                      ) : (
-                        <p className="font-medium text-neutral-400">You don't have any listinga</p>
-                      )}
-                    </>
-                  )
-                }}
-              </Await>
-            </Suspense>
-          </section>
+          <div
+            className="grid pt-16"
+            style={{
+              gridAutoRows: 'max-content'
+            }}
+          >
+            <h3 className="mb-8 text-2xl font-medium">Recent Listings</h3>
+            <section className="contacts-grid grid gap-8 pb-10 max-md:justify-center">
+              <Suspense fallback={<SkeletonCon />}>
+                <Await
+                  resolve={contacts_manager_promise}
+                  errorElement={
+                    managers.length > 0 ? (
+                      [...managers]
+                        .reverse()
+                        .map(manager => <BlockCard manager={manager} key={manager._id} />)
+                    ) : (
+                      <p className="font-medium text-neutral-400">You don't have any listinga</p>
+                    )
+                  }
+                >
+                  {() => {
+                    return (
+                      <>
+                        {managers.length > 0 ? (
+                          [...managers]
+                            .reverse()
+                            .map(manager => <BlockCard manager={manager} key={manager._id} />)
+                        ) : (
+                          <p className="font-medium text-neutral-400">
+                            You don't have any listinga
+                          </p>
+                        )}
+                      </>
+                    )
+                  }}
+                </Await>
+              </Suspense>
+            </section>
+            <section className="mt-10">
+              <h3 className='className="mb-8 font-medium" text-2xl'>Organisations</h3>
+            </section>
+          </div>
         </main>
         <Footer />
       </div>

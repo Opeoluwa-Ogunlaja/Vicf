@@ -5,7 +5,6 @@ import { BellIcon, VicfIcon } from '@/assets/icons'
 import { cn } from '@/lib/utils'
 import { useUser } from '@/hooks/useUser'
 import { useNavigate } from 'react-router-dom'
-import CreateNewButton from '@/components/CreateNewButton'
 import { Link } from 'react-router-dom'
 
 const NavigationBar = () => {
@@ -29,9 +28,6 @@ const NavigationBar = () => {
               <a href="">
                 <BellIcon className={navIconClass} />
               </a>
-            </li>
-            <li className="inline-flex max-md:hidden">
-              <CreateNewButton />
             </li>
             <li>
               {loggedIn ? (

@@ -22,6 +22,7 @@ import { useManager } from '@/hooks/useManager'
 import { useToast } from '@/hooks/use-toast'
 import { emptyBaseContactManager } from '@/lib/consts'
 import { useThrottleAsync } from '@/hooks/useThrottleAsync'
+import { PlusIcon } from '@radix-ui/react-icons'
 
 const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const [isProcessing, toggle] = useToggle(false)
@@ -89,7 +90,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
           className={cx(className)}
           onClick={() => (isOnSave ? null : handleNewListing())}
         >
-          Create New Listing {isProcessing && <Loader className="w-3" />}
+          <PlusIcon /> Create New Listing {isProcessing && <Loader className="w-3" />}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
