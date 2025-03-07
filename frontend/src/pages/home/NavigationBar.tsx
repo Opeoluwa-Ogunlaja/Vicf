@@ -34,7 +34,8 @@ const NavigationBar = () => {
                 <NavigationCard />
               ) : (
                 <Button
-                  className="bg-blue-500 px-8 text-white shadow-sm"
+                  variant={'secondary'}
+                  className="px-8 shadow-sm"
                   onClick={() => navigate('/auth')}
                 >
                   Login

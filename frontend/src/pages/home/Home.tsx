@@ -75,7 +75,7 @@ const Home = () => {
                             .map(manager => <BlockCard manager={manager} key={manager._id} />)
                         ) : (
                           <p className="font-medium text-neutral-400">
-                            You don't have any listinga
+                            You don't have any listings
                           </p>
                         )}
                       </>
@@ -85,7 +85,8 @@ const Home = () => {
               </Suspense>
             </section>
             <section className="mt-10">
-              <h3 className='className="mb-8 font-medium" text-2xl'>Organisations</h3>
+              <h3 className="mb-8 text-2xl font-medium">Organisations</h3>
+              <p className="font-medium text-neutral-400">You don't belong to any organisations</p>
             </section>
           </div>
         </main>
