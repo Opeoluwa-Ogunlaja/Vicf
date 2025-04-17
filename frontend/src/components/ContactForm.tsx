@@ -63,8 +63,8 @@ const ContactForm = () => {
   })
   const addContactMutation = useMutation({
     mutationKey: ['contacts', contactManager?.url_id, 'add'],
-    mutationFn: () =>
-      contactTasks.runTask(async (data: ContactFormType) => {
+    mutationFn: (data: ContactFormType) =>
+      contactTasks.runTask(async () => {
         if (addContact)
           addContact({
             additional_information: data.additional_information,
