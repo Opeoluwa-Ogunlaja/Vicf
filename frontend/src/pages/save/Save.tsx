@@ -12,7 +12,7 @@ import SidenavToggle from '@/components/SidenavToggle'
 import Footer from '@/components/Footer'
 import { useUser } from '@/hooks/useUser'
 import NavigationBar from './NavigationBar'
-import { Await, useParams, Navigate, useRouteLoaderData, useSearchParams } from 'react-router-dom'
+import { Await, useParams, useRouteLoaderData, useSearchParams } from 'react-router-dom'
 import { FC, ReactNode, Suspense } from 'react'
 import { useContacts } from '@/hooks/useContacts'
 import { ContactManager } from '@/types/contacts_manager'
@@ -24,6 +24,23 @@ const SaveLayout: FC<{ name?: string }> = () => {
   const contacts = useContacts()
   const { contacts_manager_promise } = useRouteLoaderData('root') as {
     contacts_manager_promise: Promise<ContactManager | null>
+  }
+
+  const exportJSON = async () => {
+    try {
+      const all_contacts_export = contacts.contacts
+      const json_contacts = JSON.stringify(all_contacts_export, null, 2)
+      const blob = new Blob([json_contacts], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.download = `${contacts.url_id}.json`
+      link.href = url
+      link.click()
+      link.remove()
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -79,7 +96,9 @@ const SaveLayout: FC<{ name?: string }> = () => {
             <h3 className="font-medium">Export Contacts As:</h3>
             <div className="mt-2 flex flex-1 flex-wrap gap-x-2 gap-y-3 max-lg:flex-col">
               <Button variant={'outline'}>Virtual Contact File (.vcf)</Button>
-              <Button variant={'outline'}>JSON (.json)</Button>
+              <Button variant={'outline'} onClick={exportJSON}>
+                JSON (.json)
+              </Button>
               <Button variant={'outline'}>CSV (.csv)</Button>
               <Button className="bg-green-500 text-white">Excel Document (.xlsx)</Button>
             </div>
@@ -108,7 +127,7 @@ const SaveHOC: FC<{ children: ReactNode }> = ({ children }) => {
           const isInManager = Boolean(contactManager)
           const isNew = params[0].has('new')
           if (!isNew) {
-            if (!isInManager) return <Navigate to={'/home'} />
+            if (!isInManager) console.log()
           }
           return children
         }}

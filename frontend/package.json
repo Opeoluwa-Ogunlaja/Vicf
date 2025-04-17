@@ -31,6 +31,8 @@
     "bson": "^6.10.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "dexie": "^4.0.11",
+    "dexie-react-hooks": "^1.1.7",
     "immer": "^10.1.1",
     "libphonenumber-js": "^1.11.14",
     "nanoid": "^5.0.9",

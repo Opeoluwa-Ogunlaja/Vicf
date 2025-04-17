@@ -35,6 +35,9 @@ import { useToast } from '@/hooks/use-toast'
 import { useUser } from '@/hooks/useUser'
 import { emptyBaseContact } from '@/lib/consts'
 import { useMutation } from '@tanstack/react-query'
+import { debounceFn } from '@/lib/utils/throttle'
+import { ContactManagerEntry } from '@/types/contacts_manager'
+import { contactTasks } from '@/feature/contactTaskQueues'
 
 const ContactForm = () => {
   const manager = useManager()
@@ -49,7 +52,31 @@ const ContactForm = () => {
   }, [manager, contacts.url_id])
   const isInManager = Boolean(contactManager)
 
-  const { updateBackup, createManager } = useManagerActions()
+  const { updateBackup, createManager, updateListingName } = useManagerActions()
+  const updateNameMutation = useMutation({
+    mutationKey: ['listing_name', contactManager?.url_id],
+    mutationFn: (data: {
+      id: string
+      name: Parameters<typeof updateListingName>[1]
+      upstream?: boolean
+    }) => contactTasks.runTask(() => updateListingName(data.id, data.name, data.upstream))
+  })
+  const addContactMutation = useMutation({
+    mutationKey: ['contacts', contactManager?.url_id, 'add'],
+    mutationFn: () =>
+      contactTasks.runTask(async (data: ContactFormType) => {
+        if (addContact)
+          addContact({
+            additional_information: data.additional_information,
+            number: data.number,
+            _id: generateMongoId(),
+            name: !data.overwrite
+              ? slugifiedId(data.name, contacts.contacts.length)
+              : (data.overwrite_name as string),
+            email: data?.email
+          })
+      })
+  })
   const updateUserBackupMutation = useMutation({
     mutationKey: ['updated_contacts', contacts.url_id],
     mutationFn: (data: {
@@ -110,17 +137,8 @@ const ContactForm = () => {
     [contactManager, formHook, user.loggedIn, contacts]
   )
 
-  const onSubmit: SubmitHandler<ContactFormType> = ({ ...data }) => {
-    if (addContact)
-      addContact({
-        additional_information: data.additional_information,
-        number: data.number,
-        _id: generateMongoId(),
-        name: !data.overwrite
-          ? slugifiedId(data.name, contacts.contacts.length)
-          : (data.overwrite_name as string),
-        email: data?.email
-      })
+  const onSubmit: SubmitHandler<ContactFormType> = async ({ ...data }) => {
+    await addContactMutation.mutateAsync(data)
     toast({ title: 'Contact Added' })
     formHook.reset({
       email: '',
@@ -148,11 +166,32 @@ const ContactForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const listing_name = formHook.getValues().name
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function handleTitleBlur<T extends FocusEventHandler<HTMLInputElement> = any>(fieldBlur: T) {
-    return (e: FocusEvent<HTMLInputElement>) => {
+  const handleTitleBlur = function <T extends FocusEventHandler<HTMLInputElement> = any>(
+    fieldBlur: T
+  ) {
+    return debounceFn((e: FocusEvent<HTMLInputElement>) => {
       fieldBlur(e)
-    }
+      updateNameMutation
+        .mutateAsync({
+          id: contactManager?._id as string,
+          name: listing_name,
+          upstream: user.loggedIn
+        })
+        .then(
+          (data: unknown) => {
+            formHook.setValue('name', (data as ContactManagerEntry).name)
+          },
+          () => {
+            toast({
+              variant: 'destructive',
+              title: 'Update listing name',
+              description: 'Unable to update listing name at the moment'
+            })
+          }
+        )
+    }, 5000)
   }
 
   return (
@@ -176,14 +215,14 @@ const ContactForm = () => {
                         width: `${field.value.length}ch`
                       }}
                       {...{ ...field, onBlur: undefined }}
-                      onBlur={handleTitleBlur<typeof field.onBlur>(field.onBlur)}
+                      onBlur={() => handleTitleBlur<typeof field.onBlur>(field.onBlur)}
                     />
                   </FormControl>
                 </FormItem>
               )
             }}
           />
-          <p className="-mt-3 text-sm font-bold text-neutral-400">
+          <p className="-mt-3 text-sm font-medium text-neutral-400">
             Click "Add Contact" and Fill the form below to add people to your collection
           </p>
         </section>

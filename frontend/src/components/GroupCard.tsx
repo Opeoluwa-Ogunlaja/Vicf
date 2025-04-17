@@ -14,7 +14,7 @@ const GroupCard: FC<{
     <Link
       to={`/save/${url_id}`}
       replace={true}
-      className="flex cursor-pointer items-center space-x-4 rounded-2xl border border-neutral-100 bg-white p-3 transition-transform hover:scale-105 sm:p-4"
+      className="flex cursor-pointer items-center space-x-4 rounded-2xl border border-neutral-100 bg-white p-3 shadow-sm transition-transform hover:scale-105 sm:p-4"
     >
       <PhonePlusIcon className="w-5 self-start pt-2 drop-shadow-md" />
       <div className="flex flex-1 flex-col gap-1 text-left text-sm">
@@ -22,9 +22,9 @@ const GroupCard: FC<{
         <p className="flex gap-2 font-medium leading-none text-neutral-400">
           <UserPlusIcon width={'1em'} /> {contacts_num > 0 ? contacts_num : 'No'} contacts
         </p>
-        <p className={cn('mt-2 text-xs text-muted', { 'text-accent': status == 'uploaded' })}>
+        <p className={cn('mt-2 text-[10px] text-muted', { 'text-accent': status == 'uploaded' })}>
           {status !== 'uploaded'
-            ? 'Contacts not exported or saved to drive'
+            ? '*Contacts not exported or saved to drive'
             : 'Contacts saved to drive'}
         </p>
       </div>

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2023"],
+    "target": "ESNext",
+    "lib": ["ES2023", "webworker"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -16,8 +16,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["vite.config.ts"]
 }

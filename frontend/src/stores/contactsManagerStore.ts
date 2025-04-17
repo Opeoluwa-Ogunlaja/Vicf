@@ -6,17 +6,7 @@ import {
 import { ContactManager, ContactManagerEntry } from '@/types/contacts_manager'
 import { create } from 'zustand'
 
-// import { produce, Draft } from 'immer'
 export const useContactManagerStore = create<ContactManager>()(set => {
-  // const setState = async <T extends ContactManager = ReturnType<typeof get>>(
-  //   fn: (state: Draft<T>) => void,
-  //   get: () => T,
-  //   _set: typeof set
-  // ): Promise<void> => {
-  //   const currentState = get()
-  //   const newState = await produce(currentState, fn)
-  //   _set(newState as T)
-  // }
   return {
     manager: [],
     actions: {

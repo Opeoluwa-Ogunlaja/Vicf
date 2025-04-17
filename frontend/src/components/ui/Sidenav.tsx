@@ -72,14 +72,14 @@ const Sidenav = () => {
             </Link>
           )}
           <div onClick={() => setOpen(false)}>
-            <CreateNewButton className="-mb-10 py-6 max-lg:order-2 lg:mt-10" />
+            <CreateNewButton className="-mb-10 py-6 max-lg:order-2 lg:mt-4" />
           </div>
 
           <section className="flex flex-col max-lg:order-3 max-lg:mt-8">
             <h3 className="mb-4 border-b border-b-neutral-200 pb-2 text-xl font-medium max-lg:text-lg">
               Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
-            <ul className="space-y-2">
+            <ul className="mt-2 space-y-2">
               {[...manager.slice(-2)].map(entry => {
                 return (
                   <li key={entry._id}>
@@ -102,11 +102,6 @@ const Sidenav = () => {
               <li>
                 <NavigationLink to="/home" className="after:!mix-blend-normal">
                   Home
-                </NavigationLink>
-              </li>
-              <li>
-                <NavigationLink to="/dashboard" className="after:!mix-blend-normal">
-                  Dashboard
                 </NavigationLink>
               </li>
               {isOnHome && (

@@ -52,7 +52,7 @@
   }
 
   .contacts-grid {
-    grid-template-columns: repeat(auto-fit, minmax(256px, max-content));
+    grid-template-columns: repeat(auto-fit, minmax(224px, max-content));
     grid-auto-rows: max-content;
     transition: all 0.2s ease-in-out;
   }

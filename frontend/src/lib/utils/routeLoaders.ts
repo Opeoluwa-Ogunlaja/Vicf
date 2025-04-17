@@ -3,6 +3,7 @@ import { queryClient } from '@/queryClient'
 import { get_contacts_manager, get_profile } from './requestUtils'
 import { useContactManagerStore } from '@/stores/contactsManagerStore'
 import { ContactManagerEntry } from '@/types/contacts_manager'
+// import { db } from '@/stores/dexie/db'
 
 export const rootLoader = (async () => {
   let userPromise!: Promise<unknown>
@@ -28,7 +29,18 @@ export const rootLoader = (async () => {
   try {
     const fetching_promise = queryClient.fetchQuery({
       queryKey: ['contacts_manager'],
-      queryFn: get_contacts_manager,
+      queryFn: async () => {
+        const server_managers = await get_contacts_manager()
+        // const current_managers = await db.managers.toArray()
+        // db.managers.bulkAdd(
+        //   server_managers?.filter(item => {
+        //     return current_managers.findIndex(man => man._id == item._id) < 1
+        //   }) as ContactManagerEntry[]
+        // )
+
+        // return await db.managers.toArray()
+        return server_managers
+      },
       staleTime: 0
     })
     fetching_promise.then(contacts_manager => {

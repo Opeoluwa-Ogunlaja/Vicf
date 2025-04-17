@@ -38,14 +38,14 @@ export const MultiBackgroundPatterns = ({
   count = 2,
   source
 }: {
-  className: string
+  className?: string
   count: number
   source: string
 }) => {
   return Array(count)
     .fill(0)
     .map((...args: unknown[]) => (
-      <BackgroundPattern className={className} source={source} key={`pattern-${args[1]}`} />
+      <BackgroundPattern className={className ?? ''} source={source} key={`pattern-${args[1]}`} />
     ))
 }
 

@@ -12,13 +12,14 @@ import { AnnouncementIcon } from '@/assets/icons'
 const SkeletonCon = () => {
   return (
     <>
-      {new Array(6).fill(null).map(() => {
+      {new Array(6).fill(null).map((item, i) => {
         return (
           <div
             className="relative isolate grid min-h-[200px] opacity-40 animate-in"
             style={{
               gridTemplateRows: '170px 1fr'
             }}
+            key={'skeCon' + i}
           >
             <Skeleton height={'100%'} className="rounded-t-md" />
             <Skeleton count={3} />
@@ -38,7 +39,7 @@ const Home = () => {
   return (
     <>
       <div className="contents h-full w-full overflow-hidden animate-in">
-        <aside className="space-x-2 bg-secondary py-2 text-center font-medium max-md:text-xs">
+        <aside className="space-x-2 bg-neutral-600 py-2 text-center text-sm text-white max-md:text-xs">
           <AnnouncementIcon className="inline-block w-5 align-middle max-md:w-3" />
           <p className="inline-block">Tip: Use the settings page to customise your display</p>
         </aside>
@@ -46,12 +47,12 @@ const Home = () => {
         <main className="main-wrapper grid max-lg:grid-cols-1">
           <Sidenav />
           <div
-            className="grid pt-16"
+            className="grid px-6 pt-16 max-md:px-8"
             style={{
               gridAutoRows: 'max-content'
             }}
           >
-            <h3 className="mb-8 text-2xl font-medium">Recent Listings</h3>
+            <h3 className="mb-5 text-lg font-medium">Recent Listings</h3>
             <section className="contacts-grid grid gap-8 pb-10 max-md:justify-center">
               <Suspense fallback={<SkeletonCon />}>
                 <Await
@@ -74,9 +75,7 @@ const Home = () => {
                             .reverse()
                             .map(manager => <BlockCard manager={manager} key={manager._id} />)
                         ) : (
-                          <p className="font-medium text-neutral-400">
-                            You don't have any listings
-                          </p>
+                          <p className="text-neutral-400">You don't have any listings</p>
                         )}
                       </>
                     )
@@ -85,8 +84,8 @@ const Home = () => {
               </Suspense>
             </section>
             <section className="mt-10">
-              <h3 className="mb-8 text-2xl font-medium">Organisations</h3>
-              <p className="font-medium text-neutral-400">You don't belong to any organisations</p>
+              <h3 className="mb-5 text-lg font-medium">Organisations</h3>
+              <p className="text-neutral-400">You don't belong to any organisations</p>
             </section>
           </div>
         </main>
