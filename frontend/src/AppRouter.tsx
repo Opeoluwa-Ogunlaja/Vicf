@@ -11,66 +11,75 @@ import { saveLoader } from './pages/save/saveLoaders'
 import { redirect } from 'react-router-dom'
 import { generateListingId } from './lib/utils/idUtils'
 import Organisations from './pages/organisations/Organisations'
+import { useOnline } from './hooks/useOnline'
 
-const router = createBrowserRouter([
-  {
-    path: '/auth',
-    loader: authLoader,
-    element: <AuthWrapper />,
-    id: 'auth',
-    children: [
+const router = (onlineStatus: boolean) =>
+  createBrowserRouter(
+    [
       {
-        path: 'login',
-        element: <Login />
-      },
-      {
-        path: 'signup',
-        element: <Signup />
-      },
-      {
-        path: '',
-        element: <Login />
-      }
-    ]
-  },
-  {
-    path: '/',
-    element: <Layout />,
-    id: 'root',
-    loader: rootLoader,
-    children: [
-      {
-        path: 'save',
+        path: '/auth',
+        loader: authLoader(onlineStatus),
+        element: <AuthWrapper />,
+        id: 'auth',
         children: [
           {
-            path: ':id',
-            loader: saveLoader,
-            element: <Save key={window.location.pathname} />
+            path: 'login',
+            element: <Login />
+          },
+          {
+            path: 'signup',
+            element: <Signup />
           },
           {
             path: '',
-            loader: () => redirect(`/save/${generateListingId()}?new=true`)
+            element: <Login />
           }
         ]
       },
       {
-        path: 'organisations',
-        element: <Organisations />
+        path: '/',
+        element: <Layout />,
+        id: 'root',
+        loader: rootLoader(onlineStatus),
+        shouldRevalidate: () => {
+          return true
+        },
+        children: [
+          {
+            path: 'save',
+            children: [
+              {
+                path: ':id',
+                loader: saveLoader,
+                element: <Save key={window.location.pathname} />
+              },
+              {
+                path: '',
+                loader: () => redirect(`/save/${generateListingId()}?new=true`)
+              }
+            ]
+          },
+          {
+            path: 'organisations',
+            element: <Organisations />
+          },
+          {
+            path: 'home',
+            element: <Home />
+          }
+        ]
       },
       {
-        path: 'home',
-        element: <Home />
+        path: '*',
+        element: <>How you take dey loss for this level</>
       }
-    ]
-  },
-  {
-    path: '*',
-    element: <>How you take dey loss for this level</>
-  }
-])
+    ],
+    {}
+  )
 
 const AppRouter: FC = () => {
-  return <RouterProvider router={router} />
+  const { isOnline } = useOnline()
+  return <RouterProvider router={router(isOnline)} />
 }
 
 export default AppRouter

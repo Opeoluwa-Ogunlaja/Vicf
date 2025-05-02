@@ -60,7 +60,7 @@
   .app-footer {
     background-image: url('./assets/illustrations/footer-wave.svg');
     background-position: bottom left;
-    background-size: auto;
+    background-size: 100%;
     background-repeat: no-repeat;
     background-blend-mode: color-dodge;
   }

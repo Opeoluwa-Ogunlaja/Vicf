@@ -4,18 +4,11 @@ import { useUserUpdate } from '@/hooks/useUserUpdate'
 import { IUser, PartialUser } from '@/types/user'
 import { Suspense, FC, useLayoutEffect, useRef } from 'react'
 import { Await, Outlet, useRouteLoaderData } from 'react-router-dom'
-import SocketProvider from './SocketProvider'
 
 const LayoutContent: FC<{ user?: PartialUser }> = () => {
   const { isPending } = useUser()
 
-  return !isPending ? (
-    <SocketProvider>
-      <Outlet />
-    </SocketProvider>
-  ) : (
-    <LoadingScreen />
-  )
+  return !isPending ? <Outlet /> : <LoadingScreen />
   // return <Outlet />
 }
 

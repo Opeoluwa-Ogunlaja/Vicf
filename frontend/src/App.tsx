@@ -7,19 +7,23 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import { GClient } from './config'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { Toaster } from './components/ui/toaster'
+import OnlineProvider from './hoc/OnlineProvider'
+import SocketProvider from './hoc/SocketProvider'
 
 const App: FC = () => {
   return (
-    <>
-      <GoogleOAuthProvider clientId={GClient}>
-        <UserProvider>
-          <SidenavProvider>
-            <AppRouter />
-            <Toaster />
-          </SidenavProvider>
-        </UserProvider>
-      </GoogleOAuthProvider>
-    </>
+    <GoogleOAuthProvider clientId={GClient}>
+      <UserProvider>
+        <SocketProvider>
+          <OnlineProvider>
+            <SidenavProvider>
+              <AppRouter />
+              <Toaster />
+            </SidenavProvider>
+          </OnlineProvider>
+        </SocketProvider>
+      </UserProvider>
+    </GoogleOAuthProvider>
   )
 }
 

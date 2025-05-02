@@ -31,7 +31,6 @@ export class TaskQueue {
       const taskWrapper = () => {
         const taskPromise = task()
         taskPromise.then(data => {
-          console.log(data)
           res(data)
         }, rej)
         return taskPromise

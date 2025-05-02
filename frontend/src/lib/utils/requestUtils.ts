@@ -152,11 +152,7 @@ export const get_contacts = async (listing_id: string): Promise<IContact[] | und
   try {
     const newUser = await axiosInstance.get(`/contacts/${listing_id}/contacts`)
 
-    return (
-      newUser.data.data.flatMap((contact: { contacts: IContact }) => {
-        return contact.contacts
-      }) || []
-    )
+    return newUser.data.data || []
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     checkError(error)

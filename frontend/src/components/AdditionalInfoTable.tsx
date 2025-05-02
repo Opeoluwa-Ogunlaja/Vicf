@@ -1,8 +1,13 @@
 import { FC } from 'react'
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table'
 import { additionalInfoValue } from '@/types'
+import DeleteInfoButton from './table-components/DeleteInfoButton'
 
-const AdditionalInfoTable: FC<{ additionalInfos: additionalInfoValue }> = ({ additionalInfos }) => {
+const AdditionalInfoTable: FC<{
+  additionalInfos: additionalInfoValue
+  contact_Id?: string
+  listing_Id?: string
+}> = ({ additionalInfos, contact_Id, listing_Id }) => {
   return (
     <Table className="border-none">
       <TableHeader>
@@ -19,7 +24,9 @@ const AdditionalInfoTable: FC<{ additionalInfos: additionalInfoValue }> = ({ add
               <TableRow className="transition-colors hover:bg-slate-100" key={info[0] + index}>
                 <TableCell>{info[0]}</TableCell>
                 <TableCell>{info[1]}</TableCell>
-                <TableCell>Icon</TableCell>
+                <TableCell className="text-center">
+                  <DeleteInfoButton listing_id={listing_Id || ''} contact_id={contact_Id || ''} />
+                </TableCell>
               </TableRow>
             )
           })}
