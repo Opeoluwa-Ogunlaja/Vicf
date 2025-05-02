@@ -5,7 +5,7 @@ import { useContactManagerStore } from '@/stores/contactsManagerStore'
 import { ContactManagerEntry } from '@/types/contacts_manager'
 import { db } from '@/stores/dexie/db'
 
-export const rootLoader = (onlineStatus: boolean) =>
+export const rootLoader = () =>
   (async () => {
     let userPromise!: Promise<unknown>
     userPromise = Promise.resolve(null)

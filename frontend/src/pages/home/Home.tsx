@@ -12,7 +12,7 @@ import { AnnouncementIcon } from '@/assets/icons'
 const SkeletonCon = () => {
   return (
     <>
-      {new Array(6).fill(null).map((item, i) => {
+      {new Array(6).fill(null).map((...[, i]) => {
         return (
           <div
             className="relative isolate grid min-h-[200px] opacity-40 animate-in"
