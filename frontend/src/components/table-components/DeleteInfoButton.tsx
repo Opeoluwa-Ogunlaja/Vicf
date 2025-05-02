@@ -9,7 +9,7 @@ import { useMutation } from '@tanstack/react-query'
 import Loader from '../ui/loader'
 
 const DeleteInfoButton: FC<{ contact_id: string; listing_id: string }> = props => {
-  const { _id, number } = props.contact
+  const _id = props.contact_id
   const listing_id = props.listing_id
   const [open, , set] = useToggle(false)
   const { delete: deleteContact } = useContactsUpdate()
@@ -25,7 +25,7 @@ const DeleteInfoButton: FC<{ contact_id: string; listing_id: string }> = props =
       }
     },
     onSuccess() {
-      toast({ title: 'Contact Deleted', description: `Deleted ${number}` })
+      toast({ title: 'Contact Deleted', description: `Deleted Contact` })
     },
     retry: 0
   })
@@ -44,7 +44,7 @@ const DeleteInfoButton: FC<{ contact_id: string; listing_id: string }> = props =
         <p className="text-neutral-500">
           Are you <strong className="text-neutral-600">sure</strong> you want to{' '}
           <strong className="text-destructive">delete</strong> the contact entry for{' '}
-          <strong className="text-primary">{number}</strong>?
+          <strong className="text-primary">{_id}</strong>?
         </p>
         <div className="flex justify-end gap-2 place-self-end py-2">
           <Button
@@ -58,7 +58,7 @@ const DeleteInfoButton: FC<{ contact_id: string; listing_id: string }> = props =
             variant={'destructive'}
             className="text-white"
             onClick={() => {
-              toast({ title: `Delete ${number}`, description: 'deleting...' })
+              toast({ title: `Delete ${_id}`, description: 'deleting...' })
               deleteMutation.mutate()
             }}
           >
