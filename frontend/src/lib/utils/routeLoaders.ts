@@ -5,7 +5,8 @@ import { useContactManagerStore } from '@/stores/contactsManagerStore'
 import { ContactManagerEntry } from '@/types/contacts_manager'
 import { db } from '@/stores/dexie/db'
 
-export const rootLoader = () =>
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+export const rootLoader = (_onlineStatus: boolean) =>
   (async () => {
     let userPromise!: Promise<unknown>
     userPromise = Promise.resolve(null)
