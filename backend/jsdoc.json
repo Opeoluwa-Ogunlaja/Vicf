@@ -1,0 +1,10 @@
+{
+  "source": {
+    "include": ["dist"],
+    "includePattern": ".+\\.ts$",
+    "excludePattern": "(node_module|docs)"
+  },
+  "opts": {
+    "destination": "./docs"
+  }
+}
