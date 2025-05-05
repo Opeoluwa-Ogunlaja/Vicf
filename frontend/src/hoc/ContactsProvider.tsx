@@ -3,9 +3,11 @@ import { ContactsUpdateContext } from '@/contexts/ContactsUpdateContext'
 import { useToast } from '@/hooks/use-toast'
 import { useManager } from '@/hooks/useManager'
 import { useManagerActions } from '@/hooks/useManagerActions'
+import { useOnline } from '@/hooks/useOnline'
 import { useSocketActions } from '@/hooks/useSocketActions'
 import { useUser } from '@/hooks/useUser'
 import { delete_contact, get_contacts } from '@/lib/utils/requestUtils'
+import { db } from '@/stores/dexie/db'
 import { contactsArray, IContact } from '@/types/contacts'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { FC, ReactNode } from 'react'
@@ -16,6 +18,7 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
   const { loggedIn } = useUser()
   const manager = useManager()
   const { updateContactCount } = useManagerActions()
+  const { isOnline } = useOnline()
 
   const contactManager = manager.find(mngr => mngr.url_id == url_id)
 
@@ -39,7 +42,7 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
       <ContactsUpdateContext.Provider
         value={{
           add: contact => {
-            if (loggedIn) {
+            if (loggedIn && isOnline) {
               sendMessage(
                 { listingId: contactManager?._id, ...contact },
                 'add-contacts',
@@ -51,6 +54,8 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
                 }
               )
             }
+
+            db.contacts.add(contact as Required<typeof contact>).then(console.log)
             queryClient.setQueryData(['contacts', url_id], (formerProps: IContact[]) => {
               return [...formerProps, contact]
             })

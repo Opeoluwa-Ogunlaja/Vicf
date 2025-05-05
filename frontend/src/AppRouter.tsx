@@ -12,6 +12,7 @@ import { redirect } from 'react-router-dom'
 import { generateListingId } from './lib/utils/idUtils'
 import Organisations from './pages/organisations/Organisations'
 import { useOnline } from './hooks/useOnline'
+import Landing from './pages/landing/Landing'
 
 const router = (onlineStatus: boolean) =>
   createBrowserRouter(
@@ -66,6 +67,10 @@ const router = (onlineStatus: boolean) =>
           {
             path: 'home',
             element: <Home />
+          },
+          {
+            path: '',
+            element: <Landing />
           }
         ]
       },

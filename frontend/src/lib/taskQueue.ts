@@ -1,28 +1,67 @@
+import { nanoid } from 'nanoid'
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type Task<T = any> = (...args: any[]) => Promise<T>
 export class TaskQueue {
   queue: Task[]
-  resolvers: any[]
-  constructor(concurrency: number = 10) {
+  resolvers: Array<[resolve: (task: Task) => void, reject: (err: any) => void]>
+  paused: boolean
+  concurrency: number
+  activeConsumers: number
+  queueId: string
+  constructor(concurrency: number = 10, startPaused: boolean = false) {
     this.queue = []
     this.resolvers = []
-
+    this.paused = startPaused
+    this.concurrency = concurrency
+    this.activeConsumers = 0
+    this.queueId = nanoid()
     for (let i = 0; i < concurrency; i++) {
+      this.activeConsumers++
       this.consume()
     }
   }
 
+  pause() {
+    this.paused = true
+  }
+
+  resume() {
+    this.paused = false
+  }
+
   async consume() {
     while (true) {
-      const task = await this.getTask()
-      await task()
+      if (this.paused) {
+        this.activeConsumers++
+        await this.waitWhilePaused()
+      }
+
+      // console.log(`omo ${this.queueId}`)
+
+      try {
+        const task = await this.getTask()
+        await task()
+
+        // eslint-disable-next-line no-empty, no-unused-vars, @typescript-eslint/no-unused-vars
+      } catch (error: any) {}
     }
   }
 
+  private waitWhilePaused() {
+    return new Promise<void>(resolve => {
+      const check = () => {
+        if (!this.paused) return resolve()
+        setTimeout(check, 10) // poll until resumed
+      }
+      check()
+    })
+  }
+
   getTask(): Promise<Task> {
-    return new Promise(res => {
-      if (this.queue.length > 0) return res(this.queue.shift()!)
-      this.resolvers.push(res)
+    return new Promise<Task>((res, rej) => {
+      if (this.queue.length > 0 && !this.paused) return res(this.queue.shift()!)
+      this.resolvers.push([res, rej])
     })
   }
 
@@ -35,7 +74,10 @@ export class TaskQueue {
         }, rej)
         return taskPromise
       }
-      if (this.resolvers.length > 0) return this.resolvers.shift()(taskWrapper)
+      if (this.resolvers.length > 0 && !this.paused) {
+        const resolver = this.resolvers.shift()
+        return resolver && resolver[0](taskWrapper)
+      }
       this.queue.push(taskWrapper)
     })
   }
