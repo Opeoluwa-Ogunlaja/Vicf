@@ -1,4 +1,4 @@
-import { GClientId, GSecret } from '../../config'
+import { frontendUrl, GClientId, GSecret } from '../../config'
 import jwt from 'jsonwebtoken'
 import jwksClient from 'jwks-rsa'
 
@@ -19,7 +19,7 @@ export async function verifyGoogleToken(code: string) {
   const client = new OAuth2Client({
     clientId: GClientId ?? '',
     clientSecret: GSecret ?? '',
-    redirectUri: 'http://localhost:5173'
+    redirectUri: frontendUrl
   })
 
   try {

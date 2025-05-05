@@ -7,6 +7,7 @@ import { flattenZodErrorMessage } from '../lib/utils/zodErrors'
 import { AccessError, NotFoundError, RequestError } from '../lib/utils/AppErrors'
 import { verifyGoogleToken } from '../lib/utils/tokenVerifications'
 import generateToken from '../lib/utils/generateToken'
+import { nodeEnv } from '../config'
 
 class UserController {
   service: UserService
@@ -83,7 +84,7 @@ class UserController {
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
         path: '/',
-        secure: false
+        secure: nodeEnv == 'production'
       })
       res.json({
         ok: true,

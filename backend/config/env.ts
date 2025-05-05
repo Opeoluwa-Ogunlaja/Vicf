@@ -13,7 +13,8 @@ const envSchema = z.object({
   GSECRET: z.string(),
   JWT_SECRET: z.string(),
   MONGO_URL: z.string(),
-  LOGIN_TOKEN_NAME: z.string().default('LIT')
+  LOGIN_TOKEN_NAME: z.string().default('LIT'),
+  FRONTEND_URL: z.string().default('http://localhost:5173')
 })
 
 export type EnvSchema = z.infer<typeof envSchema>
