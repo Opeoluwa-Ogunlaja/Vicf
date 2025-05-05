@@ -84,7 +84,8 @@ class UserController {
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
         path: '/',
-        secure: nodeEnv == 'production'
+        secure: nodeEnv == 'production',
+        sameSite: 'none'
       })
       res.json({
         ok: true,
@@ -110,7 +111,8 @@ class UserController {
       maxAge: 1000 * 60 * 60 * 24,
       httpOnly: true,
       path: '/',
-      secure: nodeEnv == 'production'
+      secure: nodeEnv == 'production',
+      sameSite: 'none'
     })
     res.json({
       ok: true,
