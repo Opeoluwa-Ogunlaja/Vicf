@@ -1,7 +1,8 @@
 import OnlineContext from '@/contexts/OnlineContext'
 import { useEventListener } from '@/hooks/useEventListener'
 import { useSocketEvent } from '@/hooks/useSocketEvent'
-import { ReactNode, useRef, useState } from 'react'
+import { OnlineTaskQueue } from '@/queue'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 
 const OnlineProvider = ({ children }: { children: ReactNode }) => {
   const lastOnlineRef = useRef<Date | null>(null)
@@ -13,8 +14,8 @@ const OnlineProvider = ({ children }: { children: ReactNode }) => {
     'connect',
     () => {
       isConnected.current = true
-      if (!online) setOnline(true)
-      // console.log('connect')
+      setOnline(true)
+      console.log('connect')
     },
     [online]
   )
@@ -29,12 +30,20 @@ const OnlineProvider = ({ children }: { children: ReactNode }) => {
     [online]
   )
 
+  useEffect(() => {
+    if (online) {
+      OnlineTaskQueue.resume()
+    } else {
+      OnlineTaskQueue.pause()
+    }
+  }, [online])
+
   const onlineHandler = () => {
     if (isConnected.current) setOnline(true)
-    // console.log('online')
+    console.log('online')
   }
   const offlineHandler = () => {
-    if (!isConnected.current) setOnline(false)
+    setOnline(false)
     // console.log('offline')
   }
   useEventListener('online', onlineHandler, window)

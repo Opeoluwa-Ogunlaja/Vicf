@@ -17,11 +17,11 @@ const SocketProvider: FC<{ children: ReactNode }> = memo(({ children }) => {
   }, [sendMessage, connect, disconnect])
 
   const connectOnEntry = useEffectEvent(() => {
-    connect('http://localhost:3002')
+    connect(import.meta.env.VITE_BACKEND_URL)
   })
 
   useEffect(() => {
-    connectOnEntry('http://localhost:3002')
+    connectOnEntry(import.meta.env.VITE_BACKEND_URL)
   }, [connect, connectOnEntry])
 
   return (
