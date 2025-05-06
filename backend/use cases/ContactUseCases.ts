@@ -31,7 +31,6 @@ export class ContactUseCases {
         },
         session
       )
-      throw new Error('Erro')
       return group
     })
   }
