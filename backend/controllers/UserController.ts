@@ -47,7 +47,7 @@ class UserController {
       httpOnly: true,
       path: '/',
       secure: nodeEnv == 'production',
-      sameSite: 'none'
+      sameSite: nodeEnv == 'production' ? 'none' : undefined
     })
 
     res.json({
@@ -86,7 +86,7 @@ class UserController {
         httpOnly: true,
         path: '/',
         secure: nodeEnv == 'production',
-        sameSite: 'none'
+        sameSite: nodeEnv == 'production' ? 'none' : undefined
       })
       res.json({
         ok: true,
@@ -113,7 +113,7 @@ class UserController {
       httpOnly: true,
       path: '/',
       secure: nodeEnv == 'production',
-      sameSite: 'none'
+      sameSite: nodeEnv == 'production' ? 'none' : undefined
     })
     res.json({
       ok: true,
