@@ -1,5 +1,6 @@
 import env from './env'
 
+export const port = env.PORT
 export const mongoUrl = env.MONGO_URL
 export const GClientId = env.GCLIENT_ID
 export const GSecret = env.GSECRET
