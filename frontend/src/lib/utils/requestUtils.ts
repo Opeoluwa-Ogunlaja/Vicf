@@ -19,6 +19,17 @@ const checkError = (err: AxiosError) => {
   }
 }
 
+export const getAccessToken = async () => {
+  try {
+    const newUser = await axiosInstance.get('/users/token')
+
+    return newUser.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
 export const signup_user = async ({
   email,
   name,
@@ -55,7 +66,11 @@ export const login_user = async ({
   }
 }
 
-export const google_login = async ({ code }: { code: string }): Promise<IUser | undefined> => {
+export const google_login = async ({
+  code
+}: {
+  code: string
+}): Promise<(IUser & { token: string }) | undefined> => {
   try {
     const newUser = await axiosInstance.post('/users/google-login', {
       code

@@ -1,12 +1,14 @@
 import { defer, LoaderFunction } from 'react-router-dom'
 import { queryClient } from '@/queryClient'
-import { get_profile } from './requestUtils'
-import { useContactManagerStore } from '@/stores/contactsManagerStore'
-import { ContactManagerEntry } from '@/types/contacts_manager'
-import { db } from '@/stores/dexie/db'
+import { get_contacts_manager, get_profile } from './requestUtils'
+import { ContactManagerActions, ContactManagerEntry } from '@/types/contacts_manager'
+// import { db } from '@/stores/dexie/db'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-export const rootLoader = (_onlineStatus: boolean) =>
+export const rootLoader = (
+  _onlineStatus: boolean,
+  setters: { setManager: ContactManagerActions['setManager'] }
+) =>
   (async () => {
     let userPromise!: Promise<unknown>
     userPromise = Promise.resolve(null)
@@ -31,15 +33,12 @@ export const rootLoader = (_onlineStatus: boolean) =>
     try {
       const fetching_promise = queryClient.fetchQuery({
         queryKey: ['contacts_manager'],
-        queryFn: async () => {
-          return await db.managers.toArray()
-        },
-        staleTime: 0
+        queryFn: get_contacts_manager,
+        staleTime: Infinity
       })
       fetching_promise.then(contacts_manager => {
         if ((contacts_manager as Array<unknown>)?.length > 0) {
-          const setManager = useContactManagerStore.getState().actions.setManager
-          setManager(contacts_manager as ContactManagerEntry[])
+          setters?.setManager(contacts_manager as ContactManagerEntry[])
         }
       })
 
