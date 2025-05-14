@@ -7,8 +7,12 @@ export class UserService {
     this.repository = repository
   }
 
-  async create_user(user: Partial<IUser>) {
+  async create_user(user: Partial<IUser> & { _id?: string }) {
     return await this.repository.create(user as IUser)
+  }
+
+  async updateRefreshToken(userId: string, refreshToken: string) {
+    return await this.repository.updateById(userId, { refreshToken })
   }
 
   get_user: typeof userRepository.findOne = async query => {

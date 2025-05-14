@@ -24,6 +24,7 @@ import { IUser, PartialUser } from '@/types/user'
 import { useGoogleLogin } from '@react-oauth/google'
 import { useToggle } from '@/hooks/useToggle'
 import { useUserUpdate } from '@/hooks/useUserUpdate'
+import useToken from '@/hooks/useToken'
 
 const LoginForm = () => {
   const formHook = useForm<LoginFormType>({
@@ -33,6 +34,7 @@ const LoginForm = () => {
       password: ''
     }
   })
+  const { setToken } = useToken()
 
   const [disableSubmit, toggleSubmit] = useToggle(false)
 
@@ -70,6 +72,7 @@ const LoginForm = () => {
             }
           })
           update_user_state({ id: res?.id, name: res?.name, email: res?.email })
+          setToken(res?.token ?? null)
           return wait(2000)
         })
         .then(() => navigate('/home'))

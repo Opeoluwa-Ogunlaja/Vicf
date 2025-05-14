@@ -8,7 +8,7 @@ dotenv.config({
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['test', 'development', 'production']).default('development'),
-  PORT: z.coerce.number().default(5000),
+  PORT: z.coerce.number().default(3002),
   GCLIENT_ID: z.string(),
   GSECRET: z.string(),
   JWT_SECRET: z.string(),

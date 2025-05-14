@@ -7,6 +7,7 @@ export interface IUser {
   verified: boolean
   provider?: string
   contact_groupings: RefType[]
+  refreshToken: string
 }
 
 export interface IUserDocument extends IUser, Document {}
