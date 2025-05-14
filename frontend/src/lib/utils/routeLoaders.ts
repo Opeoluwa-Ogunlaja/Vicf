@@ -50,10 +50,12 @@ export const rootLoader = (
             originalRequest.headers.Authorization = `Bearer ${tokenResponse.token}`
             originalRequest._retry = true
             return api(originalRequest)
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          } catch (error) {
+          } catch (err) {
             setters.setToken(null)
+            return Promise.reject(err)
           }
+        } else {
+          return Promise.reject(error)
         }
       }
     )
@@ -72,13 +74,16 @@ export const rootLoader = (
 
         userPromise = fetching_promise
         userPromise
-          .then(data => {
-            const user = data as IUser
-            setters.login_user({
-              name: user?.name,
-              email: user?.email
-            })
-          })
+          .then(
+            data => {
+              const user = data as IUser
+              setters.login_user({
+                name: user?.name,
+                email: user?.email
+              })
+            },
+            () => {}
+          )
           .finally(() => {
             setters.set_loaded()
           })
@@ -107,7 +112,7 @@ export const rootLoader = (
     }
 
     return defer({
-      user_promise: userPromise,
+      user_promise: Promise.resolve().then(() => userPromise),
       contacts_manager_promise: localContactsManagerPromise
     })
   }) satisfies LoaderFunction
