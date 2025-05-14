@@ -6,8 +6,8 @@ import { userRegisterSchema, userRegisterType } from '../lib/validators/zodSchem
 import { flattenZodErrorMessage } from '../lib/utils/zodErrors'
 import { AccessError, NotFoundError, RequestError } from '../lib/utils/AppErrors'
 import { verifyGoogleToken } from '../lib/utils/tokenVerifications'
-import generateToken from '../lib/utils/generateToken'
-import { nodeEnv } from '../config'
+import generateToken, { generateAccessToken, verifyRefreshToken } from '../lib/utils/generateToken'
+import { loginTokenName, nodeEnv } from '../config'
 
 class UserController {
   service: UserService
@@ -41,8 +41,8 @@ class UserController {
       throw new RequestError('Invalid User information')
     }
 
-    const jwt = generateToken(userExists?.id as string)
-    res.cookie('LIT', jwt, {
+    const refreshToken = generateToken(userExists?.id as string)
+    res.cookie('LIT', refreshToken, {
       maxAge: 1000 * 60 * 60 * 24,
       httpOnly: true,
       path: '/',
@@ -50,17 +50,41 @@ class UserController {
       sameSite: nodeEnv == 'production' ? 'none' : undefined
     })
 
+    const accessToken = generateAccessToken(refreshToken)
+
     res.json({
       ok: true,
-      data: { id: userExists.id, email: userExists.email, name: userExists.name }
+      data: {
+        id: userExists.id,
+        email: userExists.email,
+        name: userExists.name,
+        accessToken: accessToken
+      }
     })
   }
 
-  get_profile: AsyncHandler<{}, {}> = async (req, res) => {
-    const user = req?.user
-    if (!user) {
-      throw new AccessError('Not authenticated')
+  get_token: AsyncHandler<{}, {}> = async (req, res) => {
+    try {
+      const refreshToken = req.cookies[<string>loginTokenName]
+      const refreshTokenContent = await verifyRefreshToken(refreshToken)
+
+      if (!refreshTokenContent._id) throw new AccessError()
+
+      const accessToken = generateAccessToken(refreshToken)
+
+      res.json({
+        ok: true,
+        data: {
+          token: accessToken
+        }
+      })
+    } catch (error) {
+      throw new AccessError()
     }
+  }
+
+  get_profile: AsyncHandler<{}, {}> = async (req, res) => {
+    const user = req?.user!
 
     res.json({
       ok: true,
@@ -70,58 +94,62 @@ class UserController {
 
   social_signup_google: AsyncHandler<{ code: string }, {}> = async (req, res) => {
     const { code } = req.body
-    let jwt
+    let refreshToken, accessToken
 
     const validated_user = await verifyGoogleToken(code as string)
 
     const user = await this.service.get_user({ provider: 'google', email: validated_user?.email })
-    jwt = generateToken(user?.id as string)
+    refreshToken = generateToken(user?.id as string)
 
     if (user) {
       if (!user.verified && validated_user.email_verified)
         await this.service.complete_verification(user.id)
 
-      res.cookie('LIT', jwt, {
+      res.cookie('LIT', refreshToken, {
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
         path: '/',
         secure: nodeEnv == 'production',
         sameSite: nodeEnv == 'production' ? 'none' : undefined
       })
+
+      accessToken = generateAccessToken(refreshToken)
       res.json({
         ok: true,
         data: {
           _id: user._id,
           email: user.email,
           name: user.name,
-          token: jwt
+          token: accessToken
         }
       })
       return
     }
 
+    // const createdUserId = this.service.
     const createdUser = await this.service.create_user({
       email: validated_user?.email,
       provider: 'google',
       name: `${validated_user?.given_name} ${validated_user?.family_name}`.trim(),
       verified: validated_user.email_verified
     })
-    jwt = generateToken(createdUser.id as string)
+    refreshToken = generateToken(createdUser.id as string)
 
-    res.cookie('LIT', jwt, {
+    res.cookie('LIT', refreshToken, {
       maxAge: 1000 * 60 * 60 * 24,
       httpOnly: true,
       path: '/',
       secure: nodeEnv == 'production',
       sameSite: nodeEnv == 'production' ? 'none' : undefined
     })
+    accessToken = generateAccessToken(refreshToken)
     res.json({
       ok: true,
       data: {
         _id: createdUser._id,
         email: validated_user?.email as string,
         name: `${validated_user?.given_name} ${validated_user?.family_name}`.trim(),
-        token: jwt
+        token: accessToken
       }
     })
   }

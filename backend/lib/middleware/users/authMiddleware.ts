@@ -7,22 +7,25 @@ import validateMongodbId from '../../validators/validateMongodbId'
 import { SocketClients, SocketHandlerFn, SocketUsers } from '../../../types'
 import * as cookie from 'cookie'
 import { Socket } from 'socket.io'
+import { verifyAccessToken } from '../../utils/generateToken'
 
 export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
   if (req.user) return next()
 
-  let token
+  let refreshToken, accessToken
 
-  if ((token = req?.cookies[<string>loginTokenName])) {
-    if (!token) return next()
-    // Decode token to get Id and verify that Id
+  if (
+    (refreshToken = req?.cookies[<string>loginTokenName]) &&
+    (accessToken = req?.headers.authorization?.replace('Bearer ', ''))
+  ) {
+    if (!refreshToken) return next()
+    // Decode refreshToken to get Id and verify that Id
     try {
       // find the user by id
-      let decoded!: any
-      decoded = jwt.verify(token, jwtSecret ?? 'hehehehe', { algorithms: ['HS256'] })
-      const isValidId = validateMongodbId(decoded?._id ?? '')
+      const userInfo = (await verifyAccessToken(accessToken, refreshToken)) as any
+      const isValidId = validateMongodbId(userInfo?.id ?? '')
 
-      const user = await userRepository.findById(decoded?._id)
+      const user = await userRepository.findById(userInfo?.id)
 
       // Check if Id is valid
       if (!user || !isValidId) return next()
@@ -51,9 +54,9 @@ export const socketAuthMiddleware = async (
 
   if (!loggedInToken) return next()
 
-  const token = loggedInToken
+  const refreshToken = loggedInToken
   let decoded!: any
-  decoded = jwt.verify(token, jwtSecret ?? 'hehehehe', { algorithms: ['HS256'] })
+  decoded = jwt.verify(refreshToken, jwtSecret ?? 'hehehehe', { algorithms: ['HS256'] })
   const isValidId = validateMongodbId(decoded?._id ?? '')
 
   const user = await userRepository.findById(decoded?._id)

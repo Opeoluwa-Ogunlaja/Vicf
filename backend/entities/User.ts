@@ -17,7 +17,8 @@ const userSchema = new Schema<IUserDocument, UserModelType>({
       type: Schema.Types.ObjectId,
       ref: 'Contact_Group'
     }
-  ]
+  ],
+  refreshToken: String
 })
 
 const User = mongoose.model('User', userSchema)
