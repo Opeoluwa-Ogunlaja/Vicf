@@ -11,7 +11,7 @@ const app = express()
 app.use(cookieParser())
 app.use(express.json())
 
-const allowedOrigins = ['http://localhost:5173', 'https://vicf.vercel.app']
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:4173', 'https://vicf.vercel.app']
 app.use(
   cors({
     origin: (origin, callback) => {
