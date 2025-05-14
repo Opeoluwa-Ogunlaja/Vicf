@@ -63,7 +63,7 @@ const Home = () => {
                         .reverse()
                         .map(manager => <BlockCard manager={manager} key={manager._id} />)
                     ) : (
-                      <p className="font-medium text-neutral-400">You don't have any listinga</p>
+                      <p className="font-medium text-neutral-400">You don't have any listings</p>
                     )
                   }
                 >

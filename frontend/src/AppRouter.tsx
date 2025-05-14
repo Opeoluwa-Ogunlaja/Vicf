@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { FC, useMemo } from 'react'
+import { Dispatch, FC, useMemo } from 'react'
 import Layout from './hoc/Layout'
 import { authLoader, rootLoader } from './lib/utils/routeLoaders'
 import Save from './pages/save/Save'
@@ -15,10 +15,15 @@ import { useOnline } from './hooks/useOnline'
 import Landing from './pages/landing/Landing'
 import { useContactManagerStore } from './stores/contactsManagerStore'
 import { ContactManagerActions } from '@/types/contacts_manager'
+import useToken from './hooks/useToken'
+import { useUserUpdate } from './hooks/useUserUpdate'
 
 const router = (
   onlineStatus: boolean,
-  setters: { setManager: ContactManagerActions['setManager'] }
+  setters: {
+    setManager: ContactManagerActions['setManager']
+    setToken: Dispatch<string | null>
+  } & Pick<ReturnType<typeof useUserUpdate>, 'login_user' | 'set_loaded'>
 ) =>
   createBrowserRouter(
     [
@@ -90,11 +95,16 @@ const router = (
 const AppRouter: FC = () => {
   const { isOnline } = useOnline()
   const setManager = useContactManagerStore(state => state.actions.setManager)
+  const { setToken } = useToken()
+  const { login_user, set_loaded } = useUserUpdate()
   const routerMemoized = useMemo(() => {
     return router(isOnline, {
-      setManager: setManager
+      setManager: setManager,
+      setToken: setToken,
+      login_user,
+      set_loaded
     })
-  }, [isOnline])
+  }, [isOnline, setToken, setManager, login_user, set_loaded])
   return <RouterProvider router={routerMemoized} />
 }
 
