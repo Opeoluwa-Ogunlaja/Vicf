@@ -70,9 +70,16 @@ class UserController {
   get_token: AsyncHandler<{}, {}> = async (req, res) => {
     try {
       const refreshToken = req.cookies[<string>loginTokenName]
-      const refreshTokenContent = await verifyRefreshToken(refreshToken)
+      const refreshTokenContent = verifyRefreshToken(refreshToken)
 
       if (!refreshTokenContent._id) throw new AccessError()
+
+      const user = await this.service.get_user({
+        refreshToken: refreshToken,
+        _id: refreshTokenContent._id
+      })
+
+      if (!user) throw new AccessError()
 
       const accessToken = generateAccessToken(refreshToken)
 
