@@ -8,6 +8,7 @@ import { AccessError, NotFoundError, RequestError } from '../lib/utils/AppErrors
 import { verifyGoogleToken } from '../lib/utils/tokenVerifications'
 import generateToken, { generateAccessToken, verifyRefreshToken } from '../lib/utils/generateToken'
 import { loginTokenName, nodeEnv } from '../config'
+import { newId } from '../lib/utils/mongooseUtils'
 
 class UserController {
   service: UserService
@@ -42,6 +43,9 @@ class UserController {
     }
 
     const refreshToken = generateToken(userExists?.id as string)
+
+    await this.service.updateRefreshToken(userExists?.id, refreshToken)
+
     res.cookie('LIT', refreshToken, {
       maxAge: 1000 * 60 * 60 * 24,
       httpOnly: true,
@@ -104,7 +108,7 @@ class UserController {
     if (user) {
       if (!user.verified && validated_user.email_verified)
         await this.service.complete_verification(user.id)
-
+      await this.service.updateRefreshToken(user.id, refreshToken)
       res.cookie('LIT', refreshToken, {
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
@@ -126,12 +130,15 @@ class UserController {
       return
     }
 
-    // const createdUserId = this.service.
+    const newUserId = newId().toString()
+    refreshToken = generateToken(newUserId)
     const createdUser = await this.service.create_user({
+      _id: newUserId,
       email: validated_user?.email,
       provider: 'google',
       name: `${validated_user?.given_name} ${validated_user?.family_name}`.trim(),
-      verified: validated_user.email_verified
+      verified: validated_user.email_verified,
+      refreshToken: refreshToken
     })
     refreshToken = generateToken(createdUser.id as string)
 
