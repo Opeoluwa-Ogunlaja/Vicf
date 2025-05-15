@@ -147,7 +147,6 @@ class UserController {
       verified: validated_user.email_verified,
       refreshToken: refreshToken
     })
-    refreshToken = generateToken(createdUser.id as string)
 
     res.cookie('LIT', refreshToken, {
       maxAge: 1000 * 60 * 60 * 24,
