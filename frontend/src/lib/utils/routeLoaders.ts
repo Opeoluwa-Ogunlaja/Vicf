@@ -5,7 +5,7 @@ import { ContactManagerActions, ContactManagerEntry } from '@/types/contacts_man
 import { Dispatch } from 'react'
 import { useUserUpdate } from '@/hooks/useUserUpdate'
 import { IUser } from '@/types'
-import { axiosInstance as api } from '@/lib/utils/axiosInstance'
+import { waitForInterceptor } from './tokenReady'
 // import { db } from '@/stores/dexie/db'
 
 export const rootLoader = (
@@ -16,12 +16,9 @@ export const rootLoader = (
   } & Pick<ReturnType<typeof useUserUpdate>, 'login_user' | 'set_loaded'>
 ) =>
   (async () => {
-    let token_cache!: string
-
     const fetchAccessToken = async () => {
       try {
         const token = await getAccessToken()
-        token_cache = token.token
         setters.setToken(token.token)
         // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
       } catch (error) {
@@ -30,35 +27,7 @@ export const rootLoader = (
     }
 
     await fetchAccessToken()
-
-    api.interceptors.request.use(config => {
-      config.headers.Authorization = !(config as typeof config & { _retry: boolean })._retry
-        ? `Bearer ${token_cache}`
-        : config.headers.Authorization
-      return config
-    })
-
-    api.interceptors.response.use(
-      response => response,
-      async function (error) {
-        const originalRequest = error.config
-        if (error.response.status === 403 && error.response.data.message === 'Access Expired') {
-          try {
-            const tokenResponse = await getAccessToken()
-            setters.setToken(tokenResponse.token)
-
-            originalRequest.headers.Authorization = `Bearer ${tokenResponse.token}`
-            originalRequest._retry = true
-            return api(originalRequest)
-          } catch (err) {
-            setters.setToken(null)
-            return Promise.reject(err)
-          }
-        } else {
-          return Promise.reject(error)
-        }
-      }
-    )
+    await waitForInterceptor()
 
     let userPromise!: Promise<unknown>
     userPromise = Promise.resolve(null)

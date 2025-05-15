@@ -96,7 +96,7 @@ const LoginForm = () => {
 
   const onSubmit: SubmitHandler<LoginFormType> = async data => {
     try {
-      const res = (await loginMutation.mutateAsync(data)) as PartialUser
+      const res = (await loginMutation.mutateAsync(data)) as PartialUser & { token?: string }
       return await wait(500)
         .then(() => {
           formHook.setError('root', {
@@ -110,6 +110,7 @@ const LoginForm = () => {
               email: res?.email
             }
           })
+          setToken(res?.token ?? null)
           update_user_state({ id: res?.id, name: res?.name, email: res?.email })
           return wait(2000)
         })
