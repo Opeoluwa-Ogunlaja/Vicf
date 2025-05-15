@@ -46,7 +46,7 @@ const Sidenav = () => {
       {createPortal(
         <div
           className={cn(
-            'top-0 h-full w-full bg-black bg-opacity-50 bg-blend-screen transition-opacity duration-75 max-lg:z-[500000000]',
+            'top-0 h-full w-full bg-black bg-opacity-50 bg-blend-screen drop-shadow-md transition-opacity duration-75 max-lg:z-[500000000]',
             {
               'pointer-events-none fixed opacity-100': open,
               'invisible absolute opacity-0': !open

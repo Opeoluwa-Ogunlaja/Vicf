@@ -44,10 +44,15 @@ const Home = () => {
           <p className="inline-block">Tip: Use the settings page to customise your display</p>
         </aside>
         <NavigationBar />
-        <main className="main-wrapper grid max-lg:grid-cols-1">
+        <main
+          className="main-wrapper grid bg-primary/5 shadow-neutral-600 max-lg:grid-cols-1"
+          style={{
+            boxShadow: 'inset .25rem 1.75rem 1.25rem -2.5rem var(--tw-shadow-color)'
+          }}
+        >
           <Sidenav />
           <div
-            className="grid px-6 pt-16 max-md:px-8"
+            className="grid px-10 pt-16 max-md:px-8"
             style={{
               gridAutoRows: 'max-content'
             }}
