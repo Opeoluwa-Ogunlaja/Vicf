@@ -52,7 +52,7 @@ const Home = () => {
         >
           <Sidenav />
           <div
-            className="grid px-10 pt-16 max-md:px-8"
+            className="grid px-10 pt-16 max-md:px-8 max-md:py-14"
             style={{
               gridAutoRows: 'max-content'
             }}

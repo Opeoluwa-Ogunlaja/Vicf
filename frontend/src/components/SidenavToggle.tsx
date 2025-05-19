@@ -7,7 +7,7 @@ const SidenavToggle: FC<{ className?: string }> = ({ className }) => {
   return (
     <button
       onClick={() => setOpen(true)}
-      className={cn('text-lg font-bold text-white drop-shadow-sm md:hidden', className)}
+      className={cn('text-lg font-bold text-white drop-shadow-sm lg:hidden', className)}
       data-sidenav-toggle="true"
     >
       &#9776;
