@@ -9,9 +9,9 @@ import { markInterceptorReady } from '@/lib/utils/tokenReady'
 const UserProvider: FC<{
   children: ReactNode
 }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(null)
+  const [token, setToken] = useState<string>('')
   const [store] = useState(usersStore)
-  const tokenRef = useRef<string | null>(token)
+  const tokenRef = useRef<typeof token>(token)
 
   useEffect(() => {
     tokenRef.current = token
@@ -19,7 +19,6 @@ const UserProvider: FC<{
 
   useEffect(() => {
     let handler: number | undefined
-
     if (token) {
       handler = api.interceptors.request.use(config => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,7 +27,6 @@ const UserProvider: FC<{
           : config.headers.Authorization
         return config
       })
-
       markInterceptorReady()
     }
 
@@ -54,7 +52,7 @@ const UserProvider: FC<{
             return api(originalRequest)
           } catch (err) {
             console.log(err)
-            setToken(null)
+            setToken('')
             return Promise.reject(err)
           }
         } else {

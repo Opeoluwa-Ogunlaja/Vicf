@@ -12,7 +12,7 @@ export const rootLoader = (
   _onlineStatus: boolean,
   setters: {
     setManager: ContactManagerActions['setManager']
-    setToken: Dispatch<string | null>
+    setToken: Dispatch<string>
   } & Pick<ReturnType<typeof useUserUpdate>, 'login_user' | 'set_loaded'>
 ) =>
   (async () => {
@@ -22,7 +22,7 @@ export const rootLoader = (
         setters.setToken(token.token)
         // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
       } catch (error) {
-        setters.setToken(null)
+        setters.setToken(' ')
       }
     }
 

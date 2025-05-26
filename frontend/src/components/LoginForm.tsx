@@ -72,7 +72,7 @@ const LoginForm = () => {
             }
           })
           update_user_state({ id: res?.id, name: res?.name, email: res?.email })
-          setToken(res?.token ?? null)
+          setToken(res?.token ?? '')
           return wait(2000)
         })
         .then(() => navigate('/home'))
@@ -110,7 +110,7 @@ const LoginForm = () => {
               email: res?.email
             }
           })
-          setToken(res?.token ?? null)
+          setToken(res?.token ?? '')
           update_user_state({ id: res?.id, name: res?.name, email: res?.email })
           return wait(2000)
         })

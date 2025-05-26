@@ -22,7 +22,7 @@ const router = (
   onlineStatus: boolean,
   setters: {
     setManager: ContactManagerActions['setManager']
-    setToken: Dispatch<string | null>
+    setToken: Dispatch<string>
   } & Pick<ReturnType<typeof useUserUpdate>, 'login_user' | 'set_loaded'>
 ) =>
   createBrowserRouter(
