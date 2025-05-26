@@ -1,30 +1,41 @@
 import { TokenContext } from '@/contexts/TokenContext'
 import { UserContext } from '@/contexts/UserContext'
 import usersStore from '@/stores/usersStore'
-import { useState, FC, ReactNode, useLayoutEffect } from 'react'
+import { useState, FC, ReactNode, useLayoutEffect, useEffect, useRef } from 'react'
 import { axiosInstance as api } from '@/lib/utils/axiosInstance'
 import { getAccessToken } from '@/lib/utils/requestUtils'
 import { markInterceptorReady } from '@/lib/utils/tokenReady'
-import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 
 const UserProvider: FC<{
   children: ReactNode
 }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>('')
+  const [token, setToken] = useState<string | null>(null)
   const [store] = useState(usersStore)
+  const tokenRef = useRef<string | null>(token)
 
-  useUpdateEffect(() => {
-    const handler = api.interceptors.request.use(config => {
-      config.headers.Authorization = !(config as typeof config & { _retry: boolean })._retry
-        ? `Bearer ${token}`
-        : config.headers.Authorization
-      return config
-    })
+  useEffect(() => {
+    tokenRef.current = token
+  }, [token])
 
-    markInterceptorReady()
+  useEffect(() => {
+    let handler: number | undefined
+
+    if (token) {
+      handler = api.interceptors.request.use(config => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        config.headers.Authorization = !(config as any)._retry
+          ? `Bearer ${tokenRef.current}`
+          : config.headers.Authorization
+        return config
+      })
+
+      markInterceptorReady()
+    }
 
     return () => {
-      api.interceptors.request.eject(handler)
+      if (handler !== undefined) {
+        api.interceptors.request.eject(handler)
+      }
     }
   }, [token])
 
@@ -42,6 +53,7 @@ const UserProvider: FC<{
             originalRequest._retry = true
             return api(originalRequest)
           } catch (err) {
+            console.log(err)
             setToken(null)
             return Promise.reject(err)
           }
@@ -52,7 +64,7 @@ const UserProvider: FC<{
     )
 
     return () => api.interceptors.response.eject(handler)
-  }, [token])
+  }, [setToken])
 
   return (
     <UserContext.Provider value={store}>
