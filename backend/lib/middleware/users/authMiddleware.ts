@@ -1,7 +1,7 @@
 import expressAsyncHandler from 'express-async-handler'
 import jwt from 'jsonwebtoken'
 import { userRepository } from '../../../repositories/UserRepository'
-import { AccessError } from '../../utils/AppErrors'
+import { AccessError, ForbiddenError } from '../../utils/AppErrors'
 import { loginTokenName, jwtSecret } from './../../../config/index'
 import validateMongodbId from '../../validators/validateMongodbId'
 import { SocketClients, SocketHandlerFn, SocketUsers } from '../../../types'
@@ -18,7 +18,7 @@ export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
     (refreshToken = req?.cookies[<string>loginTokenName]) &&
     (accessToken = req?.headers.authorization?.replace('Bearer ', ''))
   ) {
-    if (!refreshToken) return next()
+    if (!refreshToken || !accessToken) return next()
     // Decode refreshToken to get Id and verify that Id
     try {
       // find the user by id
@@ -34,6 +34,7 @@ export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
       req.user = user
       return next()
     } catch (e) {
+      if (e instanceof AccessError) throw new ForbiddenError('Access Expired')
       return next()
     }
   }
