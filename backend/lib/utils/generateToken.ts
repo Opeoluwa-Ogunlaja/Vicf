@@ -13,32 +13,53 @@ const generateRefreshToken = (_id: string): string => {
   return token
 }
 
-export const generateAccessToken = (refreshToken: string) => {
-  const token = jwt.sign({ refreshToken }, jwtSecret ?? 'hehehehe', {
-    expiresIn: '5m',
-    algorithm: jwtAlgo
-  })
+export const generateAccessToken = (refreshToken: string, duration: number = 10) => {
+  const token = jwt.sign(
+    { refreshToken, expires: new Date(Date.now() + duration * 1000) },
+    jwtSecret ?? 'hehehehe',
+    {
+      expiresIn: '30s',
+      algorithm: jwtAlgo
+    }
+  )
 
   return token
 }
 
-export const verifyRefreshToken = (refreshToken: string): { _id: string } => {
-  const refreshContent = jwt.verify(refreshToken, jwtSecret ?? 'hehehehe', {
-    algorithms: [jwtAlgo]
-  }) as { _id: string }
+export const verifyRefreshToken = (refreshToken: string): { _id: string } | null => {
+  try {
+    const refreshContent = jwt.verify(refreshToken, jwtSecret ?? 'hehehehe', {
+      algorithms: [jwtAlgo]
+    }) as { _id: string }
 
-  return refreshContent
+    return refreshContent
+  } catch (error) {
+    return null
+  }
 }
 
 export const verifyAccessToken = async (accessToken: string, refreshToken: string) => {
-  const tokenAccess = jwt.verify(accessToken, jwtSecret ?? 'hehehehe', {
-    algorithms: [jwtAlgo]
-  }) as { refreshToken: string }
+  let tokenAccess: { refreshToken: string; expires: number } | null
+  try {
+    tokenAccess = jwt.verify(accessToken, jwtSecret ?? 'hehehehe', {
+      algorithms: [jwtAlgo]
+    }) as { refreshToken: string; expires: number }
+  } catch (e) {
+    tokenAccess = null
+  }
 
-  if (tokenAccess.refreshToken != refreshToken) throw new AccessError('Access Expired')
+  if (
+    !tokenAccess ||
+    tokenAccess?.refreshToken != refreshToken ||
+    Date.now() > new Date(tokenAccess?.expires).getTime()
+  )
+    throw new AccessError('Access Expired')
 
-  const { _id } = verifyRefreshToken(refreshToken)
-  const user = await userRepository.dal.getModel().findOne({ refreshToken, _id }).select('_id')
+  const refreshTokenContents = verifyRefreshToken(refreshToken)
+  const user = await userRepository.dal
+    .getModel()
+    .findOne({ refreshToken, _id: refreshTokenContents?._id })
+    .select('_id')
   return user ? user : null
 }
 

@@ -42,7 +42,7 @@ class UserController {
       throw new RequestError('Invalid User information')
     }
 
-    const refreshToken = generateToken(userExists?.id as string)
+    const refreshToken: string = generateToken(userExists?.id as string)
 
     await this.service.updateRefreshToken(userExists?.id, refreshToken)
 
@@ -62,36 +62,44 @@ class UserController {
         id: userExists.id,
         email: userExists.email,
         name: userExists.name,
-        accessToken: accessToken
+        token: accessToken
       }
     })
   }
 
   get_token: AsyncHandler<{}, {}> = async (req, res) => {
-    try {
-      const refreshToken = req.cookies[<string>loginTokenName]
-      const refreshTokenContent = verifyRefreshToken(refreshToken)
+    const refreshToken = req.cookies[<string>loginTokenName]
+    const refreshTokenContent: { _id: string } = verifyRefreshToken(refreshToken)!
 
-      if (!refreshTokenContent._id) throw new AccessError()
+    if (!refreshTokenContent?._id) throw new AccessError()
 
-      const user = await this.service.get_user({
-        refreshToken: refreshToken,
-        _id: refreshTokenContent._id
-      })
+    const user = await this.service.get_user({
+      refreshToken: refreshToken,
+      _id: refreshTokenContent._id
+    })
 
-      if (!user) throw new AccessError()
+    if (!user) throw new AccessError()
 
-      const accessToken = generateAccessToken(refreshToken)
+    const newRefreshToken = generateToken(user.id)
 
-      res.json({
-        ok: true,
-        data: {
-          token: accessToken
-        }
-      })
-    } catch (error) {
-      throw new AccessError()
-    }
+    await this.service.updateRefreshToken(user.id, newRefreshToken)
+
+    const accessToken = generateAccessToken(newRefreshToken)
+
+    res.cookie('LIT', newRefreshToken, {
+      maxAge: 1000 * 60 * 60 * 24,
+      httpOnly: true,
+      path: '/',
+      secure: nodeEnv == 'production',
+      sameSite: nodeEnv == 'production' ? 'none' : undefined
+    })
+
+    res.json({
+      ok: true,
+      data: {
+        token: accessToken
+      }
+    })
   }
 
   get_profile: AsyncHandler<{}, {}> = async (req, res) => {
