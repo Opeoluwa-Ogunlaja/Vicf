@@ -113,48 +113,35 @@ class UserController {
 
   social_signup_google: AsyncHandler<{ code: string }, {}> = async (req, res) => {
     const { code } = req.body
-    let refreshToken, accessToken
 
-    const validated_user = await verifyGoogleToken(code as string)
-
-    const user = await this.service.get_user({ provider: 'google', email: validated_user?.email })
-    refreshToken = generateToken(user?.id as string)
-
-    if (user) {
-      if (!user.verified && validated_user.email_verified)
-        await this.service.complete_verification(user.id)
-      await this.service.updateRefreshToken(user.id, refreshToken)
-      res.cookie('LIT', refreshToken, {
-        maxAge: 1000 * 60 * 60 * 24,
-        httpOnly: true,
-        path: '/',
-        secure: nodeEnv == 'production',
-        sameSite: nodeEnv == 'production' ? 'none' : undefined
-      })
-
-      accessToken = generateAccessToken(refreshToken)
-      res.json({
-        ok: true,
-        data: {
-          _id: user._id,
-          email: user.email,
-          name: user.name,
-          token: accessToken
-        }
-      })
-      return
+    const validated_user = await verifyGoogleToken(code)
+    if (!validated_user || !validated_user.email) {
+      throw new RequestError('Invalid Google token')
     }
 
-    const newUserId = newId().toString()
-    refreshToken = generateToken(newUserId)
-    const createdUser = await this.service.create_user({
-      _id: newUserId,
-      email: validated_user?.email,
-      provider: 'google',
-      name: `${validated_user?.given_name} ${validated_user?.family_name}`.trim(),
-      verified: validated_user.email_verified,
-      refreshToken: refreshToken
-    })
+    let user = (await this.service.get_user({ email: validated_user.email })) as any
+
+    if (!user) {
+      // Create a new user with social login
+      const newUserId = newId().toString()
+      const newUser = {
+        _id: newUserId,
+        email: validated_user.email,
+        provider: 'google',
+        name: `${validated_user.given_name} ${validated_user.family_name}`.trim(),
+        verified: validated_user.email_verified
+      }
+      await this.service.create_user(newUser)
+      user = newUser
+    }
+
+    // Finalize login
+    if (!user.verified && validated_user.email_verified) {
+      await this.service.complete_verification(user._id)
+    }
+
+    const refreshToken = generateToken(user._id)
+    await this.service.updateRefreshToken(user._id, refreshToken)
 
     res.cookie('LIT', refreshToken, {
       maxAge: 1000 * 60 * 60 * 24,
@@ -163,15 +150,10 @@ class UserController {
       secure: nodeEnv == 'production',
       sameSite: nodeEnv == 'production' ? 'none' : undefined
     })
-    accessToken = generateAccessToken(refreshToken)
+    const accessToken = generateAccessToken(refreshToken)
     res.json({
       ok: true,
-      data: {
-        _id: createdUser._id,
-        email: validated_user?.email as string,
-        name: `${validated_user?.given_name} ${validated_user?.family_name}`.trim(),
-        token: accessToken
-      }
+      data: { _id: user._id, email: user.email, name: user.name, token: accessToken }
     })
   }
 }
