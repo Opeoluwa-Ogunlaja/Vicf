@@ -7,9 +7,17 @@ import contactsRouter from './routers/contactsRouter'
 import organisationsRouter from './routers/organisationsRouter'
 import path from 'path'
 import { nodeEnv } from './config'
+import fs from 'fs'
 
 const app = express()
 const __dirname = path.resolve()
+
+fs.readdir(__dirname, (e, val) => {
+  if (!e) console.log(val)
+})
+fs.readdir(path.join(__dirname, 'client'), (e, val) => {
+  if (!e) console.log(val)
+})
 
 app.use(cookieParser())
 app.use(express.json())
