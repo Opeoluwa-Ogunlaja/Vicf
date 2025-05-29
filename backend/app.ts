@@ -5,6 +5,8 @@ import userRouter from './routers/userRouter'
 import { errorHandler, notFound } from './lib/middleware/handlers/errorHandlers'
 import contactsRouter from './routers/contactsRouter'
 import organisationsRouter from './routers/organisationsRouter'
+import path from 'path'
+import { nodeEnv } from './config'
 
 const app = express()
 
@@ -32,7 +34,13 @@ app.use('/users', userRouter)
 app.use('/contacts', contactsRouter)
 app.use('/organisations', organisationsRouter)
 
-app.use(notFound)
+if (nodeEnv == 'production') {
+  app.use(express.static(path.join(__dirname, 'client')))
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'index.html'))
+  })
+}
+
 app.use(errorHandler)
 
 export default app
