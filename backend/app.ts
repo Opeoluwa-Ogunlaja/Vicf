@@ -9,6 +9,7 @@ import path from 'path'
 import { nodeEnv } from './config'
 
 const app = express()
+const __dirname = path.resolve()
 
 app.use(cookieParser())
 app.use(express.json())
