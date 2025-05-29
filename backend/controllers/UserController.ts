@@ -51,7 +51,8 @@ class UserController {
       httpOnly: true,
       path: '/',
       secure: nodeEnv == 'production',
-      sameSite: nodeEnv == 'production' ? 'none' : undefined
+      sameSite: nodeEnv == 'production' ? 'none' : undefined,
+      partitioned: true
     })
 
     const accessToken = generateAccessToken(refreshToken)
@@ -91,7 +92,8 @@ class UserController {
       httpOnly: true,
       path: '/',
       secure: nodeEnv == 'production',
-      sameSite: nodeEnv == 'production' ? 'none' : undefined
+      sameSite: nodeEnv == 'production' ? 'none' : undefined,
+      partitioned: true
     })
 
     res.json({
@@ -148,7 +150,8 @@ class UserController {
       httpOnly: true,
       path: '/',
       secure: nodeEnv == 'production',
-      sameSite: nodeEnv == 'production' ? 'none' : undefined
+      sameSite: nodeEnv == 'production' ? 'none' : undefined,
+      partitioned: true
     })
     const accessToken = generateAccessToken(refreshToken)
     res.json({
