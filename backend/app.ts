@@ -10,7 +10,6 @@ import { nodeEnv } from './config'
 import fs from 'fs'
 
 const app = express()
-const __dirname = path.resolve()
 
 fs.readdir(__dirname, (e, val) => {
   if (!e) console.log(val)
