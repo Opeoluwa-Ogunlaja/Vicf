@@ -13,6 +13,8 @@ const app = express()
 app.use(cookieParser())
 app.use(express.json())
 
+app.use(cors({ origin: (o, cb) => cb(null, true), credentials: true }))
+
 app.use('/users', userRouter)
 app.use('/contacts', contactsRouter)
 app.use('/organisations', organisationsRouter)
