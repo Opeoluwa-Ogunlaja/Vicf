@@ -25,6 +25,7 @@ const BackgroundPattern: FC<{
       src={source}
       ref={elem}
       alt="background-pattern"
+      fetchPriority="high"
       className={cn(
         'background-pattern pointer-events-none absolute translate-x-1/2 translate-y-1/2',
         className

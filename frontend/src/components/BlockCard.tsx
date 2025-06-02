@@ -22,7 +22,7 @@ const BlockCard: FC<{
     >
       <div className="relative grid overflow-clip bg-primary">
         <MultiBackgroundPatterns
-          count={35}
+          count={10}
           className="absolute aspect-square w-20 opacity-20"
           source={BgPatternImage}
         />
