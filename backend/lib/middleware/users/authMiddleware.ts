@@ -7,7 +7,7 @@ import validateMongodbId from '../../validators/validateMongodbId'
 import { SocketClients, SocketHandlerFn, SocketUsers } from '../../../types'
 import * as cookie from 'cookie'
 import { Socket } from 'socket.io'
-import { verifyAccessToken } from '../../utils/generateToken'
+import { verifyAccessToken, verifyRefreshToken } from '../../utils/generateToken'
 
 export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
   if (req.user) return next()
@@ -35,6 +35,20 @@ export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
       return next()
     } catch (e) {
       if (e instanceof AccessError) throw new ForbiddenError('Access Expired')
+      if (refreshToken) {
+        const victim = verifyRefreshToken(refreshToken)?._id
+        if (victim) {
+          await userRepository.updateById(victim, {
+            $unset: {
+              refreshToken: 1
+            }
+          })
+
+          res.cookie(loginTokenName, '', {
+            expires: Date.now() - 500
+          })
+        }
+      }
       return next()
     }
   }
