@@ -1,8 +1,5 @@
-import {
-  create_contact_listing,
-  update_contact_input_backup,
-  update_contact_name_backup
-} from '@/lib/utils/requestUtils'
+import { myTaskManager } from '@/lib/taskManager'
+import { update_contact_input_backup, update_contact_name_backup } from '@/lib/utils/requestUtils'
 import { ContactManager, ContactManagerEntry } from '@/types/contacts_manager'
 import { create } from 'zustand'
 
@@ -33,17 +30,9 @@ export const useContactManagerStore = create<ContactManager>()(set => {
       },
       async createManager(data, upstream = false) {
         let errorsPresent = false
-        let new_manager = !upstream && data
+        const new_manager = myTaskManager.run('create_listing', false, data)
         const newManagerFlow = async () => {
           try {
-            if (upstream) {
-              new_manager = await create_contact_listing({
-                url_id: data.url_id,
-                name: data.name,
-                input_backup: data.input_backup
-              })
-            }
-
             set(state => {
               return { manager: [new_manager, ...state.manager] as ContactManagerEntry[] }
             })

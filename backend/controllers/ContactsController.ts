@@ -55,6 +55,15 @@ export class ContactsController {
     res.json({ ok: true, data: contacts })
   }
 
+  get_contact_listing: AsyncHandler<{}, any, { listingId: string }> = async (req, res) => {
+    const userId = req.user?.id
+    const listingId = req.params.listingId
+
+    const listing = await this.service.getListingByUrl(listingId, userId)
+
+    res.json({ ok: true, data: listing })
+  }
+
   update_input_backup: AsyncHandler<Partial<IContact>, IContactGroup, { listingId: string }> =
     async (req, res) => {
       const listingId = req.params.listingId

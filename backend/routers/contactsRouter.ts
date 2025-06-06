@@ -16,6 +16,8 @@ contactsRouter.patch(
 
 contactsRouter.get('/manager', contactsController.get_manager.bind(contactsController))
 
+contactsRouter.get('/:listingId', contactsController.get_contact_listing.bind(contactsController))
+
 contactsRouter.get('/:listingId/contacts', contactsController.get_contacts.bind(contactsController))
 
 contactsRouter.delete(

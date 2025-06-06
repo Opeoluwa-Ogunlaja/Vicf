@@ -29,6 +29,10 @@ export class ContactService {
     })
   }
 
+  async getListingByUrl(listing_id: string, user_id: string) {
+    return await this.groups_repository.findOne({ url_id: listing_id, userId: user_id })
+  }
+
   async getManagerForUser(userId: string) {
     const manager = await this.groups_repository.aggregate([
       { $match: { userId: new mongoose.Types.ObjectId(userId) } },
