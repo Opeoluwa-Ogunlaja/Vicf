@@ -66,7 +66,9 @@ const UserProvider: FC<{
 
   return (
     <UserContext.Provider value={store}>
-      <TokenContext.Provider value={{ token, setToken }}>{children}</TokenContext.Provider>
+      <TokenContext.Provider value={{ token: tokenRef, setToken }}>
+        {children}
+      </TokenContext.Provider>
     </UserContext.Provider>
   )
 }

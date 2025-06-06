@@ -15,11 +15,10 @@ import {
 import { Input } from './ui/input'
 import { AppleIcon, GoogleIcon, VicfIcon } from '@/assets/icons'
 import { wait } from '@/lib/utils/promiseUtils'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { google_login, login_user } from '@/lib/utils/requestUtils'
-import { queryClient } from '@/queryClient'
 import { IUser, PartialUser } from '@/types/user'
 import { useGoogleLogin } from '@react-oauth/google'
 import { useToggle } from '@/hooks/useToggle'
@@ -34,6 +33,7 @@ const LoginForm = () => {
       password: ''
     }
   })
+  const queryClient = useQueryClient()
   const { setToken } = useToken()
 
   const [disableSubmit, toggleSubmit] = useToggle(false)
@@ -73,6 +73,11 @@ const LoginForm = () => {
           })
           update_user_state({ id: res?.id, name: res?.name, email: res?.email })
           setToken(res?.token ?? '')
+          queryClient.invalidateQueries({
+            queryKey: ['contacts_manager'],
+            refetchType: 'all',
+            exact: true
+          })
           return wait(2000)
         })
         .then(() => navigate('/home'))
@@ -112,6 +117,11 @@ const LoginForm = () => {
           })
           setToken(res?.token ?? '')
           update_user_state({ id: res?.id, name: res?.name, email: res?.email })
+          queryClient.invalidateQueries({
+            queryKey: ['contacts_manager'],
+            refetchType: 'all',
+            exact: true
+          })
           return wait(2000)
         })
         .then(() => {

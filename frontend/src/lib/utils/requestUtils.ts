@@ -154,7 +154,7 @@ export const get_contact_listing = async (
   listing_id: string
 ): Promise<ContactManagerEntry[] | undefined> => {
   try {
-    const newUser = await axiosInstance.get(`/contacts/${listing_id}`)
+    const newUser = await axiosInstance.get(`/contacts/${listing_id}/contacts`)
 
     return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

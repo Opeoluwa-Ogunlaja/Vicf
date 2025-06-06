@@ -1,20 +1,12 @@
 import { defer, LoaderFunction } from 'react-router-dom'
 import { queryClient } from '@/queryClient'
 import { get_contacts_manager, get_profile, getAccessToken } from './requestUtils'
-import { ContactManagerActions, ContactManagerEntry } from '@/types/contacts_manager'
-import { Dispatch } from 'react'
-import { useUserUpdate } from '@/hooks/useUserUpdate'
-import { IUser } from '@/types'
+import { ContactManagerEntry } from '@/types/contacts_manager'
+import { IUser, RouteDataType } from '@/types'
 import { waitForInterceptor } from './tokenReady'
 // import { db } from '@/stores/dexie/db'
 
-export const rootLoader = (
-  _onlineStatus: boolean,
-  setters: {
-    setManager: ContactManagerActions['setManager']
-    setToken: Dispatch<string>
-  } & Pick<ReturnType<typeof useUserUpdate>, 'login_user' | 'set_loaded'>
-) =>
+export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
   (async () => {
     const fetchAccessToken = async () => {
       try {
@@ -26,8 +18,10 @@ export const rootLoader = (
       }
     }
 
-    await fetchAccessToken()
-    await waitForInterceptor()
+    if (!setters.currentToken.current) {
+      await fetchAccessToken()
+      await waitForInterceptor()
+    }
 
     let userPromise!: Promise<unknown>
     userPromise = Promise.resolve(null)
