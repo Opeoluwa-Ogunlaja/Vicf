@@ -6,6 +6,7 @@ import { IUser } from '@/types/user'
 import { ContactManagerEntry } from '@/types/contacts_manager'
 import { IContact } from '@/types'
 import { wait } from './promiseUtils'
+import { TokenRequestManager } from '../TokenRequestManager'
 
 const throwError = (error: AxiosError) => {
   throw new CustomAppError(error)
@@ -19,16 +20,32 @@ const checkError = (err: AxiosError) => {
   }
 }
 
+const fetchAccessToken = async (): Promise<{ token: string }> => {
+  const response = await axiosInstance.get('/users/token')
+  return response.data.data
+}
+
+const tokenManager = new TokenRequestManager(fetchAccessToken)
+
 export const getAccessToken = async () => {
   try {
-    const newUser = await axiosInstance.get('/users/token')
-
-    return newUser.data.data
+    return await tokenManager.getToken()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     checkError(error)
   }
 }
+
+// export const getAccessToken = async () => {
+//   try {
+//     const newUser = await axiosInstance.get('/users/token')
+
+//     return newUser.data.data
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   } catch (error: any) {
+//     checkError(error)
+//   }
+// }
 
 export const signup_user = async ({
   email,

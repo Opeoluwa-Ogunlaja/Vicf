@@ -27,6 +27,7 @@ const UserProvider: FC<{
           : config.headers.Authorization
         return config
       })
+      console.log('whatsup na')
       markInterceptorReady()
     }
 
@@ -47,11 +48,10 @@ const UserProvider: FC<{
             const tokenResponse = await getAccessToken()
             setToken(tokenResponse.token)
 
-            originalRequest.headers.Authorization = `Bearer ${tokenResponse.token}`
+            originalRequest.headers.Authorization = `Bearer ${tokenResponse?.token}`
             originalRequest._retry = true
             return api(originalRequest)
           } catch (err) {
-            console.log(err)
             setToken('')
             return Promise.reject(err)
           }

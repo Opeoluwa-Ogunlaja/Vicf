@@ -13,12 +13,12 @@ const generateRefreshToken = (_id: string): string => {
   return token
 }
 
-export const generateAccessToken = (refreshToken: string, duration: number = 60 * 5) => {
+export const generateAccessToken = (refreshToken: string, duration: number = 60 * 1) => {
   const token = jwt.sign(
     { refreshToken, expires: new Date(Date.now() + duration * 1000) },
     jwtSecret ?? 'hehehehe',
     {
-      expiresIn: '5m',
+      expiresIn: '1m',
       algorithm: jwtAlgo
     }
   )

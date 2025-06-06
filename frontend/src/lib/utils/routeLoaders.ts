@@ -11,7 +11,7 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
     const fetchAccessToken = async () => {
       try {
         const token = await getAccessToken()
-        setters.setToken(token.token)
+        setters.setToken(token?.token)
         // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
       } catch (error) {
         setters.setToken(' ')
@@ -60,8 +60,7 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
     try {
       const fetching_promise = queryClient.fetchQuery({
         queryKey: ['contacts_manager'],
-        queryFn: get_contacts_manager,
-        staleTime: Infinity
+        queryFn: get_contacts_manager
       })
       fetching_promise.then(contacts_manager => {
         if ((contacts_manager as Array<unknown>)?.length > 0) {
