@@ -46,7 +46,7 @@ const UserProvider: FC<{
         if (error.response.status === 403 && error.response.data.message === 'Access Expired') {
           try {
             const tokenResponse = await getAccessToken()
-            setToken(tokenResponse.token)
+            setToken(tokenResponse?.token || ' ')
 
             originalRequest.headers.Authorization = `Bearer ${tokenResponse?.token}`
             originalRequest._retry = true
