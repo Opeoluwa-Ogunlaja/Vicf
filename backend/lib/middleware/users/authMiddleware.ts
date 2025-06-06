@@ -2,7 +2,7 @@ import expressAsyncHandler from 'express-async-handler'
 import jwt from 'jsonwebtoken'
 import { userRepository } from '../../../repositories/UserRepository'
 import { AccessError, ForbiddenError } from '../../utils/AppErrors'
-import { loginTokenName, jwtSecret } from './../../../config/index'
+import { loginTokenName, jwtSecret, nodeEnv } from './../../../config/index'
 import validateMongodbId from '../../validators/validateMongodbId'
 import { SocketClients, SocketHandlerFn, SocketUsers } from '../../../types'
 import * as cookie from 'cookie'
@@ -44,8 +44,13 @@ export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
             }
           })
 
-          res.cookie(loginTokenName, '', {
-            expires: Date.now() - 500
+          res.cookie(loginTokenName, null, {
+            expires: new Date(Date.now() - 500),
+            httpOnly: true,
+            path: '/',
+            secure: nodeEnv == 'production',
+            sameSite: nodeEnv == 'production' ? 'none' : undefined,
+            partitioned: nodeEnv == 'production'
           })
         }
       }
