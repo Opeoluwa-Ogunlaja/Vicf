@@ -30,7 +30,7 @@ export const useContactManagerStore = create<ContactManager>()(set => {
       },
       async createManager(data, upstream = false) {
         let errorsPresent = false
-        const new_manager = myTaskManager.run('create_listing', false, data)
+        const new_manager = await myTaskManager.run('create_listing', true, data)
         const newManagerFlow = async () => {
           try {
             set(state => {

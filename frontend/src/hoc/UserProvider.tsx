@@ -27,7 +27,6 @@ const UserProvider: FC<{
           : config.headers.Authorization
         return config
       })
-      console.log('whatsup na')
       markInterceptorReady()
     }
 

@@ -3,6 +3,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { OnlineTaskQueue } from '@/queue'
 import { create_contact_listing } from './utils/requestUtils'
+import { generateMongoId } from './utils/idUtils'
+import { db } from '@/stores/dexie/db'
 
 export interface RegistryTask {
   [taskId: string]: {
@@ -41,11 +43,19 @@ export const taskRegistry: RegistryTask = {
       name?: string
       input_backup?: string
     }): Promise<T> => {
-      return await create_contact_listing({
-        url_id: data.url_id,
-        name: data.name,
-        input_backup: data.input_backup
-      })
+      const id = generateMongoId()
+      return (await db.managers.add(
+        {
+          _id: id,
+          backed_up: false,
+          contacts_count: 0,
+          input_backup: data.input_backup!,
+          name: data.name!,
+          url_id: data.url_id,
+          preferences: { slug_type: '' }
+        },
+        id
+      )) as T
     },
     retry: {
       retries: 3,
