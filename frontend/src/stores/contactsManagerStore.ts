@@ -110,9 +110,9 @@ export const useContactManagerStore = create<ContactManager>()(set => {
       },
       async updateListingName(id, newName, upstream = false) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let updated_name: any
+        let updated_name: string
         let errorsPresent = false
-        updated_name = !upstream && newName
+        if (!upstream) updated_name = newName
         const updateManagerFlow = async () => {
           try {
             if (upstream) updated_name = await update_contact_name_backup(id, newName)
@@ -150,6 +150,8 @@ export const useContactManagerStore = create<ContactManager>()(set => {
         await updateManagerFlow()
 
         if (errorsPresent) throw new Error('There was an error updating the listing')
+
+        return updated_name!
       }
     }
   }

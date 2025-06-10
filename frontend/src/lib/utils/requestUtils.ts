@@ -158,9 +158,9 @@ export const update_contact_input_backup = async (id: string, backup: Partial<IC
 
 export const update_contact_name_backup = async (id: string, newName: string) => {
   try {
-    const newListing = await axiosInstance.patch(`/contacts/name/${id}`, { name: newName })
+    const newListing = await axiosInstance.patch(`/contacts/${id}/name`, { name: newName })
 
-    return newListing.data.data.input_backup
+    return newListing.data.data.name
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     checkError(error)

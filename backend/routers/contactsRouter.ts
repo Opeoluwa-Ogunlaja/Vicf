@@ -13,6 +13,10 @@ contactsRouter.patch(
   '/backup-input/:listingId',
   contactsController.update_input_backup.bind(contactsController)
 )
+contactsRouter.patch(
+  '/:listingId/name',
+  contactsController.update_listing_name.bind(contactsController)
+)
 
 contactsRouter.get('/manager', contactsController.get_manager.bind(contactsController))
 

@@ -21,7 +21,7 @@ import {
 import { Input } from './ui/input'
 import { Checkbox } from './ui/checkbox'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
-import { FocusEvent, FocusEventHandler, useEffect, useLayoutEffect, useMemo } from 'react'
+import { FocusEvent, FocusEventHandler, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { wait } from '@/lib/utils/promiseUtils'
 import AdditionalInfoSection from '@/pages/save/AdditionalInfoSection'
 import { useManager } from '@/hooks/useManager'
@@ -36,7 +36,6 @@ import { useUser } from '@/hooks/useUser'
 import { emptyBaseContact } from '@/lib/consts'
 import { useMutation } from '@tanstack/react-query'
 import { debounceFn } from '@/lib/utils/throttle'
-import { ContactManagerEntry } from '@/types/contacts_manager'
 import { contactTasks } from '@/feature/contactTaskQueues'
 
 const ContactForm = () => {
@@ -46,6 +45,7 @@ const ContactForm = () => {
   const { toast } = useToast()
   const { toast: backupInputToast } = useToast()
   const user = useUser()
+  const lastNameUpdate = useRef<null | string>(null)
 
   const contactManager = useMemo(() => {
     return manager.find(mngr => mngr.url_id == contacts.url_id)
@@ -173,6 +173,8 @@ const ContactForm = () => {
   ) {
     return debounceFn((e: FocusEvent<HTMLInputElement>) => {
       fieldBlur(e)
+      if (formHook.getValues().name == lastNameUpdate.current) return
+
       updateNameMutation
         .mutateAsync({
           id: contactManager?._id as string,
@@ -181,7 +183,8 @@ const ContactForm = () => {
         })
         .then(
           (data: unknown) => {
-            formHook.setValue('name', (data as ContactManagerEntry).name)
+            formHook.setValue('name', data as string)
+            lastNameUpdate.current = data as string
           },
           () => {
             toast({
@@ -215,7 +218,7 @@ const ContactForm = () => {
                         width: `${field.value.length}ch`
                       }}
                       {...{ ...field, onBlur: undefined }}
-                      onBlur={() => handleTitleBlur<typeof field.onBlur>(field.onBlur)}
+                      onBlur={handleTitleBlur<typeof field.onBlur>(field.onBlur)}
                     />
                   </FormControl>
                 </FormItem>

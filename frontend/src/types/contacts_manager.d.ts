@@ -27,7 +27,7 @@ export type ContactManagerActions = {
     backup: Omit<ContactFormType, 'name'>,
     upstream?: boolean
   ) => Promise<void>
-  updateListingName: (id: string, newName: string, upstream?: boolean) => Promise<void>
+  updateListingName: (id: string, newName: string, upstream?: boolean) => Promise<string>
   updateContactCount: (id: string, dec?: boolean = false) => void
 }
 

@@ -11,6 +11,7 @@ import {
 import { flattenZodErrorMessage } from '../lib/utils/zodErrors'
 import { AccessError, RequestError } from './../lib/utils/AppErrors'
 import { contactUseCases, ContactUseCases } from '../use cases/ContactUseCases'
+import { z } from 'zod'
 
 export class ContactsController {
   service: ContactService
@@ -78,12 +79,10 @@ export class ContactsController {
   update_listing_name: AsyncHandler<{ name: string }, IContactGroup, { listingId: string }> =
     async (req, res) => {
       const listingId = req.params.listingId
-      const name = req.body.name
-      const validation = await updateContactInputBackupSchema.partial().safeParseAsync(req.body)
+      const validation = await z.string().safeParseAsync(req.body.name)
       if (!validation.success)
         throw new RequestError(flattenZodErrorMessage(validation.error.errors))
-      const backup = validation.data
-      const manager = await this.service.updateManagerInputBackup(listingId, backup as IContact)
+      const manager = await this.service.updateManager(listingId, { name: validation.data })
       res.json({ ok: true, data: manager?.toJSON() })
     }
 
