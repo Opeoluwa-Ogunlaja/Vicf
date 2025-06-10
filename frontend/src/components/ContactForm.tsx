@@ -1,5 +1,5 @@
-import { ContactFormSchema, ContactFormType } from '@/lib/utils/form-schemas'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { ContactFormSchema, ContactFormType, phoneNumberType } from '@/lib/utils/form-schemas'
+import { useForm, SubmitHandler, useWatch } from 'react-hook-form'
 import { Button } from './ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PhonePlusIcon } from '@/assets/icons'
@@ -37,6 +37,7 @@ import { emptyBaseContact } from '@/lib/consts'
 import { useMutation } from '@tanstack/react-query'
 import { debounceFn } from '@/lib/utils/throttle'
 import { contactTasks } from '@/feature/contactTaskQueues'
+import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 
 const ContactForm = () => {
   const manager = useManager()
@@ -45,7 +46,6 @@ const ContactForm = () => {
   const { toast } = useToast()
   const { toast: backupInputToast } = useToast()
   const user = useUser()
-  const lastNameUpdate = useRef<null | string>(null)
 
   const contactManager = useMemo(() => {
     return manager.find(mngr => mngr.url_id == contacts.url_id)
@@ -94,6 +94,7 @@ const ContactForm = () => {
     }
   })
 
+  const lastNameUpdate = useRef<string | null>(contactManager?.name || null)
   const formHook = useForm<ContactFormType>({
     resolver: zodResolver(ContactFormSchema),
     defaultValues: isInManager
@@ -103,6 +104,25 @@ const ContactForm = () => {
           ...emptyBaseContact
         }
   })
+
+  const number = useWatch({ control: formHook.control, name: 'number' })
+
+  useUpdateEffect(() => {
+    if (!number || formHook.formState.errors.number) return
+
+    if (
+      contacts.contacts.findIndex(
+        contact => contact.number == phoneNumberType.safeParse(number).data
+      ) > -1
+    ) {
+      formHook.setError('number', {
+        type: 'manual',
+        message: 'This number has already been entered'
+      })
+    } else {
+      formHook.clearErrors('number')
+    }
+  }, [number, formHook.setError, formHook.formState.errors.number, formHook.clearErrors])
 
   useFormValueChangeDebounce({
     formHook,
