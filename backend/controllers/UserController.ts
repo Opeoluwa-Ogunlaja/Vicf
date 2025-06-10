@@ -150,7 +150,7 @@ class UserController {
       httpOnly: true,
       path: '/',
       secure: nodeEnv == 'production',
-      sameSite: nodeEnv == 'production' ? 'strict' : undefined
+      sameSite: nodeEnv == 'production' ? 'lax' : undefined
       // partitioned: nodeEnv == 'production'
     })
     const accessToken = generateAccessToken(refreshToken)
