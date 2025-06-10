@@ -20,6 +20,8 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
   const { updateContactCount } = useManagerActions()
   const { isOnline } = useOnline()
 
+  console.log(isOnline)
+
   const contactManager = manager.find(mngr => mngr.url_id == url_id)
 
   const queryClient = useQueryClient()
@@ -42,7 +44,7 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
       <ContactsUpdateContext.Provider
         value={{
           add: contact => {
-            if (loggedIn && isOnline) {
+            if (loggedIn) {
               sendMessage(
                 { listingId: contactManager?._id, ...contact },
                 'add-contacts',
