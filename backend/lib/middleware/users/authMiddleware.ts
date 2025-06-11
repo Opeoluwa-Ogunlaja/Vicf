@@ -11,8 +11,6 @@ import { verifyAccessToken, verifyRefreshToken } from '../../utils/generateToken
 
 export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
   if (req.user) return next()
-  console.log(req.cookies, req?.headers.authorization)
-
   let refreshToken, accessToken
 
   if (

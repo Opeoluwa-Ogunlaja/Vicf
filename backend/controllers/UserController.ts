@@ -51,7 +51,7 @@ class UserController {
       httpOnly: true,
       path: '/',
       secure: nodeEnv == 'production',
-      sameSite: nodeEnv == 'production' ? 'strict' : undefined
+      sameSite: nodeEnv == 'production' ? 'lax' : undefined
       // partitioned: nodeEnv == 'production'
     })
 
@@ -87,12 +87,12 @@ class UserController {
 
     const accessToken = generateAccessToken(newRefreshToken)
 
-    res.cookie('LIT', newRefreshToken, {
+    res.cookie('LIT', refreshToken, {
       maxAge: 1000 * 60 * 60 * 24 * 20,
       httpOnly: true,
       path: '/',
       secure: nodeEnv == 'production',
-      sameSite: nodeEnv == 'production' ? 'strict' : undefined
+      sameSite: nodeEnv == 'production' ? 'lax' : undefined
       // partitioned: nodeEnv == 'production'
     })
 
