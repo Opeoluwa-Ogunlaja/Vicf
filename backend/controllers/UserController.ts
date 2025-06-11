@@ -87,7 +87,7 @@ class UserController {
 
     const accessToken = generateAccessToken(newRefreshToken)
 
-    res.cookie('LIT', refreshToken, {
+    res.cookie('LIT', newRefreshToken, {
       maxAge: 1000 * 60 * 60 * 24 * 20,
       httpOnly: true,
       path: '/',
