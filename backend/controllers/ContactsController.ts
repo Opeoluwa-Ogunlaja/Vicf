@@ -90,11 +90,10 @@ export class ContactsController {
           { name: validation.data },
           session!
         )
-        console.log(listingInfo)
         await this.service.migrateSlugs(
           listingId,
           listingInfo.preferences.slug_type,
-          listingInfo?.name,
+          validation.data,
           session
         )
         return updated_manager

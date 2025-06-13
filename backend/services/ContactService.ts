@@ -49,9 +49,8 @@ export class ContactService {
   ) {
     const MyModel = this.contacts_repository.contact_dal.getModel()
     const batchSize = 500
-    console.log('hello')
     const cursor = MyModel.find(
-      { contact_group: listingId, overwrite_name: false },
+      { contact_group: listingId, overwrite: false },
       { name: 1 }
     ).cursor()
     const bulkOps: any[] = []
@@ -67,10 +66,10 @@ export class ContactService {
               update: { $set: { name: newSlug } }
             }
           })
+          position++
         }
-        position++
       } catch (err: any) {
-        // console.warn(`Skipping doc ${doc._id}: ${err.message}`)
+        console.warn(`Skipping doc ${doc._id}: ${err.message}`)
       }
 
       if (bulkOps.length >= batchSize) {
