@@ -185,6 +185,7 @@ const ContactForm = () => {
     await addContactMutation.mutateAsync(data)
     toast({ title: 'Contact Added' })
     formHook.reset({
+      name: contactManager?.name || undefined,
       email: '',
       number: '',
       additional_information: {},
