@@ -96,7 +96,7 @@ const ContactForm = () => {
             number: data.number,
             _id: generateMongoId(),
             name: !data.overwrite
-              ? slugifiedId(data.name, contacts.contacts.length)
+              ? slugifiedId(data.name, contacts.contacts.length + 1)
               : (data.overwrite_name as string),
             email: data?.email
           })
