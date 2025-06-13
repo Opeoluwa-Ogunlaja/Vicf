@@ -181,8 +181,6 @@ const ContactForm = () => {
 
   useEffect(() => {
     if (!isInManager) startManagerCreationTimeout()
-
-    if (contactManager) toast({ title: 'Syncing listing...', description: 'Syncing...' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -214,7 +212,7 @@ const ContactForm = () => {
             })
           }
         )
-    }, 5000)
+    }, 2000)
   }
 
   return (

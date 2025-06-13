@@ -79,10 +79,26 @@ export class ContactsController {
   update_listing_name: AsyncHandler<{ name: string }, IContactGroup, { listingId: string }> =
     async (req, res) => {
       const listingId = req.params.listingId
+      const listingInfo = await this.service.getListingTitleAndSlugType(listingId)
+      if (!listingInfo) throw new RequestError('Invalid action')
       const validation = await z.string().safeParseAsync(req.body.name)
       if (!validation.success)
         throw new RequestError(flattenZodErrorMessage(validation.error.errors))
-      const manager = await this.service.updateManager(listingId, { name: validation.data })
+      const manager = await this.service.groups_repository.runInTransaction(async session => {
+        const updated_manager = await this.service.updateManager(
+          listingId,
+          { name: validation.data },
+          session!
+        )
+        console.log(listingInfo)
+        await this.service.migrateSlugs(
+          listingId,
+          listingInfo.preferences.slug_type,
+          listingInfo?.name,
+          session
+        )
+        return updated_manager
+      })
       res.json({ ok: true, data: manager?.toJSON() })
     }
 

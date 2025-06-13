@@ -1,6 +1,5 @@
 import { Schema, model, Model } from 'mongoose'
 import { IContactGroupDocument } from '../types/'
-import contactSchema from './Contact'
 
 export type ContactGroupModelType = Model<IContactGroupDocument>
 
@@ -30,6 +29,13 @@ const contactGroupSchema = new Schema<IContactGroupDocument, ContactGroupModelTy
   },
   last_backup: {
     type: Date
+  },
+  preferences: {
+    slug_type: {
+      type: String,
+      enum: ['title_number', 'title_hash'],
+      default: 'title_number'
+    }
   }
 })
 

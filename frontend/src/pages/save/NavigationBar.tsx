@@ -10,6 +10,13 @@ import { cn } from '@/lib/utils'
 import { useUser } from '@/hooks/useUser'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+  SelectTrigger
+} from '@/components/ui/select'
 
 const NavigationBar = () => {
   const navIconClass = cn('w-8 max-md:w-6')
@@ -43,10 +50,25 @@ const NavigationBar = () => {
               }}
               className="mt-2 min-w-72 p-6 max-sm:min-w-48 max-sm:p-3"
             >
-              <h4 className="font-semibold">Collection Settings</h4>
-              <p className="text-neutral-400 max-sm:text-xs">
-                Adjust <strong>Apo boiz</strong> collection settings
-              </p>
+              <h4 className="mb-4 font-semibold">Collection Settings</h4>
+              <ul>
+                <li className="flex justify-between">
+                  <p className="mt-2 text-sm text-neutral-500">Slug type</p>
+                  <Select>
+                    <SelectTrigger className="w-[156px]">
+                      <SelectValue defaultValue={'title_number'} placeholder="Title + Number" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="title_number">Title + number</SelectItem>
+                      <SelectItem value="title_hash">Title + hash</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </li>
+              </ul>
+
+              <Button variant={'secondary'} className="mt-5 w-full" disabled>
+                Apply Settings
+              </Button>
             </DropdownMenuContent>
           </DropdownMenu>
         </li>

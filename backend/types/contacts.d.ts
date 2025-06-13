@@ -22,6 +22,9 @@ export interface IContactGroup {
   url_id: string
   last_backup: Date
   input_backup: string
+  preferences: {
+    slug_type: 'title_number' | 'title_hash'
+  }
 }
 
 export interface IContactGroupDocument extends IContactGroup, Document {}

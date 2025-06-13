@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Button } from './ui/button'
 import { cx } from 'class-variance-authority'
 import Loader from './ui/loader'
@@ -32,6 +32,11 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const [open, setOpen] = useState(false)
   const { loggedIn } = useUser()
   const manager = useManager()
+  const managerLength = useRef<number>(manager.length)
+
+  useEffect(() => {
+    managerLength.current = manager.length
+  }, [manager])
 
   const { createManager } = useManagerActions()
   const { toast } = useToast()
@@ -48,7 +53,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
             contacts_count: 0,
             url_id: id as string,
             input_backup: JSON.stringify({ name: undefined }),
-            name: `New Contact ${manager.length + 1}`
+            name: `New Contact ${managerLength.current + 1}`
           },
           loggedIn
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -72,7 +77,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
         {
           _id: generateMongoId(),
           url_id: id as string,
-          name: `New Contact ${manager.length + 1}`,
+          name: `New Contact ${managerLength.current + 1}`,
           ...emptyBaseContactManager
         },
         loggedIn
