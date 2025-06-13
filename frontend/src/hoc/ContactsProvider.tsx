@@ -3,7 +3,7 @@ import { ContactsUpdateContext } from '@/contexts/ContactsUpdateContext'
 import { useToast } from '@/hooks/use-toast'
 import { useManager } from '@/hooks/useManager'
 import { useManagerActions } from '@/hooks/useManagerActions'
-import { useOnline } from '@/hooks/useOnline'
+// import { useOnline } from '@/hooks/useOnline'
 import { useSocketActions } from '@/hooks/useSocketActions'
 import { useUser } from '@/hooks/useUser'
 import { delete_contact, get_contacts } from '@/lib/utils/requestUtils'
@@ -18,9 +18,9 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
   const { loggedIn } = useUser()
   const manager = useManager()
   const { updateContactCount } = useManagerActions()
-  const { isOnline } = useOnline()
+  // const { isOnline } = useOnline()
 
-  console.log(isOnline)
+  // console.log(isOnline)
 
   const contactManager = manager.find(mngr => mngr.url_id == url_id)
 

@@ -43,8 +43,8 @@ export class ContactsRepository {
     return await this.contact_dal.aggregate(...args)
   }
 
-  async deleteContact(id: string) {
-    return await this.contact_dal.delete(id)
+  async deleteContact(id: string, session?: ClientSession) {
+    return await this.contact_dal.delete(id, session)
   }
 }
 

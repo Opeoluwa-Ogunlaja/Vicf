@@ -75,10 +75,9 @@ const ContactForm = () => {
                     name: convertSlug(
                       contactManager?.preferences?.slug_type || 'title_number',
                       data.name,
-                      position
+                      position++
                     )
                   }
-                  position++
                 } else return contact
               })
             }

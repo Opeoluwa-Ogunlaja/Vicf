@@ -144,15 +144,23 @@ export class ContactService {
   }
 
   async deleteContact(listingId: string, contactId: string) {
-    const deletedContact = await this.contacts_repository.deleteContact(contactId)
+    const deletedContact = await this.contacts_repository.runInTransaction(async session => {
+      let deleted = await this.contacts_repository.deleteContact(contactId, session)
 
-    await this.updateManager(listingId, {
-      $inc: {
-        contacts_count: -1
-      },
-      $pull: {
-        contacts: [deletedContact!.id]
-      }
+      await this.updateManager(
+        listingId,
+        {
+          $inc: {
+            contacts_count: -1
+          },
+          $pull: {
+            contacts: [deletedContact!.id]
+          }
+        },
+        session
+      )
+
+      return deleted
     })
 
     return deletedContact
