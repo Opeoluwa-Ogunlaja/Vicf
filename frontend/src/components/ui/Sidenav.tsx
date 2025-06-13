@@ -58,7 +58,7 @@ const Sidenav = () => {
       <div className="contents" ref={sidenavRef}>
         <aside
           className={cn(
-            'sidenav grid gap-20 overflow-y-auto scroll-smooth bg-white px-8 py-10 transition-all duration-500 max-lg:pointer-events-auto max-lg:fixed max-lg:inset-x-0 max-lg:left-0 max-lg:top-0 max-lg:z-[50000000000] max-lg:h-full max-lg:w-[300px] max-lg:gap-10 max-lg:justify-self-stretch',
+            'sidenav grid gap-16 overflow-y-auto scroll-smooth bg-white px-8 py-10 transition-all duration-500 max-lg:pointer-events-auto max-lg:fixed max-lg:inset-x-0 max-lg:left-0 max-lg:top-0 max-lg:z-[50000000000] max-lg:h-full max-lg:w-[300px] max-lg:gap-10 max-lg:justify-self-stretch',
             {
               'max-lg:invisible max-lg:max-w-0 max-lg:overflow-hidden max-lg:opacity-0': !open,
               closed: !open,
@@ -74,26 +74,6 @@ const Sidenav = () => {
           <div onClick={() => setOpen(false)}>
             <CreateNewButton className="-mb-10 py-6 max-lg:order-2 lg:mt-4" />
           </div>
-
-          <section className="flex flex-col max-lg:order-3 max-lg:mt-8">
-            <h3 className="mb-4 border-b border-b-neutral-200 pb-2 text-xl font-medium max-lg:text-lg">
-              Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
-            </h3>
-            <ul className="mt-2 space-y-2">
-              {[...manager.slice(-2)].map(entry => {
-                return (
-                  <li key={entry._id}>
-                    <GroupCard
-                      url_id={entry.url_id}
-                      group_name={entry.name}
-                      status={!entry.backed_up ? 'not-uploaded' : 'uploaded'}
-                      contacts_num={entry.contacts_count}
-                    />
-                  </li>
-                )
-              })}
-            </ul>
-          </section>
           <section className="flex flex-col max-lg:order-1">
             <h3 className="mb-4 border-b border-b-neutral-200 pb-2 text-xl font-medium max-lg:text-lg">
               Goto <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
@@ -118,6 +98,25 @@ const Sidenav = () => {
                   </NavigationLink>
                 </li>
               )}
+            </ul>
+          </section>
+          <section className="flex flex-col max-lg:order-3 max-lg:mt-8">
+            <h3 className="mb-4 border-b border-b-neutral-200 pb-2 text-xl font-medium max-lg:text-lg">
+              Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
+            </h3>
+            <ul className="mt-2 space-y-2">
+              {[...manager.slice(-2)].map(entry => {
+                return (
+                  <li key={entry._id}>
+                    <GroupCard
+                      url_id={entry.url_id}
+                      group_name={entry.name}
+                      status={!entry.backed_up ? 'not-uploaded' : 'uploaded'}
+                      contacts_num={entry.contacts_count}
+                    />
+                  </li>
+                )
+              })}
             </ul>
           </section>
         </aside>{' '}
