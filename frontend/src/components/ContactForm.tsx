@@ -25,16 +25,16 @@ import { FocusEvent, FocusEventHandler, useEffect, useLayoutEffect, useMemo, use
 import { wait } from '@/lib/utils/promiseUtils'
 import AdditionalInfoSection from '@/pages/save/AdditionalInfoSection'
 import { useManager } from '@/hooks/useManager'
-import { generateMongoId, slugifiedId } from '@/lib/utils/idUtils'
+import { convertSlug, generateMongoId, slugifiedId } from '@/lib/utils/idUtils'
 import { useContacts } from '@/hooks/useContacts'
 import { useTimeout } from '@/hooks/useTimeout'
-import { additionalInfoValue } from '@/types'
+import { additionalInfoValue, contactsArray } from '@/types'
 import { useManagerActions } from '@/hooks/useManagerActions'
 import { useFormValueChangeDebounce } from '@/hooks/useFormValueChangeDebounce'
 import { useToast } from '@/hooks/use-toast'
 import { useUser } from '@/hooks/useUser'
 import { emptyBaseContact } from '@/lib/consts'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { debounceFn } from '@/lib/utils/throttle'
 import { contactTasks } from '@/feature/contactTaskQueues'
 import { useUpdateEffect } from '@/hooks/useUpdateEffect'
@@ -46,6 +46,7 @@ const ContactForm = () => {
   const { toast } = useToast()
   const { toast: backupInputToast } = useToast()
   const user = useUser()
+  const queryClient = useQueryClient()
 
   const contactManager = useMemo(() => {
     return manager.find(mngr => mngr.url_id == contacts.url_id)
@@ -59,7 +60,31 @@ const ContactForm = () => {
       id: string
       name: Parameters<typeof updateListingName>[1]
       upstream?: boolean
-    }) => contactTasks.runTask(() => updateListingName(data.id, data.name, data.upstream))
+    }) =>
+      contactTasks
+        .runTask(() => updateListingName(data.id, data.name, data.upstream))
+        .then(res => {
+          queryClient.setQueryData(
+            ['contacts', contactManager?.url_id],
+            (myContacts: contactsArray) => {
+              let position = 1
+              return myContacts.map(contact => {
+                if (!contact.overwrite_name) {
+                  return {
+                    ...contact,
+                    name: convertSlug(
+                      contactManager?.preferences?.slug_type || 'title_number',
+                      data.name,
+                      position
+                    )
+                  }
+                  position++
+                } else return contact
+              })
+            }
+          )
+          return res
+        })
   })
   const addContactMutation = useMutation({
     mutationKey: ['contacts', contactManager?.url_id, 'add'],

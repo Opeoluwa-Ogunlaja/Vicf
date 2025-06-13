@@ -1,7 +1,7 @@
 import { ContactFormType } from '@/lib/utils/form-schemas'
 
 export type Preferences = {
-  slug_type: string
+  slug_type: 'title_number' | 'title_hash'
 }
 
 export type ContactManagerEntry = {

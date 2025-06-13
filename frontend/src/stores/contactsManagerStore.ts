@@ -19,7 +19,7 @@ export const useContactManagerStore = create<ContactManager>()(set => {
                 preferences: {
                   ...entry.preferences,
                   ...preferences,
-                  slug_type: preferences.slug_type ?? entry.preferences?.slug_type ?? ''
+                  slug_type: preferences.slug_type ?? entry.preferences?.slug_type ?? 'title_number'
                 }
               }
             }
