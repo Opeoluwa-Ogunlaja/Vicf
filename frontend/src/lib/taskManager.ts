@@ -52,7 +52,7 @@ export const taskRegistry: RegistryTask = {
           input_backup: data.input_backup!,
           name: data.name!,
           url_id: data.url_id,
-          preferences: { slug_type: '' }
+          preferences: { slug_type: 'title_number' }
         },
         id
       )) as T
