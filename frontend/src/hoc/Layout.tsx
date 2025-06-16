@@ -1,14 +1,26 @@
 import LoadingScreen from '@/components/LoadingScreen'
-import { Suspense } from 'react'
-import { Await, Outlet, useRouteLoaderData } from 'react-router-dom'
+import { Suspense, useEffect } from 'react'
+import { Await, Outlet, useNavigation, useRouteLoaderData } from 'react-router-dom'
 import { IUser } from '@/types/user'
+import { useToggle } from '@/hooks/useToggle'
 
 const LayoutContent = () => {
   return <Outlet />
 }
 
 const Layout = () => {
+  const navigation = useNavigation()
+  const [hasLoadedOnce, , set] = useToggle(false)
+  const isLoading = navigation.state == 'loading'
   const { user_promise } = useRouteLoaderData('root') as { user_promise: Promise<IUser | null> }
+
+  useEffect(() => {
+    if (navigation.state == 'idle') {
+      set(true)
+    }
+  }, [navigation.state, set])
+
+  if (isLoading && !hasLoadedOnce) return <LoadingScreen />
 
   return (
     <Suspense fallback={<LoadingScreen />}>
