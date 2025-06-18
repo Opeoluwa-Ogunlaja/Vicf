@@ -44,7 +44,7 @@ const OnlineProvider = memo(({ children }: { children: ReactNode }) => {
       }
       return newOnline
     })
-  }, [isUserLoggedIn, computeOnline])
+  }, [computeOnline])
 
   useUpdateEffect(() => {
     const prop = online ? 'on' : 'off'
