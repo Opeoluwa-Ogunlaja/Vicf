@@ -1,22 +1,26 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { FC, memo, useMemo } from 'react'
-import Layout from './hoc/Layout'
+import { FC, lazy, memo, Suspense, useMemo } from 'react'
 import { authLoader, rootLoader } from './lib/utils/routeLoaders'
-import Save from './pages/save/Save'
-import Home from './pages/home/Home'
-import Login from './pages/login/Login'
-import Signup from './pages/signup/Signup'
-import AuthWrapper from './hoc/AuthWrapper'
 import { saveLoader } from './pages/save/saveLoaders'
 import { redirect } from 'react-router-dom'
 import { generateListingId } from './lib/utils/idUtils'
-import Organisations from './pages/organisations/Organisations'
+
 // import { useOnline } from './hooks/useOnline'
-import Landing from './pages/landing/Landing'
+
 import { useContactManagerStore } from './stores/contactsManagerStore'
 import useToken from './hooks/useToken'
 import { useUserUpdate } from './hooks/useUserUpdate'
 import { RouteDataType } from './types'
+import LoadingScreen from './components/LoadingScreen'
+
+const Layout = lazy(() => import('./hoc/Layout'))
+const Save = lazy(() => import('./pages/save/Save'))
+const Home = lazy(() => import('./pages/home/Home'))
+const Login = lazy(() => import('./pages/login/Login'))
+const Signup = lazy(() => import('./pages/signup/Signup'))
+const AuthWrapper = lazy(() => import('./hoc/AuthWrapper'))
+const Landing = lazy(() => import('./pages/landing/Landing'))
+const Organisations = lazy(() => import('./pages/organisations/Organisations'))
 
 const router = (onlineStatus: boolean, setters: RouteDataType) =>
   createBrowserRouter(
@@ -100,7 +104,12 @@ const AppRouter: FC = () => {
       set_loaded
     })
   }, [setToken, setManager, login_user, set_loaded, token])
-  return <RouterProvider router={routerMemoized} />
+
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <RouterProvider router={routerMemoized} />
+    </Suspense>
+  )
 }
 
 export default memo(AppRouter)

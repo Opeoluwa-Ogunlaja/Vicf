@@ -27,6 +27,7 @@ const NavigationCard: FC<{ className?: string }> = ({ className }) => {
         <img
           src="https://res.cloudinary.com/maddope/image/upload/v1711923023/masyntech-mern-blog/uwcz3p8o75ozapa9pjf6.jpg"
           alt="Profile image"
+          loading="lazy"
           className="aspect-square w-10 rounded-full shadow-inner"
         />
         <div className="hidden flex-1 space-y-1 text-left md:block">
