@@ -1,5 +1,9 @@
 import { myTaskManager } from '@/lib/taskManager'
-import { update_contact_input_backup, update_contact_name_backup } from '@/lib/utils/requestUtils'
+import {
+  update_contact_input_backup,
+  update_contact_name_backup,
+  update_manager_slug
+} from '@/lib/utils/requestUtils'
 import { ContactManager, ContactManagerEntry } from '@/types/contacts_manager'
 import { create } from 'zustand'
 
@@ -152,6 +156,49 @@ export const useContactManagerStore = create<ContactManager>()(set => {
         if (errorsPresent) throw new Error('There was an error updating the listing')
 
         return updated_name!
+      },
+      async updateListingSlugType(id, slug_type, upstream = false) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let errorsPresent = false
+        const updateManagerFlow = async () => {
+          try {
+            if (upstream) await update_manager_slug(id, slug_type)
+
+            set(state => {
+              const manager = state.manager.map(entry => {
+                if (entry._id === id) {
+                  return {
+                    ...entry,
+                    preferences: { slug_type: slug_type }
+                  }
+                }
+                return entry
+              })
+              return { manager }
+            })
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (error) {
+            errorsPresent = true
+            set(state => {
+              const manager = state.manager.map(entry => {
+                if (entry._id === id) {
+                  return {
+                    ...entry,
+                    preferences: { slug_type: slug_type }
+                  }
+                }
+                return entry
+              })
+              return { manager }
+            })
+          }
+        }
+
+        await updateManagerFlow()
+
+        if (errorsPresent) throw new Error('There was an error updating the listing')
+
+        return slug_type
       }
     }
   }

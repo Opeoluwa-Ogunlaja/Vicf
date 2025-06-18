@@ -167,6 +167,19 @@ export const update_contact_name_backup = async (id: string, newName: string) =>
   }
 }
 
+export const update_manager_slug = async (id: string, slug_type: string) => {
+  try {
+    const newListing = await axiosInstance.patch(`/contacts/${id}/slug-type`, {
+      slug_type: slug_type
+    })
+
+    return newListing.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
 export const get_contact_listing = async (
   listing_id: string
 ): Promise<ContactManagerEntry[] | undefined> => {

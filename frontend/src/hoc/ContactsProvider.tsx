@@ -7,7 +7,7 @@ import { useManagerActions } from '@/hooks/useManagerActions'
 import { useSocketActions } from '@/hooks/useSocketActions'
 import { useUser } from '@/hooks/useUser'
 import { delete_contact, get_contacts } from '@/lib/utils/requestUtils'
-import { db } from '@/stores/dexie/db'
+// import { db } from '@/stores/dexie/db'
 import { contactsArray, IContact } from '@/types/contacts'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { FC, ReactNode } from 'react'
@@ -57,7 +57,6 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
               )
             }
 
-            db.contacts.add(contact as Required<typeof contact>).then(console.log)
             queryClient.setQueryData(['contacts', url_id], (formerProps: IContact[]) => {
               return [...formerProps, contact]
             })
@@ -78,6 +77,7 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
             return contact
           },
           delete: async (listing_id: string, contact_id: string) => {
+            console.log(contact_id)
             function remove() {
               const contacts = queryClient.getQueryData(['contacts', url_id]) as IContact[]
               const currentContacts = contacts.filter(contact => contact._id !== contact_id)

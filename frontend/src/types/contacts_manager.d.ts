@@ -28,6 +28,11 @@ export type ContactManagerActions = {
     upstream?: boolean
   ) => Promise<void>
   updateListingName: (id: string, newName: string, upstream?: boolean) => Promise<string>
+  updateListingSlugType: (
+    id: string,
+    slug_type: 'title_number' | 'title_hash',
+    upstream?: boolean
+  ) => Promise<string>
   updateContactCount: (id: string, dec?: boolean = false) => void
 }
 

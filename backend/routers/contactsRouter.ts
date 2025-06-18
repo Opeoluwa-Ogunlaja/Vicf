@@ -18,6 +18,11 @@ contactsRouter.patch(
   contactsController.update_listing_name.bind(contactsController)
 )
 
+contactsRouter.patch(
+  '/:listingId/slug-type',
+  contactsController.update_slug_type.bind(contactsController)
+)
+
 contactsRouter.get('/manager', contactsController.get_manager.bind(contactsController))
 
 contactsRouter.get('/:listingId', contactsController.get_contact_listing.bind(contactsController))

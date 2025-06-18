@@ -101,6 +101,30 @@ export class ContactsController {
       res.json({ ok: true, data: manager?.toJSON() })
     }
 
+  update_slug_type: AsyncHandler<
+    { slug_type: 'title_number' | 'title_hash' },
+    any,
+    { listingId: string }
+  > = async (req, res) => {
+    const slug_type = req.body.slug_type
+    const listingId = req.params.listingId
+    const listingInfo = await this.service.getListingTitleAndSlugType(listingId)
+    if (!listingInfo) throw new RequestError('Invalid action')
+
+    await this.service.groups_repository.runInTransaction(async session => {
+      await this.service.updateManager(
+        listingId,
+        {
+          'preferences.slug_type': slug_type
+        },
+        session
+      )
+      await this.service.migrateSlugs(listingId, slug_type, listingInfo.name, session)
+    })
+
+    res.json({ ok: true, data: {} })
+  }
+
   delete_contact: AsyncHandler<{}, {}, { listingId: string; contactId: string }> = async (
     req,
     res
@@ -108,7 +132,7 @@ export class ContactsController {
     const { listingId, contactId } = req.params
 
     const deletedContact = await this.service.deleteContact(listingId, contactId)
-    res.json({ ok: true, data: {} })
+    res.json({ ok: true, data: { ...deletedContact?.toObject() } })
   }
 
   socket_add_contact: SocketHandlerFn<Partial<IContact> & { listingId: string }> = async (

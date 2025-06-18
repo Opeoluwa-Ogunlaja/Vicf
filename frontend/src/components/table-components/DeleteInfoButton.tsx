@@ -18,8 +18,8 @@ const DeleteInfoButton: FC<{ contact_id: string; listing_id: string }> = props =
   const deleteMutation = useMutation({
     mutationKey: ['delete_contact', _id],
     mutationFn: () => {
-      if (deleteContact) {
-        return deleteContact(listing_id, _id || '')
+      if (deleteContact && _id) {
+        return deleteContact(listing_id, _id)
       } else {
         return Promise.reject('')
       }

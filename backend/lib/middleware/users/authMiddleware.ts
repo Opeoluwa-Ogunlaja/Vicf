@@ -42,16 +42,16 @@ export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
               refreshToken: 1
             }
           })
-
-          res.cookie(loginTokenName, null, {
-            expires: new Date(Date.now() - 500),
-            httpOnly: true,
-            path: '/',
-            secure: nodeEnv == 'production',
-            sameSite: nodeEnv == 'production' ? 'lax' : undefined
-            // partitioned: nodeEnv == 'production'
-          })
         }
+
+        res.cookie(loginTokenName, null, {
+          expires: new Date(Date.now() - 500),
+          httpOnly: true,
+          path: '/',
+          secure: nodeEnv == 'production',
+          sameSite: nodeEnv == 'production' ? 'lax' : undefined
+          // partitioned: nodeEnv == 'production'
+        })
       }
       return next()
     }

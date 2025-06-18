@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ContactFormSchema, ContactFormType, phoneNumberType } from '@/lib/utils/form-schemas'
 import { useForm, SubmitHandler, useWatch } from 'react-hook-form'
 import { Button } from './ui/button'
@@ -38,6 +39,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { debounceFn } from '@/lib/utils/throttle'
 import { contactTasks } from '@/feature/contactTaskQueues'
 import { useUpdateEffect } from '@/hooks/useUpdateEffect'
+import { nanoid } from 'nanoid'
 
 const ContactForm = () => {
   const manager = useManager()
@@ -95,7 +97,9 @@ const ContactForm = () => {
             number: data.number,
             _id: generateMongoId(),
             name: !data.overwrite
-              ? slugifiedId(data.name, contacts.contacts.length + 1)
+              ? contactManager?.preferences?.slug_type == 'title_number'
+                ? slugifiedId(data.name, contacts.contacts.length + 1)
+                : slugifiedId(data.name, nanoid(6))
               : (data.overwrite_name as string),
             email: data?.email
           })
@@ -143,9 +147,9 @@ const ContactForm = () => {
         type: 'manual',
         message: 'This number has already been entered'
       })
-    } else {
-      formHook.clearErrors('number')
     }
+
+    return () => formHook.clearErrors('number')
   }, [number, formHook.setError, formHook.formState.errors.number, formHook.clearErrors])
 
   useFormValueChangeDebounce({

@@ -19,8 +19,8 @@ const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string }> = pro
   const deleteMutation = useMutation({
     mutationKey: ['delete_contact', _id],
     mutationFn: () => {
-      if (deleteContact) {
-        return deleteContact(listing_id, _id || '')
+      if (deleteContact && _id) {
+        return deleteContact(listing_id, _id)
       } else {
         return Promise.reject('')
       }

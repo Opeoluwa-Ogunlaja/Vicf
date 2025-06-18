@@ -37,7 +37,7 @@ export class ContactGroupsRepository {
         userId,
         _id: groupId
       })
-      .populate({ path: 'contacts', select: '-contact-group' })
+      .populate({ path: 'contacts', select: '-contact_group' })
       .select('contacts')
   }
 

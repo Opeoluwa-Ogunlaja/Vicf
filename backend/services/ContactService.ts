@@ -38,7 +38,7 @@ export class ContactService {
     return await this.groups_repository.group_dal
       .getModel()
       .findById(listingId)
-      .select('title preferences')
+      .select('name preferences')
   }
 
   async migrateSlugs(
@@ -129,36 +129,44 @@ export class ContactService {
   }
 
   async addContact(listingId: string, contact: Partial<IContact> & { _id: string }) {
-    const id = this.groups_repository.generateId().toString()
-    return await Promise.all([
-      this.contacts_repository.create({ ...contact, _id: id }),
-      this.updateManager(listingId, {
+    const transaction_res = await this.groups_repository.runInTransaction(async session => {
+      const createdContact = await this.contacts_repository.create({
+        ...contact,
+        _id: contact._id,
+        contact_group: listingId
+      })
+      const updatedManager = this.updateManager(listingId, {
         $inc: {
           contacts_count: 1
         },
         $push: {
-          contacts: [id]
+          contacts: contact._id
         }
       })
-    ])
+
+      return [createdContact, updatedManager]
+    })
+
+    return transaction_res
   }
 
   async deleteContact(listingId: string, contactId: string) {
     const deletedContact = await this.contacts_repository.runInTransaction(async session => {
       let deleted = await this.contacts_repository.deleteContact(contactId, session)
 
-      await this.updateManager(
-        listingId,
-        {
-          $inc: {
-            contacts_count: -1
+      if (deleted)
+        await this.updateManager(
+          listingId,
+          {
+            $inc: {
+              contacts_count: -1
+            },
+            $pull: {
+              contacts: contactId
+            }
           },
-          $pull: {
-            contacts: [deletedContact!.id]
-          }
-        },
-        session
-      )
+          session
+        )
 
       return deleted
     })
