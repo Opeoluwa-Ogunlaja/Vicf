@@ -5,7 +5,7 @@ import BlockCard from '@/components/BlockCard'
 import { useManager } from '@/hooks/useManager'
 import { Await, useRouteLoaderData } from 'react-router-dom'
 import { ContactManager } from '@/types/contacts_manager'
-import { Suspense } from 'react'
+import { memo, Suspense } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { AnnouncementIcon } from '@/assets/icons'
 
@@ -100,4 +100,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default memo(Home)

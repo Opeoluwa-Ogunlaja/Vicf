@@ -13,14 +13,14 @@ import Footer from '@/components/Footer'
 import { useUser } from '@/hooks/useUser'
 import NavigationBar from './NavigationBar'
 import { Await, useParams, useRouteLoaderData, useSearchParams } from 'react-router-dom'
-import { FC, ReactNode, Suspense } from 'react'
+import { FC, memo, ReactNode, Suspense } from 'react'
 import { useContacts } from '@/hooks/useContacts'
 import { ContactManager } from '@/types/contacts_manager'
 import { Button } from '@/components/ui/button'
 import LoadingScreen from '@/components/LoadingScreen'
 import { Link } from 'react-router-dom'
 
-const SaveLayout: FC<{ name?: string }> = () => {
+const SaveLayout: FC<{ name?: string }> = memo(() => {
   const contacts = useContacts()
   const { contacts_manager_promise } = useRouteLoaderData('root') as {
     contacts_manager_promise: Promise<ContactManager | null>
@@ -108,7 +108,7 @@ const SaveLayout: FC<{ name?: string }> = () => {
       <Footer />
     </div>
   )
-}
+})
 
 const SaveHOC: FC<{ children: ReactNode }> = ({ children }) => {
   const { id } = useParams()

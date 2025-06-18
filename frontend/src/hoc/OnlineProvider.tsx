@@ -5,9 +5,9 @@ import { useSocketEvent } from '@/hooks/useSocketEvent'
 import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 import { useUser } from '@/hooks/useUser'
 import { OnlineTaskQueue } from '@/queue'
-import { ReactNode, useEffect, useRef, useState, useCallback } from 'react'
+import { ReactNode, useEffect, useRef, useState, useCallback, memo } from 'react'
 
-const OnlineProvider = ({ children }: { children: ReactNode }) => {
+const OnlineProvider = memo(({ children }: { children: ReactNode }) => {
   const isConnected = useRef(false)
   const lastOnlineRef = useRef<Date | null>(null)
   const lastCheckRef = useRef<Date | null>(null)
@@ -28,6 +28,8 @@ const OnlineProvider = ({ children }: { children: ReactNode }) => {
 
   const computeOnline = () => isConnected.current && navigator.onLine && isUserLoggedIn
 
+  console.log(isConnected.current, navigator.onLine, isUserLoggedIn)
+
   // Sync computed status and timestamps
   const syncOnlineStatus = useCallback(() => {
     const newOnline = computeOnline()
@@ -42,7 +44,7 @@ const OnlineProvider = ({ children }: { children: ReactNode }) => {
       }
       return newOnline
     })
-  }, [isUserLoggedIn])
+  }, [isUserLoggedIn, computeOnline])
 
   useUpdateEffect(() => {
     const prop = online ? 'on' : 'off'
@@ -57,9 +59,8 @@ const OnlineProvider = ({ children }: { children: ReactNode }) => {
     () => {
       isConnected.current = true
       syncOnlineStatus()
-      console.log('socket connected')
     },
-    []
+    [online, syncOnlineStatus]
   )
 
   // WebSocket disconnect
@@ -70,19 +71,17 @@ const OnlineProvider = ({ children }: { children: ReactNode }) => {
       syncOnlineStatus()
       console.log('socket disconnected')
     },
-    []
+    [online, syncOnlineStatus]
   )
 
   // Browser online
   const handleBrowserOnline = useCallback(() => {
     syncOnlineStatus()
-    console.log('browser online')
   }, [syncOnlineStatus])
 
   // Browser offline
   const handleBrowserOffline = useCallback(() => {
     syncOnlineStatus()
-    console.log('browser offline')
   }, [syncOnlineStatus])
 
   useEventListener('online', handleBrowserOnline, window)
@@ -115,6 +114,6 @@ const OnlineProvider = ({ children }: { children: ReactNode }) => {
       </OnlineEventsContext.Provider>
     </OnlineContext.Provider>
   )
-}
+})
 
 export default OnlineProvider

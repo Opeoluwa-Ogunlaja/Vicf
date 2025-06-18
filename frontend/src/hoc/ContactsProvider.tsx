@@ -77,7 +77,6 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
             return contact
           },
           delete: async (listing_id: string, contact_id: string) => {
-            console.log(contact_id)
             function remove() {
               const contacts = queryClient.getQueryData(['contacts', url_id]) as IContact[]
               const currentContacts = contacts.filter(contact => contact._id !== contact_id)

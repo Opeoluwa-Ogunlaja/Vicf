@@ -9,7 +9,6 @@ export function throttle<FuncType extends (...args: any) => any = (...args: any[
   let canRun: boolean
   return (...args: Parameters<FuncType>) => {
     const runTime = Date.now()
-    console.log(runTime, lastRunTime, delay, runTime - lastRunTime)
     canRun = runTime - lastRunTime > delay
     lastRunTime = runTime
     if (canRun) throttledFunc(args)
@@ -34,7 +33,6 @@ export function throttleAsync<
   return async (...args: Parameters<FuncType>) => {
     const runTime = Date.now()
     canRun = runTime - lastRunTime > delay
-    console.log(runTime, lastRunTime, runTime - lastRunTime)
     lastRunTime = runTime
     if (canRun) await throttledFunc(args)
   }

@@ -1,8 +1,9 @@
 import { BgPatternImage } from '@/assets/images'
 import { MultiBackgroundPatterns } from './ui/BackgroundPattern'
 import { AnnouncementIcon, VicfIcon } from '@/assets/icons'
+import { memo } from 'react'
 
-const LoadingScreen = () => {
+const LoadingScreen = memo(() => {
   return (
     <div className="absolute inset-0 isolate grid h-full w-full place-content-center overflow-hidden">
       <div className="animate-background absolute inset-0 -z-30 h-full w-full bg-secondary"></div>
@@ -22,6 +23,6 @@ const LoadingScreen = () => {
       </div>
     </div>
   )
-}
+})
 
 export default LoadingScreen

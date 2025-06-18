@@ -1,12 +1,12 @@
 import LoadingScreen from '@/components/LoadingScreen'
-import { Suspense, useEffect } from 'react'
+import { memo, Suspense, useEffect } from 'react'
 import { Await, Outlet, useNavigation, useRouteLoaderData } from 'react-router-dom'
 import { IUser } from '@/types/user'
 import { useToggle } from '@/hooks/useToggle'
 
-const LayoutContent = () => {
+const LayoutContent = memo(() => {
   return <Outlet />
-}
+})
 
 const Layout = () => {
   const navigation = useNavigation()

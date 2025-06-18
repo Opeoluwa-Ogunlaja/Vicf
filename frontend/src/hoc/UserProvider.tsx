@@ -1,14 +1,14 @@
 import { TokenContext } from '@/contexts/TokenContext'
 import { UserContext } from '@/contexts/UserContext'
 import usersStore from '@/stores/usersStore'
-import { useState, FC, ReactNode, useLayoutEffect, useEffect, useRef } from 'react'
+import { useState, FC, ReactNode, useLayoutEffect, useEffect, useRef, memo } from 'react'
 import { axiosInstance as api } from '@/lib/utils/axiosInstance'
 import { getAccessToken } from '@/lib/utils/requestUtils'
 import { markInterceptorReady } from '@/lib/utils/tokenReady'
 
 const UserProvider: FC<{
   children: ReactNode
-}> = ({ children }) => {
+}> = memo(({ children }) => {
   const [token, setToken] = useState<string>('')
   const [store] = useState(usersStore)
   const tokenRef = useRef<typeof token>(token)
@@ -70,6 +70,6 @@ const UserProvider: FC<{
       </TokenContext.Provider>
     </UserContext.Provider>
   )
-}
+})
 
 export default UserProvider
