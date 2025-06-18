@@ -34,24 +34,24 @@ export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
       return next()
     } catch (e) {
       if (e instanceof AccessError) throw new ForbiddenError('Access Expired')
-      if (refreshToken) {
-        const victim = verifyRefreshToken(refreshToken)?._id
-        if (victim) {
-          await userRepository.updateById(victim, {
-            $unset: {
-              refreshToken: 1
-            }
-          })
-          res.cookie(loginTokenName, null, {
-            expires: new Date(Date.now() - 500),
-            httpOnly: true,
-            path: '/',
-            secure: nodeEnv == 'production',
-            sameSite: nodeEnv == 'production' ? 'lax' : undefined
-            // partitioned: nodeEnv == 'production'
-          })
-        }
-      }
+      // if (refreshToken) {
+      //   const victim = verifyRefreshToken(refreshToken)?._id
+      //   if (victim) {
+      //     await userRepository.updateById(victim, {
+      //       $unset: {
+      //         refreshToken: 1
+      //       }
+      //     })
+      //     res.cookie(loginTokenName, null, {
+      //       expires: new Date(Date.now() - 500),
+      //       httpOnly: true,
+      //       path: '/',
+      //       secure: nodeEnv == 'production',
+      //       sameSite: nodeEnv == 'production' ? 'lax' : undefined
+      //       // partitioned: nodeEnv == 'production'
+      //     })
+      //   }
+      // }
       return next()
     }
   }
