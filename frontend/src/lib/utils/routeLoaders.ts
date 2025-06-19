@@ -18,10 +18,10 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
       }
     }
 
-    if (!setters.currentToken.current) {
+    if (!setters.currentToken.current.trim()) {
       await fetchAccessToken()
       await waitForInterceptor()
-    }
+    } else console.log('skipped token check')
 
     let userPromise!: Promise<unknown>
     userPromise = Promise.resolve(null)
@@ -59,8 +59,10 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
     localContactsManagerPromise = Promise.resolve(null)
     try {
       const fetching_promise = queryClient.fetchQuery({
-        queryKey: ['contacts_manager'],
-        queryFn: get_contacts_manager
+        queryKey: ['contacts_manager', Math.random()],
+        queryFn: () => {
+          return get_contacts_manager(setters.currentToken.current)
+        }
       })
       fetching_promise.then(contacts_manager => {
         if ((contacts_manager as Array<unknown>)?.length > 0) {

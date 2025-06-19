@@ -19,14 +19,17 @@ const UserProvider: FC<{
 
   useEffect(() => {
     let handler: number | undefined
+    console.log('set the token')
     if (token) {
       handler = api.interceptors.request.use(config => {
+        console.log('interceptor be acting up', config.url, tokenRef.current)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         config.headers.Authorization = !(config as any)._retry
           ? `Bearer ${tokenRef.current}`
           : config.headers.Authorization
         return config
       })
+
       markInterceptorReady()
     }
 

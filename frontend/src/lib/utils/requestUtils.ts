@@ -111,9 +111,14 @@ export const get_profile = async (): Promise<IUser | undefined> => {
   }
 }
 
-export const get_contacts_manager = async (): Promise<ContactManagerEntry[] | undefined> => {
+export const get_contacts_manager = async (
+  authToken?: string
+): Promise<ContactManagerEntry[] | undefined> => {
   try {
-    const newUser = await axiosInstance.get('/contacts/manager')
+    const newUser = await axiosInstance.get(
+      '/contacts/manager',
+      authToken ? { headers: { Authorization: `Bearer ${authToken}` } } : undefined
+    )
 
     return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

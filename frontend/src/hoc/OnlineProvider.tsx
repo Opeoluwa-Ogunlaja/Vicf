@@ -26,9 +26,10 @@ const OnlineProvider = memo(({ children }: { children: ReactNode }) => {
     handlers.current.off.push(handler)
   }, [])
 
-  const computeOnline = () => isConnected.current && navigator.onLine && isUserLoggedIn
-
-  console.log(isConnected.current, navigator.onLine, isUserLoggedIn)
+  const computeOnline = useCallback(
+    () => isConnected.current && navigator.onLine && isUserLoggedIn,
+    [isConnected, isUserLoggedIn]
+  )
 
   // Sync computed status and timestamps
   const syncOnlineStatus = useCallback(() => {

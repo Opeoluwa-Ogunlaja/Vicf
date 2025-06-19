@@ -72,7 +72,8 @@ const LoginForm = () => {
             }
           })
           update_user_state({ id: res?.id, name: res?.name, email: res?.email })
-          setToken(res?.token ?? '')
+          if (res?.token) setToken(res?.token)
+          // else console.warn('there was no token for some reason')
           queryClient.invalidateQueries({
             queryKey: ['contacts_manager'],
             refetchType: 'all',
@@ -115,7 +116,9 @@ const LoginForm = () => {
               email: res?.email
             }
           })
-          setToken(res?.token ?? '')
+          console.log('setting the state')
+          if (res?.token) setToken(res?.token)
+          // else console.warn('there was no token for some reason')
           update_user_state({ id: res?.id, name: res?.name, email: res?.email })
           queryClient.invalidateQueries({
             queryKey: ['contacts_manager'],

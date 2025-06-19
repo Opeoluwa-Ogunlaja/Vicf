@@ -13,7 +13,6 @@ const NavigationBar = () => {
   const navigate = useNavigate()
   const { loggedIn } = useUser()
   const { isOnline } = useOnline()
-  console.log(isOnline)
 
   return (
     <header className="relative w-full px-16 pt-3 max-md:px-8 max-sm:px-3">
