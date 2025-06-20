@@ -125,16 +125,13 @@ class UserController {
 
     if (!user) {
       // Create a new user with social login
-      const newUserId = newId().toString()
       const newUser = {
-        _id: newUserId,
         email: validated_user.email,
         provider: 'google',
         name: `${validated_user.given_name} ${validated_user.family_name}`.trim(),
         verified: validated_user.email_verified
       }
-      await this.service.create_user(newUser)
-      user = newUser
+      user = await this.service.create_user(newUser)
     }
 
     // Finalize login
