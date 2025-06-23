@@ -15,7 +15,7 @@ export const NavigationLink = ({
     <NavLink
       to={to}
       className={({ isActive }) =>
-        cn('nav-link relative', className, { 'active font-bold': isActive })
+        cn('nav-link relative font-normal', className, { 'active font-semibold': isActive })
       }
     >
       {children}

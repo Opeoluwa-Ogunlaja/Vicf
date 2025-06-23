@@ -45,7 +45,7 @@ const Home = () => {
         </aside>
         <NavigationBar />
         <main
-          className="main-wrapper grid bg-primary/5 shadow-neutral-600 max-lg:grid-cols-1"
+          className="main-wrapper grid max-lg:grid-cols-1"
           style={{
             boxShadow: 'inset .25rem 1.75rem 1.25rem -2.5rem var(--tw-shadow-color)'
           }}

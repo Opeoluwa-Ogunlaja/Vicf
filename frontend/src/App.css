@@ -14,7 +14,7 @@
   }
 
   .main-wrapper {
-    grid-template-columns: minmax(0, max-content) 1fr;
+    grid-template-columns: minmax(0, 25%) 1fr;
   }
 
   .auth-wrapper {
@@ -58,11 +58,23 @@
   }
 
   .app-footer {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .app-footer::after {
+    content: '';
+    inset: 0;
+    position: absolute;
+    opacity: 0.6;
+    z-index: 1;
     background-image: url('./assets/illustrations/footer-wave.svg');
     background-position: bottom left;
     background-size: 100%;
     background-repeat: no-repeat;
-    background-blend-mode: color-dodge;
+    background-blend-mode: color-overlay;
+    mix-blend-mode: overlay;
+    pointer-events: none;
   }
 
   .stacker {

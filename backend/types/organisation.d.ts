@@ -5,6 +5,7 @@ export interface IOrganisation {
   members: RefType[]
   contact_groupings: RefType[]
   owner: RefType
+  inviteCode: string
 }
 
 export interface IOrganisationDocument extends IOrganisation, Document {}

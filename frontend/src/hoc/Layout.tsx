@@ -3,9 +3,23 @@ import { memo, Suspense, useEffect } from 'react'
 import { Await, Outlet, useNavigation, useRouteLoaderData } from 'react-router-dom'
 import { IUser } from '@/types/user'
 import { useToggle } from '@/hooks/useToggle'
+import { MultiBackgroundPatterns } from '@/components/ui/BackgroundPattern'
+import { BgPatternImage } from '@/assets/images'
+import { isMobile } from 'react-device-detect'
 
 const LayoutContent = memo(() => {
-  return <Outlet />
+  return (
+    <>
+      <Outlet />
+      <div className="absolute inset-0 isolate -z-40 overflow-hidden">
+        <MultiBackgroundPatterns
+          count={isMobile ? 3 : 6}
+          className="-z-10 aspect-square w-48 opacity-[0.0125] invert"
+          source={BgPatternImage}
+        />
+      </div>
+    </>
+  )
 })
 
 const Layout = () => {
