@@ -40,6 +40,7 @@ import { debounceFn } from '@/lib/utils/throttle'
 import { contactTasks } from '@/feature/contactTaskQueues'
 import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 import { nanoid } from 'nanoid'
+import useMounted from '@/hooks/useMounted'
 
 const ContactForm = () => {
   const manager = useManager()
@@ -49,6 +50,7 @@ const ContactForm = () => {
   const { toast: backupInputToast } = useToast()
   const user = useUser()
   const queryClient = useQueryClient()
+  const mounted = useMounted()
 
   const contactManager = useMemo(() => {
     return manager.find(mngr => mngr.url_id == contacts.url_id)
@@ -149,7 +151,7 @@ const ContactForm = () => {
       })
     }
 
-    return () => formHook.clearErrors('number')
+    formHook.clearErrors('number')
   }, [number, formHook.setError, formHook.formState.errors.number, formHook.clearErrors])
 
   useFormValueChangeDebounce({
@@ -219,28 +221,30 @@ const ContactForm = () => {
     fieldBlur: T
   ) {
     return debounceFn((e: FocusEvent<HTMLInputElement>) => {
-      fieldBlur(e)
-      if (formHook.getValues().name == lastNameUpdate.current) return
+      if (mounted) {
+        fieldBlur(e)
+        if (formHook.getValues().name == lastNameUpdate.current) return
 
-      updateNameMutation
-        .mutateAsync({
-          id: contactManager?._id as string,
-          name: listing_name,
-          upstream: user.loggedIn
-        })
-        .then(
-          (data: unknown) => {
-            formHook.setValue('name', data as string)
-            lastNameUpdate.current = data as string
-          },
-          () => {
-            toast({
-              variant: 'destructive',
-              title: 'Update listing name',
-              description: 'Unable to update listing name at the moment'
-            })
-          }
-        )
+        updateNameMutation
+          .mutateAsync({
+            id: contactManager?._id as string,
+            name: listing_name,
+            upstream: user.loggedIn
+          })
+          .then(
+            (data: unknown) => {
+              formHook.setValue('name', data as string)
+              lastNameUpdate.current = data as string
+            },
+            () => {
+              toast({
+                variant: 'destructive',
+                title: 'Update listing name',
+                description: 'Unable to update listing name at the moment'
+              })
+            }
+          )
+      }
     }, 2000)
   }
 

@@ -50,7 +50,7 @@ const ContactsTable = memo(
         <div className={twMerge('mx-auto h-20 rounded-t-lg bg-neutral-600', className)}></div>
         <Table className="overflow-x-auto border-y px-6 text-center [&_td]:px-6 [&_td]:py-4 [&_th]:px-6 [&_th]:py-4 [&_th]:!text-center">
           <TableCaption>
-            {contacts.length} out of {contacts.length} contacts
+            {contacts.length} out of {contactManager?.contacts_count} contacts
           </TableCaption>
           <TableHeader className="sticky bg-muted/10 shadow-lg shadow-neutral-50 [&_*]:!font-medium">
             <TableRow className="font-normal hover:bg-secondary">

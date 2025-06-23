@@ -11,37 +11,26 @@ import { verifyAccessToken, verifyRefreshToken } from '../../utils/generateToken
 
 export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
   if (req.user) return next()
-  let refreshToken, accessToken
+  let refreshToken = req?.cookies[loginTokenName],
+    accessToken
 
-  if (
-    (refreshToken = req?.cookies[<string>loginTokenName]) &&
-    (accessToken = req?.headers.authorization?.replace('Bearer ', ''))
-  ) {
-    if (!refreshToken || !accessToken) return next()
+  if (refreshToken) {
+    accessToken = req?.headers.authorization?.replace('Bearer ', '') || ''
     // Decode refreshToken to get Id and verify that Id
     try {
       // find the user by id
       const userInfo = (await verifyAccessToken(accessToken, refreshToken)) as any
-      const isValidId = validateMongodbId(userInfo?.id ?? '')
 
-      const user = await userRepository.findById(userInfo?.id)
-
-      // Check if Id is valid
-      if (!user || !isValidId) return next()
-
-      // Attatch the user to the request object
-      req.user = user
-      return next()
-    } catch (e) {
-      if (e instanceof AccessError) throw new ForbiddenError('Access Expired')
-      // if (refreshToken) {
-      //   const victim = verifyRefreshToken(refreshToken)?._id
+      // if (!userInfo) {
+      //   const tokenContent = verifyRefreshToken(refreshToken)
+      //   const victim = tokenContent?._id
       //   if (victim) {
       //     await userRepository.updateById(victim, {
       //       $unset: {
       //         refreshToken: 1
       //       }
       //     })
+
       //     res.cookie(loginTokenName, null, {
       //       expires: new Date(Date.now() - 500),
       //       httpOnly: true,
@@ -51,8 +40,26 @@ export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
       //       // partitioned: nodeEnv == 'production'
       //     })
       //   }
+
+      //   return next()
       // }
+
+      const isValidId = validateMongodbId(userInfo?.id)
+
+      const user = await userRepository.findById(userInfo?.id)
+
+      // Check if Id is valid
+      if (!user || !isValidId) {
+        return next()
+      }
+
+      // Attatch the user to the request object
+      req.user = user
       return next()
+    } catch (e) {
+      console.log(e)
+      console.log(e instanceof AccessError)
+      if (e instanceof AccessError) throw new ForbiddenError('Access Expired')
     }
   }
 

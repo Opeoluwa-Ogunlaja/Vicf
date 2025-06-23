@@ -47,7 +47,7 @@ class UserController {
     await this.service.updateRefreshToken(userExists?.id, refreshToken)
 
     res.cookie('LIT', refreshToken, {
-      maxAge: 1000 * 60 * 60 * 24 * 20,
+      maxAge: 1000 * 60 * 60 * 24 * 10,
       httpOnly: true,
       path: '/',
       secure: nodeEnv == 'production',
@@ -88,7 +88,7 @@ class UserController {
     const accessToken = generateAccessToken(newRefreshToken)
 
     res.cookie('LIT', newRefreshToken, {
-      maxAge: 1000 * 60 * 60 * 24 * 20,
+      maxAge: 1000 * 60 * 60 * 24 * 10,
       httpOnly: true,
       path: '/',
       secure: nodeEnv == 'production',
@@ -143,7 +143,7 @@ class UserController {
     await this.service.updateRefreshToken(user._id, refreshToken)
 
     res.cookie('LIT', refreshToken, {
-      maxAge: 1000 * 60 * 60 * 24 * 20,
+      maxAge: 1000 * 60 * 60 * 24 * 10,
       httpOnly: true,
       path: '/',
       secure: nodeEnv == 'production',

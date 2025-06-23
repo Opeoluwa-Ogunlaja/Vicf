@@ -6,19 +6,19 @@ import { userRepository } from '../../repositories/UserRepository'
 export const jwtAlgo = 'HS256'
 const generateRefreshToken = (_id: string): string => {
   const token = jwt.sign({ _id }, jwtSecret ?? 'hehehehe', {
-    expiresIn: '20d',
+    expiresIn: '10d',
     algorithm: jwtAlgo
   })
 
   return token
 }
 
-export const generateAccessToken = (refreshToken: string, duration: number = 60 * 1) => {
+export const generateAccessToken = (refreshToken: string, duration: number = 60 * 10) => {
   const token = jwt.sign(
     { refreshToken, expires: new Date(Date.now() + duration * 1000) },
     jwtSecret ?? 'hehehehe',
     {
-      expiresIn: '1m',
+      expiresIn: '10m',
       algorithm: jwtAlgo
     }
   )
@@ -48,12 +48,11 @@ export const verifyAccessToken = async (accessToken: string, refreshToken: strin
     tokenAccess = null
   }
 
-  if (
-    !tokenAccess ||
-    tokenAccess?.refreshToken != refreshToken ||
-    Date.now() > new Date(tokenAccess?.expires).getTime()
-  )
-    throw new AccessError('Access Expired')
+  if (!tokenAccess || tokenAccess?.refreshToken != refreshToken) {
+    return null
+  }
+
+  if (Date.now() > new Date(tokenAccess?.expires).getTime()) throw new AccessError('Access Expired')
 
   const refreshTokenContents = verifyRefreshToken(refreshToken)
   const user = await userRepository.dal
