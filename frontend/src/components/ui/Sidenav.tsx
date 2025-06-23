@@ -21,7 +21,7 @@ const Sidenav = () => {
   const manager = useManager()
   const location = useLocation()
   const isOnSave = location.pathname.includes('/save')
-  const isOnHome = location.pathname.includes('/home')
+  // const isOnHome = location.pathname.includes('/home')
 
   useEffect(() => {
     if (open) openCount.current += 1
@@ -84,13 +84,11 @@ const Sidenav = () => {
                   Home
                 </NavigationLink>
               </li>
-              {isOnHome && (
-                <li>
-                  <NavigationLink to="/organisations" className="after:!mix-blend-normal">
-                    Organisations
-                  </NavigationLink>
-                </li>
-              )}
+              <li>
+                <NavigationLink to="/organisations" className="after:!mix-blend-normal">
+                  Organisations
+                </NavigationLink>
+              </li>
               {!isOnSave && (
                 <li>
                   <NavigationLink to="/save" className="after:!mix-blend-normal">

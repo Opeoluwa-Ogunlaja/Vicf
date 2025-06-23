@@ -14,21 +14,23 @@ const BlockCard: FC<{
 
   return (
     <div
-      className="grid origin-center cursor-pointer grid-rows-2 overflow-hidden rounded-lg drop-shadow-md transition-all hover:scale-[1.05]"
+      className="grid origin-center cursor-pointer grid-rows-2 overflow-hidden rounded-lg shadow-neutral-400/5 drop-shadow-lg transition-all hover:scale-[1.05] md:max-w-[300px]"
       style={{
         gridTemplateRows: '156px max-content'
       }}
       onClick={() => navigate(`/save/${manager.url_id}`)}
     >
       <div className="relative grid overflow-clip bg-primary">
-        <MultiBackgroundPatterns
-          count={10}
-          className="absolute aspect-square w-20 opacity-20"
-          source={BgPatternImage}
-        />
+        <div className="absolute inset-0">
+          <MultiBackgroundPatterns
+            count={10}
+            className="aspect-square w-20 opacity-20"
+            source={BgPatternImage}
+          />
+        </div>
       </div>
       <div className="flex items-center space-x-4 overflow-hidden bg-white p-3 sm:p-4">
-        <PhonePlusIcon className="w-5 self-start pt-2" />
+        <PhonePlusIcon className="mx-2 w-5 self-start pt-2" />
         <div className="flex flex-1 flex-col gap-1 text-left text-sm">
           <h4 className="text-lg font-semibold">{manager.name}</h4>
           <p className="flex gap-2 font-medium leading-none text-neutral-400">

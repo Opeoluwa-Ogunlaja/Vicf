@@ -13,7 +13,7 @@ const Footer = () => {
             <NavigationLink to="/home">Home</NavigationLink>
           </li>
           <li>
-            <NavigationLink to="/dashboard">Dashboard</NavigationLink>
+            <NavigationLink to="/organisations">Organisations</NavigationLink>
           </li>
           <li>
             <NavigationLink to="/save">Save Contacts</NavigationLink>

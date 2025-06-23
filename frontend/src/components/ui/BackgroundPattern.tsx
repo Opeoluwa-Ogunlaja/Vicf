@@ -27,8 +27,9 @@ const BackgroundPattern: FC<{
       src={source}
       ref={elem}
       alt="background-pattern"
+      loading="lazy"
       className={cn(
-        'background-pattern pointer-events-none absolute translate-x-1/2 translate-y-1/2',
+        'background-pattern pointer-events-none absolute -translate-x-1/2 -translate-y-1/2',
         className
       )}
     ></img>

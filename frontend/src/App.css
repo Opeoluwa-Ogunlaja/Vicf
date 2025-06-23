@@ -57,6 +57,12 @@
     transition: all 0.2s ease-in-out;
   }
 
+  .organisations-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: max-content;
+    transition: all 0.2s ease-in-out;
+  }
+
   .app-footer {
     position: relative;
     isolation: isolate;
