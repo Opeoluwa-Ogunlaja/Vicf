@@ -57,8 +57,6 @@ export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
       req.user = user
       return next()
     } catch (e) {
-      console.log(e)
-      console.log(e instanceof AccessError)
       if (e instanceof AccessError) throw new ForbiddenError('Access Expired')
     }
   }

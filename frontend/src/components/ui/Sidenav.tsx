@@ -1,4 +1,4 @@
-import { ClockRewindIcon, VicfIcon } from '@/assets/icons'
+import { ClockRewindIcon, HomeSmileIcon, PlusIcon, UsersOrgIcon, VicfIcon } from '@/assets/icons'
 import { NavigationLink } from './navigation-link'
 import { cn } from '@/lib/utils'
 
@@ -59,7 +59,7 @@ const Sidenav = () => {
         <aside
           ref={sidenavRef}
           className={cn(
-            'sidenav pointer-events-auto grid transform gap-16 overflow-y-auto scroll-smooth py-10 pl-8 pr-8 transition-transform duration-300 ease-in-out max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-[5000] max-lg:h-full max-lg:w-[300px] max-lg:bg-white sm:pl-14',
+            'sidenav pointer-events-auto grid transform gap-16 overflow-y-auto scroll-smooth border-neutral-50 py-10 pl-8 pr-8 transition-transform duration-300 ease-in-out max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-[5000] max-lg:h-full max-lg:w-[300px] max-lg:bg-white sm:pl-14 md:border-r-2',
             {
               'max-lg:-translate-x-full max-lg:opacity-0 max-md:pointer-events-none': !open,
               'max:md:pointer-events-auto max-lg:translate-x-0 max-lg:opacity-100': open
@@ -75,22 +75,25 @@ const Sidenav = () => {
             <CreateNewButton className="-mb-10 w-full py-6 max-lg:order-2 lg:mt-4" />
           </div>
           <section className="flex flex-col max-lg:order-1">
-            <h3 className="mb-4 border-b border-b-neutral-200 pb-2 text-xl font-medium max-lg:text-lg">
+            <h3 className="text-md mb-4 pb-2 text-lg font-medium text-neutral-400">
               Goto <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
-            <ul className="flex flex-col gap-4 text-neutral-500">
-              <li>
+            <ul className="flex flex-col gap-6 text-base text-neutral-600">
+              <li className="flex items-center gap-4">
+                <HomeSmileIcon className="text-neutral-500" />
                 <NavigationLink to="/home" className="after:!mix-blend-normal">
                   Home
                 </NavigationLink>
               </li>
-              <li>
+              <li className="flex items-center gap-4">
+                <UsersOrgIcon className="text-neutral-500" />
                 <NavigationLink to="/organisations" className="after:!mix-blend-normal">
                   Organisations
                 </NavigationLink>
               </li>
               {!isOnSave && (
-                <li>
+                <li className="flex items-center gap-4">
+                  <PlusIcon className="text-neutral-500" />
                   <NavigationLink to="/save" className="after:!mix-blend-normal">
                     Save Contacts
                   </NavigationLink>
@@ -99,10 +102,10 @@ const Sidenav = () => {
             </ul>
           </section>
           <section className="flex flex-col max-lg:order-3 max-lg:mt-8">
-            <h3 className="mb-4 border-b border-b-neutral-200 pb-2 text-xl font-medium max-lg:text-lg">
+            <h3 className="text-md mb-4 pb-2 text-lg font-medium text-neutral-400">
               Recents <ClockRewindIcon width={'1em'} className="inline-block align-text-top" />
             </h3>
-            <ul className="mt-2 space-y-2">
+            <ul className="space-y-2">
               {[...manager.slice(-2)].map(entry => {
                 return (
                   <li key={entry._id}>

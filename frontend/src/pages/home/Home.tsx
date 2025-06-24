@@ -52,12 +52,14 @@ const Home = () => {
         >
           <Sidenav />
           <div
-            className="grid px-10 pt-16 max-md:px-8 max-md:py-14"
+            className="grid px-14 pt-10 max-md:px-8 max-md:py-14"
             style={{
               gridAutoRows: 'max-content'
             }}
           >
-            <h3 className="mb-5 text-lg font-medium">Recent Listings</h3>
+            <h3 className="mb-8 w-max rounded-full bg-blue-50 px-6 py-2 text-lg text-blue-700">
+              Recent Listings
+            </h3>
             <section className="contacts-grid grid gap-8 pb-10 max-md:justify-center">
               <Suspense fallback={<SkeletonCon />}>
                 <Await
@@ -89,7 +91,9 @@ const Home = () => {
               </Suspense>
             </section>
             <section className="mt-10">
-              <h3 className="mb-5 text-lg font-medium">Organisations</h3>
+              <h3 className="mb-8 w-max rounded-full bg-blue-50 px-6 py-2 text-lg text-blue-700">
+                Organisations
+              </h3>
               <p className="text-neutral-400">You don't belong to any organisations</p>
             </section>
           </div>

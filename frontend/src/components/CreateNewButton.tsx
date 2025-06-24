@@ -92,10 +92,11 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
       <AlertDialogTrigger asChild>
         <Button
           variant={'secondary'}
-          className={cx(className, 'items-center')}
+          className={cx('text-[17px]', className, 'items-center')}
           onClick={() => (isOnSave ? null : handleNewListing())}
         >
-          <PlusIcon /> <span className="-mb-1 self-center">Create New Listing </span>
+          <PlusIcon width={'1.5em'} />{' '}
+          <span className="-mb-1 self-center">Create New Listing </span>
           {isProcessing && <Loader className="w-3" />}
         </Button>
       </AlertDialogTrigger>

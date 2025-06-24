@@ -8,6 +8,8 @@ import SettingsIcon from './settings.svg?react'
 import ChevronDownIcon from './chevron-down.svg?react'
 import PhonePlusIcon from './phone-plus.svg?react'
 import UserPlusIcon from './user-plus.svg?react'
+import HomeSmileIcon from './home-smile.svg?react'
+import UsersOrgIcon from './users-org.svg?react'
 import FacebookIcon from './facebook.svg?react'
 import InstagramIcon from './instagram.svg?react'
 import StyledUnderline from './styled-underline.svg?react'
@@ -35,5 +37,7 @@ export {
   EditIcon,
   TrashIcon,
   DotsHorizontalIcon,
-  PlusIcon
+  PlusIcon,
+  HomeSmileIcon,
+  UsersOrgIcon
 }

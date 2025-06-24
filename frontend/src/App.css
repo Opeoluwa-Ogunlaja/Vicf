@@ -14,7 +14,7 @@
   }
 
   .main-wrapper {
-    grid-template-columns: minmax(0, 25%) 1fr;
+    grid-template-columns: minmax(0, 26%) 1fr;
   }
 
   .auth-wrapper {
