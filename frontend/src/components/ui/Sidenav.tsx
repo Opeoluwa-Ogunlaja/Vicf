@@ -46,23 +46,23 @@ const Sidenav = () => {
       {createPortal(
         <div
           className={cn(
-            'top-0 h-full w-full bg-black bg-opacity-50 bg-blend-screen drop-shadow-md transition-opacity duration-75 max-lg:z-[500000000]',
+            'fixed inset-0 z-[4000] bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out',
             {
-              'pointer-events-none fixed opacity-100': open,
-              'invisible absolute opacity-0': !open
+              'pointer-events-auto opacity-100': open,
+              'pointer-events-none opacity-0': !open
             }
           )}
         ></div>,
         document.querySelector('#sidenav-overlay') as Element
       )}
-      <div className="contents" ref={sidenavRef}>
+      <div className="contents">
         <aside
+          ref={sidenavRef}
           className={cn(
-            'sidenav grid gap-16 overflow-y-auto scroll-smooth py-10 pl-14 pr-8 transition-all duration-500 max-lg:pointer-events-auto max-lg:fixed max-lg:inset-x-0 max-lg:left-0 max-lg:top-0 max-lg:z-[50000000000] max-lg:h-full max-lg:w-[300px] max-lg:gap-10 max-lg:justify-self-stretch sm:bg-white',
+            'sidenav pointer-events-auto grid transform gap-16 overflow-y-auto scroll-smooth py-10 pl-8 pr-8 transition-transform duration-300 ease-in-out max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-[5000] max-lg:h-full max-lg:w-[300px] max-lg:bg-white sm:pl-14',
             {
-              'max-lg:invisible max-lg:max-w-0 max-lg:overflow-hidden max-lg:opacity-0': !open,
-              closed: !open,
-              'open w-max max-lg:visible max-lg:max-w-[300px] max-lg:px-6 max-lg:opacity-100': open
+              'max-lg:-translate-x-full max-lg:opacity-0 max-md:pointer-events-none': !open,
+              'max:md:pointer-events-auto max-lg:translate-x-0 max-lg:opacity-100': open
             }
           )}
         >

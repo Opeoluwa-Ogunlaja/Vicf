@@ -49,6 +49,7 @@
 
   .sidenav {
     grid-auto-rows: min-content;
+    will-change: transform, opacity;
   }
 
   .contacts-grid {
