@@ -7,7 +7,7 @@ const OrganisationCard: FC<{
   organisation: Partial<{ name: string }>
 }> = ({ organisation }) => {
   return (
-    <div className="grid cursor-pointer rounded-lg bg-white shadow-neutral-400/5 drop-shadow-md transition-all hover:scale-[1.05]">
+    <div className="grid cursor-pointer overflow-clip rounded-lg bg-white shadow-neutral-400/5 drop-shadow-md transition-all hover:scale-[1.05]">
       <div className="relative grid overflow-clip bg-primary">
         <div className="absolute inset-0">
           <MultiBackgroundPatterns

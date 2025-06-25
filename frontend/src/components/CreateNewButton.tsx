@@ -92,7 +92,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
       <AlertDialogTrigger asChild>
         <Button
           variant={'secondary'}
-          className={cx('text-[17px]', className, 'items-center')}
+          className={cx('text-[1.0625rem]', className, 'items-center')}
           onClick={() => (isOnSave ? null : handleNewListing())}
         >
           <PlusIcon width={'1.5em'} />{' '}

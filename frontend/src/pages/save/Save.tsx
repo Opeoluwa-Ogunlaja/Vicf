@@ -49,7 +49,7 @@ const SaveLayout: FC<{ name?: string }> = memo(() => {
         <AnnouncementIcon className="inline-block w-5 align-middle max-md:w-3" />
         <p className="inline-block">Tip: Use the settings page to customise your display</p>
       </aside>
-      <header className="relative grid h-[426px] overflow-hidden bg-primary px-16 py-4 max-md:px-8 max-sm:px-3">
+      <header className="relative grid h-[26.625rem] overflow-hidden bg-primary px-16 py-4 max-md:px-8 max-sm:px-3">
         <div className="flex items-center justify-between self-start">
           <div className="max-md flex gap-4 md:contents">
             <SidenavToggle />
@@ -79,7 +79,7 @@ const SaveLayout: FC<{ name?: string }> = memo(() => {
         <Sidenav />
         <section className="px-8">
           <div className="form-container pointer-events-none absolute inset-0 z-50 grid h-[100dvh] w-full grid-rows-12 place-content-center place-items-center">
-            <div className="pointer-events-auto static z-[500] mx-auto mt-80 w-[520px] origin-top place-self-start rounded-xl bg-white px-12 py-5 shadow-neutral-300 drop-shadow-lg transition-all max-lg:mt-[19.5rem] max-sm:mt-72 max-sm:w-10/12 max-sm:min-w-[300px] max-sm:px-8">
+            <div className="pointer-events-auto static z-[500] mx-auto mt-80 w-[32.5rem] origin-top place-self-start rounded-xl bg-white px-12 py-5 shadow-neutral-300 drop-shadow-lg transition-all max-lg:mt-[19.5rem] max-sm:mt-72 max-sm:w-10/12 max-sm:min-w-[18.75] max-sm:px-8">
               <Suspense fallback={<>Loading</>}>
                 <Await resolve={contacts_manager_promise} errorElement={<ContactForm />}>
                   {() => <ContactForm />}

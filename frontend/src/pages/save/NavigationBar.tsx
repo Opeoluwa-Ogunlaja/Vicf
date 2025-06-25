@@ -96,7 +96,7 @@ const NavigationBar = () => {
                       value={slug_type}
                       onValueChange={(val: string) => setSlugType(val as typeof slug_type)}
                     >
-                      <SelectTrigger className="w-[156px]">
+                      <SelectTrigger className="w-[9.75rem]">
                         <SelectValue defaultValue={contactManager?.preferences?.slug_type} />
                       </SelectTrigger>
                       <SelectContent>

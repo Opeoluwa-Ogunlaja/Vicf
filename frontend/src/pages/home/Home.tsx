@@ -15,7 +15,7 @@ const SkeletonCon = () => {
       {new Array(6).fill(null).map((...[, i]) => {
         return (
           <div
-            className="relative isolate grid min-h-[200px] opacity-40 animate-in"
+            className="relative isolate grid min-h-[12.5rem] opacity-40 animate-in"
             style={{
               gridTemplateRows: '170px 1fr'
             }}
@@ -57,7 +57,8 @@ const Home = () => {
               gridAutoRows: 'max-content'
             }}
           >
-            <h3 className="mb-8 w-max rounded-full bg-blue-50 px-6 py-2 text-lg text-blue-700">
+            <h3 className="mb-8 text-lg font-medium">Home</h3>
+            <h3 className="mb-6 w-max rounded-full bg-blue-50 px-6 py-2 text-base text-blue-700">
               Recent Listings
             </h3>
             <section className="contacts-grid grid gap-8 pb-10 max-md:justify-center">
@@ -90,8 +91,8 @@ const Home = () => {
                 </Await>
               </Suspense>
             </section>
-            <section className="mt-10">
-              <h3 className="mb-8 w-max rounded-full bg-blue-50 px-6 py-2 text-lg text-blue-700">
+            <section className="mt-6">
+              <h3 className="mb-6 w-max rounded-full bg-blue-50 px-6 py-2 text-base text-blue-700">
                 Organisations
               </h3>
               <p className="text-neutral-400">You don't belong to any organisations</p>

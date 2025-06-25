@@ -59,7 +59,7 @@ const Sidenav = () => {
         <aside
           ref={sidenavRef}
           className={cn(
-            'sidenav pointer-events-auto grid transform gap-16 overflow-y-auto scroll-smooth border-neutral-50 py-10 pl-8 pr-8 transition-transform duration-300 ease-in-out max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-[5000] max-lg:h-full max-lg:w-[300px] max-lg:bg-white sm:pl-14 md:border-r-2',
+            'sidenav pointer-events-auto grid transform gap-16 overflow-y-auto scroll-smooth border-neutral-50 py-10 pl-8 pr-8 transition-transform duration-300 ease-in-out max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-[5000] max-lg:h-full max-lg:w-[18.75rem] max-lg:bg-white sm:pl-14 md:border-r-2',
             {
               'max-lg:-translate-x-full max-lg:opacity-0 max-md:pointer-events-none': !open,
               'max:md:pointer-events-auto max-lg:translate-x-0 max-lg:opacity-100': open

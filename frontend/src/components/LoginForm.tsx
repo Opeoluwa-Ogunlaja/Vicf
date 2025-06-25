@@ -154,7 +154,7 @@ const LoginForm = () => {
     >
       <Form {...formHook}>
         <form
-          className="grid w-[400px] gap-2 max-lg:w-[300px]"
+          className="grid w-[25rem] gap-2 max-lg:w-[18.75rem]"
           onSubmit={formHook.handleSubmit(onSubmit)}
           aria-labelledby="login-form-title"
         >

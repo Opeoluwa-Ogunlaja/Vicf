@@ -1,4 +1,8 @@
 @layer framework {
+  html {
+    font-size: 15px;
+  }
+
   body {
     container: body / block-size;
     position: relative;
