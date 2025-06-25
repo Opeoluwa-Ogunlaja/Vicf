@@ -8,6 +8,9 @@ import { ContactManager } from '@/types/contacts_manager'
 import { memo, Suspense } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { AnnouncementIcon } from '@/assets/icons'
+import { MobileOnlyView } from 'react-device-detect'
+import CreateNewButton from '@/components/CreateNewButton'
+import useMediaQuery from '@/hooks/useMediaQuery'
 
 const SkeletonCon = () => {
   return (
@@ -29,6 +32,13 @@ const SkeletonCon = () => {
     </>
   )
 }
+
+const AccessibileCreateButton = memo(() => {
+  const smScreen = useMediaQuery('(max-width: 720px)')
+  return (
+    <MobileOnlyView>{smScreen && <CreateNewButton className="mb-10 w-full py-5" />}</MobileOnlyView>
+  )
+})
 
 const Home = () => {
   const managers = useManager()
@@ -52,11 +62,12 @@ const Home = () => {
         >
           <Sidenav />
           <div
-            className="grid px-14 pt-10 max-md:px-8 max-md:py-14"
+            className="grid px-14 pt-10 max-md:px-8 max-md:py-10"
             style={{
               gridAutoRows: 'max-content'
             }}
           >
+            <AccessibileCreateButton />
             <h3 className="mb-8 text-lg font-medium">Home</h3>
             <h3 className="mb-6 w-max rounded-full bg-blue-50 px-6 py-2 text-base text-blue-700">
               Recent Listings
