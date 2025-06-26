@@ -85,6 +85,7 @@ export type rootLoaderType = typeof rootLoader
 
 export const authLoader = (onlineStatus: boolean, setters: RouteDataType) =>
   (async () => {
+    console.log(onlineStatus)
     const fetchAccessToken = async () => {
       try {
         const token = await getAccessToken()
