@@ -8,6 +8,8 @@ export interface IContact {
   overwrite: boolean
   overwrite_name: string
   contact_group: RefType
+  locked: boolean
+  last_updated_by: RefType
 }
 
 export interface IContactDocument extends IContact, Document {}

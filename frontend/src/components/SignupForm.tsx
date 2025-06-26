@@ -17,7 +17,7 @@ import { AppleIcon, GoogleIcon, VicfIcon } from '@/assets/icons'
 import { useMutation } from '@tanstack/react-query'
 import { signup_user } from '@/lib/utils/requestUtils'
 import { wait } from '@/lib/utils/promiseUtils'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useState } from 'react'
 
 const SignupForm = () => {
@@ -148,16 +148,22 @@ const SignupForm = () => {
           >
             Sign Up
           </Button>
+          <p className="mt-2 justify-self-center">
+            Already have an account?{' '}
+            <Link to="/auth" className="text-sky-500">
+              Login
+            </Link>
+          </p>
 
           <div className="mx-auto mt-3 flex w-8/12 flex-col gap-3">
             <h3 className="text-center">Or</h3>
             <Button className="flex justify-start gap-4 border bg-white py-4 shadow-md hover:bg-white hover:shadow-sm">
               <GoogleIcon />
-              <span>Sign up with Google</span>
+              <span>Sign in with Google</span>
             </Button>
             <Button className="flex justify-start gap-4 border bg-black py-4 text-white shadow-md hover:bg-black hover:shadow-sm">
               <AppleIcon />
-              <span>Sign up with Apple</span>
+              <span>Sign in with Apple</span>
             </Button>
           </div>
         </form>

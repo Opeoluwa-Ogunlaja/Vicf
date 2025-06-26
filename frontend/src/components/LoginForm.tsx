@@ -16,7 +16,7 @@ import { Input } from './ui/input'
 import { AppleIcon, GoogleIcon, VicfIcon } from '@/assets/icons'
 import { wait } from '@/lib/utils/promiseUtils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useState } from 'react'
 import { google_login, login_user } from '@/lib/utils/requestUtils'
 import { IUser, PartialUser } from '@/types/user'
@@ -219,11 +219,17 @@ const LoginForm = () => {
           >
             Login
           </Button>
+          <p className="mt-2 justify-self-center">
+            Don't have an account?{' '}
+            <Link to="/auth/signup" className="text-sky-500">
+              Sign Up
+            </Link>
+          </p>
 
           <div className="mx-auto mt-3 flex w-8/12 flex-col gap-3">
             <h3 className="text-center">Or</h3>
             <Button
-              className="flex justify-start gap-4 border bg-white py-4 shadow-md hover:bg-white hover:shadow-sm"
+              className="flex w-full justify-start gap-4 border bg-white py-4 shadow-md hover:bg-white hover:shadow-sm"
               onClick={() => {
                 toggleSubmit()
                 login()
@@ -231,14 +237,14 @@ const LoginForm = () => {
               type="button"
             >
               <GoogleIcon />
-              <span>Sign up with Google</span>
+              <span>Sign in with Google</span>
             </Button>
             <Button
-              className="flex justify-start gap-4 border bg-black py-4 text-white shadow-md hover:bg-black hover:shadow-sm"
+              className="flex min-w-full justify-start gap-4 border bg-black py-4 text-white shadow-md hover:bg-black hover:shadow-sm"
               type="button"
             >
               <AppleIcon />
-              <span>Sign up with Apple</span>
+              <span>Sign in with Apple</span>
             </Button>
           </div>
         </form>

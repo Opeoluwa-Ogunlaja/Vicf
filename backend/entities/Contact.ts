@@ -17,6 +17,14 @@ const contactSchema = new Schema<IContactDocument>(
     contact_group: {
       type: 'ObjectId',
       ref: 'Contact_Group'
+    },
+    locked: {
+      type: Boolean,
+      default: false
+    },
+    last_updated_by: {
+      type: 'ObjectId',
+      ref: 'User'
     }
   },
   {

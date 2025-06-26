@@ -13,6 +13,7 @@ import CreateNewButton from '../CreateNewButton'
 import { useManager } from '@/hooks/useManager'
 import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { useUser } from '@/hooks/useUser'
 
 const Sidenav = () => {
   const [open, , setOpen] = useSidenav()
@@ -22,6 +23,7 @@ const Sidenav = () => {
   const location = useLocation()
   const isOnSave = location.pathname.includes('/save')
   // const isOnHome = location.pathname.includes('/home')
+  const { loggedIn } = useUser()
 
   useEffect(() => {
     if (open) openCount.current += 1
@@ -85,12 +87,14 @@ const Sidenav = () => {
                   Home
                 </NavigationLink>
               </li>
-              <li className="flex items-center gap-4">
-                <UsersOrgIcon className="text-neutral-500" />
-                <NavigationLink to="/organisations" className="after:!mix-blend-normal">
-                  Organisations
-                </NavigationLink>
-              </li>
+              {loggedIn && (
+                <li className="flex items-center gap-4">
+                  <UsersOrgIcon className="text-neutral-500" />
+                  <NavigationLink to="/organisations" className="after:!mix-blend-normal">
+                    Organisations
+                  </NavigationLink>
+                </li>
+              )}
               {!isOnSave && (
                 <li className="flex items-center gap-4">
                   <PlusIcon className="text-neutral-500" />

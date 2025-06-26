@@ -27,7 +27,7 @@ const router = (onlineStatus: boolean, setters: RouteDataType) =>
     [
       {
         path: '/auth',
-        loader: authLoader(onlineStatus),
+        loader: authLoader(onlineStatus, setters),
         element: <AuthWrapper />,
         id: 'auth',
         children: [

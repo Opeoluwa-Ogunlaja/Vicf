@@ -83,9 +83,23 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
 
 export type rootLoaderType = typeof rootLoader
 
-export const authLoader = (onlineStatus: boolean) =>
+export const authLoader = (onlineStatus: boolean, setters: RouteDataType) =>
   (async () => {
-    console.log(onlineStatus)
+    const fetchAccessToken = async () => {
+      try {
+        const token = await getAccessToken()
+        setters.setToken(token?.token)
+        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+      } catch (error) {
+        setters.setToken(' ')
+      }
+    }
+
+    if (!setters.currentToken.current.trim()) {
+      await fetchAccessToken()
+      await waitForInterceptor()
+    } else console.log('skipped token check')
+
     let userPromise!: Promise<unknown>
     userPromise = Promise.resolve(null)
     try {

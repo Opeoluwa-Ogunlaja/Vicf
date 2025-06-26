@@ -62,3 +62,9 @@ export const SignupFormSchema = z.object({
 })
 
 export type SignupFormType = z.infer<typeof SignupFormSchema>
+
+export const CreateOrganisationSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters')
+})
+
+export type CreateOrganisationType = z.infer<typeof CreateOrganisationSchema>

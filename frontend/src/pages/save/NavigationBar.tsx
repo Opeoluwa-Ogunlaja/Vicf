@@ -139,7 +139,7 @@ const NavigationBar = () => {
           ) : (
             <Button
               variant={'secondary'}
-              className="px-8 shadow-sm"
+              className="px-8 shadow-sm hover:text-white"
               onClick={() => navigate('/auth')}
             >
               Login
