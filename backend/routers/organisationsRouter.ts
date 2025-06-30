@@ -8,4 +8,9 @@ organisationsRouter.post(
   organisationController.create_organisation.bind(organisationController)
 )
 
+organisationsRouter.get(
+  '/me',
+  organisationController.get_organisations.bind(organisationController)
+)
+
 export default organisationsRouter

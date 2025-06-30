@@ -1,8 +1,9 @@
+import { userInfo } from 'node:os'
 import {
   OrganisationRepository,
   organisationRepository
 } from '../repositories/OrganisationsRepository'
-import { IOrganisation, Repository } from '../types'
+import { IOrganisation } from '../types'
 
 export class OrganisationService {
   repository: OrganisationRepository
@@ -20,6 +21,12 @@ export class OrganisationService {
 
   get_organisation_by_id: typeof organisationRepository.findById = async id => {
     return this.repository.findById(id)
+  }
+
+  get_organisations_for_user = async (userId: string) => {
+    return await this.repository.findAll({
+      owner: userId
+    })
   }
 
   complete_verification = async (id: string) => {

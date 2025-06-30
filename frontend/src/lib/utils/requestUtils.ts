@@ -235,3 +235,27 @@ export const testPromise = async () => {
     return false
   }
 }
+
+export const createOrganisation = async (organisation_name: string) => {
+  try {
+    const newUser = await axiosInstance.post('/organisations/create', {
+      name: organisation_name
+    })
+
+    return newUser.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
+export const get_organisations_for_me = async () => {
+  try {
+    const newUser = await axiosInstance.get(`/organisations/me`)
+
+    return newUser.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}

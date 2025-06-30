@@ -24,33 +24,49 @@ import {
 import { Input } from './ui/input'
 import { useUser } from '@/hooks/useUser'
 import { PlusIcon } from '@radix-ui/react-icons'
-import { useForm } from 'react-hook-form'
-import { wait } from '@/lib/utils/promiseUtils'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { CreateOrganisationSchema, CreateOrganisationType } from '@/lib/utils/form-schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createOrganisation } from '@/lib/utils/requestUtils'
+import { wait } from '@/lib/utils/promiseUtils'
+import { EditIcon } from '@/assets/icons'
 
 const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
-  const [isProcessing, toggle] = useToggle(false)
+  const [isProcessing] = useToggle(false)
   const [open, setOpen] = useState(false)
-  const [isSubmitting, setSubmitting] = useState<boolean>(false)
-  // const [isSubmitted, setSubmitted] = useState<boolean>(false)
-  const { loggedIn } = useUser()
-  console.log(loggedIn)
+
+  const { user } = useUser()
+
   const formHook = useForm<CreateOrganisationType>({
     resolver: zodResolver(CreateOrganisationSchema),
     defaultValues: {
       name: ''
     }
   })
+  const queryClient = useQueryClient()
+  const [success, setSuccess] = useState<boolean>(false)
+  const createOrganisationMutation = useMutation({
+    mutationFn: (data: { name: string }) => createOrganisation(data.name),
+    mutationKey: ['organisations', 'creation'],
+    onSuccess(data) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      queryClient.setQueryData(['organisations', user?.id], (prevContent: any) => {
+        return [...prevContent, data]
+      })
+    }
+  })
+  const { isSubmitting, errors } = formHook.formState
+  const [view, setView] = useState<'login' | 'success'>('login')
 
-  const onSubmit = async () => {
+  const onSubmit: SubmitHandler<CreateOrganisationType> = async data => {
     try {
-      setSubmitting(true)
-      await wait(2000)
+      await createOrganisationMutation.mutateAsync({ name: data.name })
+      setSuccess(true)
+      await wait(800)
+      setView('success')
     } catch (error) {
       console.log(error)
-    } finally {
-      setSubmitting(false)
     }
   }
 
@@ -70,43 +86,84 @@ const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
           </DialogDescription>
         </DialogHeader>
         <Form {...formHook}>
-          <form className="flex flex-col gap-2" onSubmit={formHook.handleSubmit(onSubmit)}>
-            <section className="grid grid-cols-2 max-md:grid-cols-1">
-              <FormField
-                control={formHook.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem className="max-md:mt-14">
-                    <FormLabel>Name</FormLabel>
-                    <FormControl className="-mt-2">
-                      <Input placeholder="Acme.co Marketing" {...field} />
-                    </FormControl>
-                    <FormDescription className="text-xs text-neutral-400">
-                      The Organisations's name.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
+          <form onSubmit={formHook.handleSubmit(onSubmit)}>
+            {view == 'login' ? (
+              <div className="flex flex-col gap-2">
+                {errors.root?.message && (
+                  <div className="-mt-2 mb-2 bg-red-50 py-2 text-center text-sm font-medium text-destructive">
+                    {errors.root?.message}
+                  </div>
                 )}
-              />
-            </section>
+                {success && (
+                  <div className="-mt-2 mb-2 bg-green-50 py-2 text-center text-sm font-medium text-accent">
+                    Login successful
+                  </div>
+                )}
+                <section className="grid grid-cols-2 max-md:grid-cols-1">
+                  <FormField
+                    control={formHook.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem className="max-md:mt-14">
+                        <FormLabel>Name</FormLabel>
+                        <FormControl className="-mt-2">
+                          <Input placeholder="Acme.co Marketing" {...field} />
+                        </FormControl>
+                        <FormDescription className="text-xs text-neutral-400">
+                          The Organisations's name.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </section>
+              </div>
+            ) : (
+              <>
+                <section>
+                  <h3 className="mt-4 text-lg font-bold text-primary">
+                    Organisation Created Successfully
+                  </h3>
+                  <div className="mb-6 mt-4 grid gap-2">
+                    <p className="text-neutral-500">Group invitation link:</p>
+                    <div
+                      className="grid justify-evenly gap-2"
+                      style={{
+                        gridTemplateColumns: '90% 10%'
+                      }}
+                    >
+                      <button className="inline-block overflow-hidden text-ellipsis rounded-md bg-neutral-200 px-3 py-2">
+                        {createOrganisationMutation.data &&
+                          `https://vicf.onrender.com/organisations/invitation/${createOrganisationMutation.data.inviteCode}`}
+                      </button>
+                      <Button size="icon" className="text-white">
+                        <EditIcon />
+                      </Button>
+                    </div>
+                  </div>
+                </section>
+              </>
+            )}
             <DialogFooter>
               <Button
                 variant="ghost"
                 type="button"
                 className="hover:bg-neutral-100"
-                onClick={toggle}
+                onClick={() => setOpen(false)}
               >
                 Close
               </Button>
-              <Button
-                id="save-contact-btn"
-                variant="default"
-                type="submit"
-                disabled={isSubmitting}
-                className="w-max bg-secondary/50 px-5 text-base font-normal max-md:absolute max-md:mx-auto max-md:mt-28 max-md:w-4/5"
-              >
-                Create Organisation {isSubmitting && <Loader />}
-              </Button>
+              {view == 'login' && (
+                <Button
+                  id="save-contact-btn"
+                  variant="default"
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-max bg-secondary/50 px-5 text-base font-normal max-md:absolute max-md:mx-auto max-md:mt-28 max-md:w-4/5"
+                >
+                  Create Organisation {isSubmitting && <Loader />}
+                </Button>
+              )}
             </DialogFooter>
           </form>
         </Form>

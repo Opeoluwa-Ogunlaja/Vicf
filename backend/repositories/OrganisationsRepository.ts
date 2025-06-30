@@ -16,6 +16,10 @@ export class OrganisationRepository {
     })
   }
 
+  async findAll(query: RootFilterQuery<IOrganisationDocument>, ...args: any[]) {
+    return await this.dal.getMany(query)
+  }
+
   async findOne(query: RootFilterQuery<IOrganisationDocument>, ...args: any[]) {
     return await this.dal.getOne(query, ...args)
   }

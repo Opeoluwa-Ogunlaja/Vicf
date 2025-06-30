@@ -26,6 +26,14 @@ class OrganisationController {
 
     res.json({ ok: true, data: newOrganisation })
   }
+
+  get_organisations: AsyncHandler<any, any> = async (req, res) => {
+    const userId = req.user?.id
+
+    const organisations = await this.service.get_organisations_for_user(userId)
+
+    res.json({ ok: true, data: organisations })
+  }
 }
 
 export const organisationController: OrganisationController = new Proxy(

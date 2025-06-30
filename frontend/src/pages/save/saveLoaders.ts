@@ -1,10 +1,9 @@
 import { queryClient } from '@/queryClient'
 import { get_contact_listing } from '@/lib/utils/requestUtils'
 import { defer, LoaderFunction } from 'react-router-dom'
-import { waitForInterceptor } from '@/lib/utils/tokenReady'
+// import { waitForInterceptor } from '@/lib/utils/tokenReady'
 
 export const saveLoader = (async ({ params }) => {
-  await waitForInterceptor()
   let contactPromise!: Promise<unknown>
   contactPromise = Promise.resolve(null)
   try {
