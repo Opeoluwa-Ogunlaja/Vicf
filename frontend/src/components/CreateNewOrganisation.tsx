@@ -73,7 +73,7 @@ const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={'secondary'} className={cx('text-[1.0625rem]', className, 'items-center')}>
+        <Button variant={'secondary'} className={cx(className, 'items-center')}>
           <PlusIcon width={'1.5em'} /> <span className="-mb-1 self-center">New Organisation </span>
           {isProcessing && <Loader className="w-3" />}
         </Button>
