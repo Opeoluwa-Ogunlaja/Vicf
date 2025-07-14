@@ -153,7 +153,13 @@ class UserController {
     const accessToken = generateAccessToken(refreshToken)
     res.json({
       ok: true,
-      data: { _id: user._id, email: user.email, name: user.name, token: accessToken }
+      data: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        profile_photo: user.profile_photo,
+        token: accessToken
+      }
     })
   }
 }

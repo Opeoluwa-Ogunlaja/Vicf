@@ -2,7 +2,7 @@ import { RootFilterQuery } from 'mongoose'
 import MongooseDAL from '../data access layers/MongooseDal'
 import User, { UserModelType } from '../entities/User'
 import { userRegisterType } from '../lib/validators/zodSchemas'
-import { IUserDocument } from '../types'
+import { IUser, IUserDocument } from '../types'
 
 export class UserRepository {
   dal: MongooseDAL<IUserDocument, UserModelType>
@@ -12,11 +12,12 @@ export class UserRepository {
     this.runInTransaction = this.dal.runInTransaction
   }
 
-  async create({ email, password, name }: userRegisterType) {
+  async create({ email, password, name, profile_photo }: IUser) {
     return await this.dal.create({
       email,
       password,
-      name
+      name,
+      profile_photo
     })
   }
 
