@@ -11,6 +11,10 @@ const contactGroupSchema = new Schema<IContactGroupDocument, ContactGroupModelTy
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
+  organisation: {
+    type: 'ObjectId',
+    ref: 'Organisations'
+  },
   url_id: { type: String, unique: true },
   contacts_count: Number,
   backed_up: {

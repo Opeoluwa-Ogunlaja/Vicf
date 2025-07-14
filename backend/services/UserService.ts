@@ -1,3 +1,4 @@
+import { ClientSession } from 'mongoose'
 import { UserRepository, userRepository } from '../repositories/UserRepository'
 import { IUser, Repository } from '../types'
 
@@ -27,6 +28,18 @@ export class UserService {
     return this.repository.updateById(id, {
       verified: true
     })
+  }
+
+  add_contact_group_to_user = async (userId: string, groupId: string, session?: ClientSession) => {
+    await this.repository.updateById(
+      userId,
+      {
+        $push: {
+          contact_groupings: groupId
+        }
+      },
+      session
+    )
   }
 }
 

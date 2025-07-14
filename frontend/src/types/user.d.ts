@@ -2,6 +2,7 @@ export interface IUser {
   email: string
   id: string
   name: string
+  profile_photo: string
 }
 
 export type PartialUser = Partial<IUser>

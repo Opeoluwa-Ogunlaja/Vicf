@@ -8,7 +8,6 @@ import { AccessError, NotFoundError, RequestError } from '../lib/utils/AppErrors
 import { verifyGoogleToken } from '../lib/utils/tokenVerifications'
 import generateToken, { generateAccessToken, verifyRefreshToken } from '../lib/utils/generateToken'
 import { loginTokenName, nodeEnv } from '../config'
-import { newId } from '../lib/utils/mongooseUtils'
 
 class UserController {
   service: UserService
@@ -109,7 +108,7 @@ class UserController {
 
     res.json({
       ok: true,
-      data: { id: user.id, email: user.email, name: user.name }
+      data: { id: user.id, email: user.email, name: user.name, profile_photo: user.profile_photo }
     })
   }
 
@@ -129,7 +128,8 @@ class UserController {
         email: validated_user.email,
         provider: 'google',
         name: `${validated_user.given_name} ${validated_user.family_name}`.trim(),
-        verified: validated_user.email_verified
+        verified: validated_user.email_verified,
+        profile_photo: validated_user.picture
       }
       user = await this.service.create_user(newUser)
     }

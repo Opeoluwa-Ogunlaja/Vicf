@@ -25,7 +25,7 @@ const NavigationCard: FC<{ className?: string }> = ({ className }) => {
         )}
       >
         <img
-          src="https://res.cloudinary.com/maddope/image/upload/v1711923023/masyntech-mern-blog/uwcz3p8o75ozapa9pjf6.jpg"
+          src={user?.profile_photo}
           alt="Profile image"
           loading="lazy"
           className="aspect-square max-h-10 w-10 rounded-full shadow-inner"

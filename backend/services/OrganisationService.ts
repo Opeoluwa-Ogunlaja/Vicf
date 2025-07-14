@@ -1,4 +1,3 @@
-import { userInfo } from 'node:os'
 import {
   OrganisationRepository,
   organisationRepository
@@ -19,14 +18,35 @@ export class OrganisationService {
     return this.repository.findOne(query)
   }
 
-  get_organisation_by_id: typeof organisationRepository.findById = async id => {
-    return this.repository.findById(id)
+  get_organisation_by_id = async (id: string) => {
+    return this.repository.getOrganisationWithListings(id)
   }
 
   get_organisations_for_user = async (userId: string) => {
     return await this.repository.findAll({
       owner: userId
     })
+  }
+
+  verify_organisation_member = async (
+    organisationId: string,
+    userId: string,
+    organisation: any
+  ) => {
+    if (organisation && organisation.members.includes(userId)) {
+      return true
+    } else {
+      const organisationFound = await this.repository.findOne({
+        _id: organisationId,
+        members: {
+          $in: userId
+        }
+      })
+
+      return Boolean(organisationFound)
+    }
+
+    return false
   }
 
   complete_verification = async (id: string) => {

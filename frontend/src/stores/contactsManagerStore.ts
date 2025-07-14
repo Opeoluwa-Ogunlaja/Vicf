@@ -32,6 +32,11 @@ export const useContactManagerStore = create<ContactManager>()(set => {
           return { manager }
         })
       },
+      addOrgansisationManagers(managers) {
+        set(state => {
+          return { manager: [...managers, ...state.manager] as ContactManagerEntry[] }
+        })
+      },
       async createManager(data, upstream = false) {
         let errorsPresent = false
         const new_manager = await myTaskManager.run('create_listing', true, data)

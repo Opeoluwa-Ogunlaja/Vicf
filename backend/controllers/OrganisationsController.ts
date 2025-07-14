@@ -36,7 +36,6 @@ class OrganisationController {
   }
 
   get_organisation: AsyncHandler<any, any, { organisationId: string }> = async (req, res) => {
-    const userId = req.user?.id
     const { organisationId } = req.params
 
     const organisation = await this.service.get_organisation_by_id(organisationId)

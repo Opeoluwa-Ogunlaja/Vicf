@@ -4,7 +4,15 @@ import { useUser } from '@/hooks/useUser'
 import { get_organisation } from '@/lib/utils/requestUtils'
 import Skeleton from 'react-loading-skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import useOrganisationsListing from '@/hooks/useOrganisationsListing'
+import BlockCard from '@/components/BlockCard'
 
+const OrganisationListings = ({ organisationId }: { organisationId: string }) => {
+  const organisation_managers = useOrganisationsListing(organisationId)
+  return organisation_managers.map(manager => {
+    return <BlockCard manager={manager} />
+  })
+}
 const Organisation = () => {
   const { loggedIn } = useUser()
   const { organisationId } = useParams()
@@ -12,7 +20,8 @@ const Organisation = () => {
   const { data: currentOrganisation, isPending: organisationPending } = useQuery({
     queryFn: () => get_organisation(organisationId!),
     queryKey: ['organisation', organisationId],
-    enabled: loggedIn && Boolean(organisationId)
+    enabled: loggedIn && Boolean(organisationId),
+    staleTime: Infinity
   })
 
   if (organisationPending)
@@ -35,7 +44,7 @@ const Organisation = () => {
         <p className="text-neutral-400">Created on so so so... date</p>
       </section>
       <Tabs defaultValue="listings" className="mt-8 w-full">
-        <TabsList className="w-full justify-start gap-2 border-b border-neutral-50 bg-transparent">
+        <TabsList className="contacts-grid w-full justify-start gap-2 border-b border-neutral-50 bg-transparent">
           <TabsTrigger
             value="listings"
             className="rounded-b-none px-10 py-2 font-medium transition hover:bg-neutral-100 data-[state=active]:bg-neutral-100"
@@ -49,8 +58,8 @@ const Organisation = () => {
             Members
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="listings" className="py-4 transition-all animate-in">
-          Make changes to your account here.
+        <TabsContent value="listings" className="contacts-grid py-4 transition-all animate-in">
+          <OrganisationListings organisationId={currentOrganisation._id} />
         </TabsContent>
         <TabsContent value="members" className="py-4 transition-all animate-in">
           Change your password here.

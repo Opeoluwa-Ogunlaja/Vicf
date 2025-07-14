@@ -68,10 +68,16 @@ const LoginForm = () => {
             return {
               id: res?.id,
               name: res?.name,
-              email: res?.email
+              email: res?.email,
+              profile_photo: res?.profile_photo
             }
           })
-          update_user_state({ id: res?.id, name: res?.name, email: res?.email })
+          update_user_state({
+            id: res?.id,
+            name: res?.name,
+            email: res?.email,
+            profile_photo: res?.profile_photo
+          })
           if (res?.token) setToken(res?.token)
           // else console.warn('there was no token for some reason')
           queryClient.invalidateQueries({
@@ -113,13 +119,19 @@ const LoginForm = () => {
             return {
               id: res?.id,
               name: res?.name,
-              email: res?.email
+              email: res?.email,
+              profile_photo: res?.profile_photo
             }
           })
           console.log('setting the state')
           if (res?.token) setToken(res?.token)
           // else console.warn('there was no token for some reason')
-          update_user_state({ id: res?.id, name: res?.name, email: res?.email })
+          update_user_state({
+            id: res?.id,
+            name: res?.name,
+            email: res?.email,
+            profile_photo: res?.profile_photo
+          })
           queryClient.invalidateQueries({
             queryKey: ['contacts_manager'],
             refetchType: 'all',

@@ -41,6 +41,31 @@ export class ContactsController {
     })
   }
 
+  create_organisation_group: AsyncHandler<
+    createContactGroupType,
+    Partial<IContactGroup>,
+    { organisationId: string }
+  > = async (req, res) => {
+    const { organisationId } = req.params
+    const userId = req?.user?.id
+    const validation = await createContactGroupSchema.safeParseAsync(req.body)
+    if (!validation.success) throw new RequestError(flattenZodErrorMessage(validation.error.errors))
+    const { url_id, description, name } = validation.data
+
+    const newContact = await this.use_case.CreateContactForOrganisation(userId, organisationId, {
+      url_id,
+      description,
+      name
+    })
+
+    if (!newContact) throw new Error("Could'nt complete your request")
+
+    res.json({
+      ok: true,
+      data: newContact.toJSON()!
+    })
+  }
+
   get_manager: AsyncHandler<{}, {}> = async (req, res) => {
     const userId = req.user?.id
     const manager = await this.service.getManagerForUser(userId)

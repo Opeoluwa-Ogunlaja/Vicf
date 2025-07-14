@@ -27,6 +27,7 @@ export interface IContactGroup {
   preferences: {
     slug_type: 'title_number' | 'title_hash'
   }
+  organisation: RefType
 }
 
 export interface IContactGroupDocument extends IContactGroup, Document {}
