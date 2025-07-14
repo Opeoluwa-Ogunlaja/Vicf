@@ -3,20 +3,11 @@ import NavigationBar from '../home/NavigationBar'
 import Sidenav from '@/components/ui/Sidenav'
 import Footer from '@/components/Footer'
 
-import CreateNewOrganisation from '@/components/CreateNewOrganisation'
 import { useUser } from '@/hooks/useUser'
-import { Navigate } from 'react-router-dom'
-import OrganisationsListing from './OrganisationsListing'
-import { useQuery } from '@tanstack/react-query'
-import { get_organisations_for_me } from '@/lib/utils/requestUtils'
+import { Navigate, Outlet } from 'react-router-dom'
 
 const Organisations = () => {
-  const { loggedIn, user } = useUser()
-  const { data: myOrganisations, isLoading: loadingOrganisations } = useQuery({
-    queryFn: get_organisations_for_me,
-    queryKey: ['organisations', user?.id],
-    enabled: loggedIn
-  })
+  const { loggedIn } = useUser()
 
   if (!loggedIn) return <Navigate replace to="/auth" />
 
@@ -35,21 +26,13 @@ const Organisations = () => {
       >
         <Sidenav />
         <div
-          className="grid px-10 pt-16 max-md:px-8 max-md:py-14"
+          className="grid px-10 pt-16 max-md:px-8 max-md:py-8"
           style={{
             gridAutoRows: 'max-content',
             container: 'main-section / inline-size'
           }}
         >
-          <h3 className="mb-8 text-lg font-medium">
-            Your Organisations <CreateNewOrganisation className="ml-4 py-4" />
-          </h3>
-
-          {loadingOrganisations ? (
-            <span>Loading Organisations</span>
-          ) : (
-            <OrganisationsListing organisations={myOrganisations} />
-          )}
+          <Outlet />
         </div>
       </main>
       <Footer />

@@ -1,5 +1,5 @@
 import { BgPatternImage } from '@/assets/images'
-import { Suspense } from 'react'
+import { Suspense, useLayoutEffect } from 'react'
 import { Await, Navigate, Outlet, useRouteLoaderData } from 'react-router-dom'
 import { IUser } from '@/types/user'
 import LoadingScreen from '@/components/LoadingScreen'
@@ -7,6 +7,12 @@ import LoadingScreen from '@/components/LoadingScreen'
 const AuthWrapper = () => {
   const { user_promise } = useRouteLoaderData('auth') as { user_promise: Promise<IUser | null> }
 
+  useLayoutEffect(() => {
+  
+    document.body.classList.replace('blockLayout', 'authLayout')
+    document.body.classList.add('authLayout')
+
+  })
   return (
     <>
       <Suspense fallback={<LoadingScreen />}>

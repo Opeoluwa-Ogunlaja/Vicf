@@ -21,6 +21,8 @@ const Signup = lazy(() => import('./pages/signup/Signup'))
 const AuthWrapper = lazy(() => import('./hoc/AuthWrapper'))
 const Landing = lazy(() => import('./pages/landing/Landing'))
 const Organisations = lazy(() => import('./pages/organisations/Organisations'))
+const Organisation = lazy(() => import('./pages/organisations/Organisation'))
+const OrganisationHome = lazy(() => import('./pages/organisations/OrganisationsHome'))
 
 const router = (onlineStatus: boolean, setters: RouteDataType) =>
   createBrowserRouter(
@@ -50,9 +52,14 @@ const router = (onlineStatus: boolean, setters: RouteDataType) =>
         element: <Layout />,
         id: 'root',
         loader: rootLoader(onlineStatus, setters),
-        // shouldRevalidate: () => {
-        //   return true
-        // },
+        shouldRevalidate: routingParams => {
+          switch (true) {
+            case routingParams.currentUrl.pathname.includes('organisations') &&
+              routingParams.nextUrl.pathname.includes('organisations/'):
+              return false
+          }
+          return true
+        },
         children: [
           {
             path: 'save',
@@ -70,7 +77,15 @@ const router = (onlineStatus: boolean, setters: RouteDataType) =>
           },
           {
             path: 'organisations',
-            element: <Organisations />
+            element: <Organisations />,
+            shouldRevalidate: () => false,
+            children: [
+              { path: ':organisationId', element: <Organisation /> },
+              {
+                path: '',
+                element: <OrganisationHome />
+              }
+            ]
           },
           {
             path: 'home',

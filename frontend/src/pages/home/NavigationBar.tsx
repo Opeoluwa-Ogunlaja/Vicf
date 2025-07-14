@@ -15,7 +15,7 @@ const NavigationBar = () => {
   const { isOnline } = useOnline()
 
   return (
-    <header className="relative w-full border-b border-neutral-50 px-16 pt-3 max-md:px-8 max-sm:px-3">
+    <header className="main-navigation relative w-full h-max border-b border-neutral-50 px-16 pt-3 max-md:px-8 max-sm:px-3">
       <div className="flex items-center justify-between self-start pb-3">
         <div className="gap-4 max-lg:flex lg:contents">
           <SidenavToggle className="text-neutral-600" />

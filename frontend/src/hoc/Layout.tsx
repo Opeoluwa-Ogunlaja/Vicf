@@ -1,5 +1,5 @@
 import LoadingScreen from '@/components/LoadingScreen'
-import { memo, Suspense, useEffect } from 'react'
+import { memo, Suspense, useEffect, useLayoutEffect } from 'react'
 import { Await, Outlet, useNavigation, useRouteLoaderData } from 'react-router-dom'
 import { IUser } from '@/types/user'
 import { useToggle } from '@/hooks/useToggle'
@@ -28,6 +28,10 @@ const Layout = () => {
   const isLoading = navigation.state == 'loading'
   const { user_promise } = useRouteLoaderData('root') as { user_promise: Promise<IUser | null> }
 
+  useLayoutEffect(() => {
+    document.body.classList.replace('authLayout', 'blockLayout')
+    document.body.classList.add('blockLayout')
+  }, [])
   useEffect(() => {
     if (navigation.state == 'idle') {
       set(true)

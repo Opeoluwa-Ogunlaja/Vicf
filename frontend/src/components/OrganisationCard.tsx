@@ -1,13 +1,21 @@
 import { BellIcon, DotsHorizontalIcon, UserPlusIcon, UsersOrgIcon } from '@/assets/icons'
 import { FC } from 'react'
 import { Button } from './ui/button'
+import { useNavigate } from 'react-router-dom'
 
 const OrganisationCard: FC<{
-  organisation: Partial<{ name: string }>
+  organisation: Partial<{ name: string; _id: string }>
 }> = ({ organisation }) => {
+  const navigate = useNavigate()
+  const handleCardClick = () => {
+    navigate(`/organisations/${organisation._id}`)
+  }
   return (
-    <div className="grid cursor-pointer overflow-clip rounded-lg bg-white shadow-neutral-400/5 drop-shadow-md transition-all hover:scale-[1.05]">
-      <div className="flex items-center space-x-4 overflow-hidden bg-white p-3 sm:p-4">
+    <div
+      onClick={handleCardClick}
+      className="grid cursor-pointer overflow-clip rounded-lg border border-neutral-200/60 bg-white shadow-neutral-400/5 drop-shadow-md transition-all hover:scale-[1.05]"
+    >
+      <div className="flex items-center space-x-4 overflow-hidden bg-white p-4">
         <UsersOrgIcon className="mx-2 w-5 self-start justify-self-start" />
         <div className="relative flex flex-1 flex-col gap-1 text-left text-sm">
           <div className="flex items-baseline justify-between">
