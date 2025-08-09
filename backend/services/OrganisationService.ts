@@ -28,6 +28,17 @@ export class OrganisationService {
     })
   }
 
+  get_organisation_members_by_id = async (organisationId: string) => {
+    return await this.repository.dal
+      .getModel()
+      .findById(organisationId)
+      .populate({
+        path: 'members',
+        select: 'name email profile_photo'
+      })
+      .select('name members')
+  }
+
   verify_organisation_member = async (
     organisationId: string,
     userId: string,
@@ -45,8 +56,6 @@ export class OrganisationService {
 
       return Boolean(organisationFound)
     }
-
-    return false
   }
 
   complete_verification = async (id: string) => {

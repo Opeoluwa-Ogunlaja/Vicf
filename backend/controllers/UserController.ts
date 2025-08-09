@@ -34,7 +34,7 @@ class UserController {
     const { email, password } = req.body
     const userExists = await this.service.get_user({ email })
     if (!userExists) {
-      throw new NotFoundError('User')
+      throw new RequestError('Invalid Credentials')
     }
 
     if (password !== userExists.password) {

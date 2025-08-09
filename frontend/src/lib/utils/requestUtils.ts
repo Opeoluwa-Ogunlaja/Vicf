@@ -270,3 +270,14 @@ export const get_organisation = async (organisationId: string) => {
     checkError(error)
   }
 }
+
+export const get_organisation_members = async (organisationId: string) => {
+  try {
+    const newUser = await axiosInstance.get(`/organisations/${organisationId}/members`)
+
+    return newUser.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}

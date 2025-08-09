@@ -44,6 +44,8 @@ export async function connectSocketIo() {
   try {
     const socketIOHandler = new SocketIOHandler(io)
     socketIOHandler.connect()
+
+    return io
   } catch (error) {
     console.error(error)
   }

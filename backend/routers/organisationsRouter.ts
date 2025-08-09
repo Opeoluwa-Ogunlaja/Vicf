@@ -18,4 +18,9 @@ organisationsRouter.get(
   organisationController.get_organisation.bind(organisationController)
 )
 
+organisationsRouter.get(
+  '/:organisationId/members',
+  organisationController.get_members.bind(organisationController)
+)
+
 export default organisationsRouter

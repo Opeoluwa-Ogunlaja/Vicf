@@ -2,9 +2,14 @@ import { BellIcon, DotsHorizontalIcon, UserPlusIcon, UsersOrgIcon } from '@/asse
 import { FC } from 'react'
 import { Button } from './ui/button'
 import { useNavigate } from 'react-router-dom'
+import { ContactManagerEntry } from '@/types/contacts_manager'
 
 const OrganisationCard: FC<{
-  organisation: Partial<{ name: string; _id: string }>
+  organisation: Partial<{
+    name: string
+    _id: string
+    contact_groupings: Partial<ContactManagerEntry>[]
+  }>
 }> = ({ organisation }) => {
   const navigate = useNavigate()
   const handleCardClick = () => {
@@ -30,7 +35,7 @@ const OrganisationCard: FC<{
             </section>
           </div>
           <p className="flex gap-2 font-medium leading-none text-neutral-400">
-            <UserPlusIcon width={'1em'} /> contacts
+            <UserPlusIcon width={'1em'} /> {organisation.contact_groupings?.length} listings
           </p>
         </div>
       </div>

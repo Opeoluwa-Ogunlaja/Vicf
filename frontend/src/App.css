@@ -67,6 +67,12 @@
     transition: all 0.2s ease-in-out;
   }
 
+  .members_grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;
+    transition: all 0.2s ease-in-out;
+  }
+
   .organisations-grid {
     grid-template-columns: repeat(auto-fill, minmax(clamp(320px, 40cqw, 460px), 1fr));
     grid-auto-rows: 1fr;

@@ -1,21 +1,25 @@
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { useUser } from '@/hooks/useUser'
 import { get_organisation } from '@/lib/utils/requestUtils'
 import Skeleton from 'react-loading-skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import useOrganisationsListing from '@/hooks/useOrganisationsListing'
 import BlockCard from '@/components/BlockCard'
+import OrganisationMembers from './OrganisationMembers'
 
 const OrganisationListings = ({ organisationId }: { organisationId: string }) => {
   const organisation_managers = useOrganisationsListing(organisationId)
   return organisation_managers.map(manager => {
-    return <BlockCard manager={manager} />
+    return <BlockCard key={manager._id} manager={manager} />
   })
 }
 const Organisation = () => {
   const { loggedIn } = useUser()
   const { organisationId } = useParams()
+  const [params, setParams] = useSearchParams({
+    tab: 'listings'
+  })
 
   const { data: currentOrganisation, isPending: organisationPending } = useQuery({
     queryFn: () => get_organisation(organisationId!),
@@ -43,7 +47,15 @@ const Organisation = () => {
         <h3 className="text-xl font-semibold lg:text-3xl">{currentOrganisation.name}</h3>
         <p className="text-neutral-400">Created on so so so... date</p>
       </section>
-      <Tabs defaultValue="listings" className="mt-8 w-full">
+      <Tabs
+        defaultValue={params.get('tab') ?? 'listings'}
+        onValueChange={tabName =>
+          setParams({
+            tab: tabName
+          })
+        }
+        className="mt-8 w-full"
+      >
         <TabsList className="contacts-grid w-full justify-start gap-2 border-b border-neutral-50 bg-transparent">
           <TabsTrigger
             value="listings"
@@ -62,7 +74,7 @@ const Organisation = () => {
           <OrganisationListings organisationId={currentOrganisation._id} />
         </TabsContent>
         <TabsContent value="members" className="py-4 transition-all animate-in">
-          Change your password here.
+          <OrganisationMembers organisationId={currentOrganisation._id} />
         </TabsContent>
       </Tabs>
     </>
