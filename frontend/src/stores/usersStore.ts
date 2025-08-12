@@ -7,10 +7,10 @@ export default createStore<IUserState>(set => {
     isPending: true,
     user: null,
     actions: {
-      login_user: ({ id, email, name, profile_photo }: PartialUser) =>
+      login_user: ({ _id, email, name, profile_photo }: PartialUser) =>
         set(() => ({
           user: {
-            id,
+            _id,
             email,
             name,
             profile_photo

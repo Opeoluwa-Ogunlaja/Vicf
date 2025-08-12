@@ -70,10 +70,10 @@ const Organisation = () => {
             Members
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="listings" className="contacts-grid py-4 transition-all animate-in">
+        <TabsContent value="listings" className="contacts-grid py-4 animate-in fade-in-45">
           <OrganisationListings organisationId={currentOrganisation._id} />
         </TabsContent>
-        <TabsContent value="members" className="py-4 transition-all animate-in">
+        <TabsContent value="members" className="py-4 animate-in fade-in-45">
           <OrganisationMembers organisationId={currentOrganisation._id} />
         </TabsContent>
       </Tabs>

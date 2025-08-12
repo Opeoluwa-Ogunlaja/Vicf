@@ -28,7 +28,7 @@ const OrganisationMembers = ({ organisationId }: { organisationId: string }) => 
 
       <section className="members-grid mt-10 grid gap-1 pb-10 max-sm:justify-center">
         {organisation.members.map((member: Partial<IUser>) => {
-          return <MemberCard member={member} />
+          return <MemberCard key={member._id} member={member} />
         })}
       </section>
     </>

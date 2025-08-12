@@ -41,6 +41,7 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
             data => {
               const user = data as IUser
               setters.login_user({
+                _id: user._id,
                 name: user?.name,
                 email: user?.email,
                 profile_photo: user?.profile_photo

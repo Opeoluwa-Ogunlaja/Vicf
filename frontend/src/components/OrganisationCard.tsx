@@ -18,7 +18,7 @@ const OrganisationCard: FC<{
   return (
     <div
       onClick={handleCardClick}
-      className="grid cursor-pointer overflow-clip rounded-lg border border-neutral-200/60 bg-white shadow-neutral-400/5 drop-shadow-md transition-all hover:scale-[1.05]"
+      className="grid cursor-pointer overflow-clip rounded-lg border border-neutral-200/60 bg-white shadow-neutral-400/5 drop-shadow-md transition-transform hover:scale-[1.05]"
     >
       <div className="flex items-center space-x-4 overflow-hidden bg-white p-4">
         <UsersOrgIcon className="mx-2 w-5 self-start justify-self-start" />

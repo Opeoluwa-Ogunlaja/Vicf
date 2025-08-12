@@ -108,7 +108,7 @@ class UserController {
 
     res.json({
       ok: true,
-      data: { id: user.id, email: user.email, name: user.name, profile_photo: user.profile_photo }
+      data: { _id: user._id, id: user.id, email: user.email, name: user.name, profile_photo: user.profile_photo }
     })
   }
 

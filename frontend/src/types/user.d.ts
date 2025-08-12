@@ -1,6 +1,6 @@
 export interface IUser {
   email: string
-  id: string
+  _id: string
   name: string
   profile_photo: string
 }

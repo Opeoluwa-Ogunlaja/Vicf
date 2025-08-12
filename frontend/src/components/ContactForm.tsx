@@ -282,7 +282,7 @@ const ContactForm = () => {
         </section>
         <Accordion type="multiple">
           <AccordionItem value="core" className="border-none">
-            <AccordionTrigger className="font-bold text-neutral-500 underline transition-all">
+            <AccordionTrigger className="font-bold text-neutral-500 underline">
               Add Contact
             </AccordionTrigger>
             <AccordionContent className="grid gap-3 px-1">
@@ -330,7 +330,7 @@ const ContactForm = () => {
               </section>
               <Accordion type="multiple" className="mt-4">
                 <AccordionItem value="additional">
-                  <AccordionTrigger className="text-lg font-normal text-neutral-600 transition-all">
+                  <AccordionTrigger className="text-lg font-normal text-neutral-600">
                     Overwrites
                   </AccordionTrigger>
                   <AccordionContent>

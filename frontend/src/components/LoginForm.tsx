@@ -66,14 +66,14 @@ const LoginForm = () => {
           setSuccess(true)
           queryClient.setQueryData<Partial<IUser>>(['user', 'logged_in'], () => {
             return {
-              id: res?.id,
+              _id: res?._id,
               name: res?.name,
               email: res?.email,
               profile_photo: res?.profile_photo
             }
           })
           update_user_state({
-            id: res?.id,
+            _id: res?._id,
             name: res?.name,
             email: res?.email,
             profile_photo: res?.profile_photo
@@ -117,7 +117,7 @@ const LoginForm = () => {
           setSuccess(true)
           queryClient.setQueryData<Partial<IUser>>(['user', 'logged_in'], () => {
             return {
-              id: res?.id,
+              _id: res?._id,
               name: res?.name,
               email: res?.email,
               profile_photo: res?.profile_photo
@@ -127,7 +127,7 @@ const LoginForm = () => {
           if (res?.token) setToken(res?.token)
           // else console.warn('there was no token for some reason')
           update_user_state({
-            id: res?.id,
+            _id: res?._id,
             name: res?.name,
             email: res?.email,
             profile_photo: res?.profile_photo

@@ -22,7 +22,7 @@ const BlockCard: FC<{
 
   return (
     <div
-      className="grid origin-center cursor-pointer grid-rows-2 overflow-hidden rounded-lg shadow-neutral-400/5 drop-shadow-lg transition-all hover:scale-[1.0125] md:max-w-[17.25rem]"
+      className="grid origin-center cursor-pointer grid-rows-2 overflow-hidden rounded-lg shadow-neutral-400/5 drop-shadow-lg transition-transform hover:scale-[1.0125] md:max-w-[17.25rem]"
       style={{
         gridTemplateRows: '156px max-content'
       }}
