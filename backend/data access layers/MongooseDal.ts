@@ -65,7 +65,7 @@ class MongooseDAL<TDocument = any, TModel extends Model<TDocument> = any> {
     data: UpdateQuery<TDocument>,
     session?: ClientSession
   ) {
-    return await this.model.updateMany(query, data, { new: true }).session(session || null)
+    return await this.model.updateMany(query, data).session(session || null)
   }
 
   async delete<T>(id: T, session?: ClientSession) {
