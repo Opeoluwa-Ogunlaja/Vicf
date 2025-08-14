@@ -8,7 +8,7 @@ const OrganisationsHome = () => {
   const { loggedIn, user } = useUser()
   const { data: myOrganisations, isLoading: loadingOrganisations } = useQuery({
     queryFn: get_organisations_for_me,
-    queryKey: ['organisations', user?.id],
+    queryKey: ['organisations', user?._id],
     enabled: loggedIn
   })
   return (

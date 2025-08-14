@@ -10,12 +10,12 @@ dbConnection()
   const io = await connectSocketIo()
 
   if (nodeEnv !== 'production') {
-    const pubClient = createClient({ url: 'redis://localhost:6379' })
-    const subClient = pubClient.duplicate()
+    // const pubClient = createClient({ url: 'redis://localhost:6379' })
+    // const subClient = pubClient.duplicate()
 
-    await Promise.all([pubClient.connect(), subClient.connect()])
+    // await Promise.all([pubClient.connect(), subClient.connect()])
 
-    io!.adapter(createAdapter(pubClient, subClient))
+    // io!.adapter(createAdapter(pubClient, subClient))
   }
 
   server.listen(port, () => {

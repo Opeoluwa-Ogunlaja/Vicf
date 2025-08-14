@@ -12,6 +12,9 @@ import { MobileOnlyView } from 'react-device-detect'
 import CreateNewButton from '@/components/CreateNewButton'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import { useUser } from '@/hooks/useUser'
+import { useQuery } from '@tanstack/react-query'
+import { get_organisations_for_me } from '@/lib/utils/requestUtils'
+import OrganisationsListing from '../organisations/OrganisationsListing'
 
 const SkeletonCon = () => {
   return (
@@ -46,7 +49,13 @@ const Home = () => {
   const { contacts_manager_promise } = useRouteLoaderData('root') as {
     contacts_manager_promise: Promise<ContactManager | null>
   }
-  const { loggedIn } = useUser()
+  const { loggedIn, user } = useUser()
+  
+  const { data: myOrganisations, isLoading: loadingOrganisations } = useQuery({
+    queryFn: get_organisations_for_me,
+    queryKey: ['organisations', user?._id],
+    enabled: loggedIn
+  })
 
   return (
     <>
@@ -109,7 +118,10 @@ const Home = () => {
                 <h3 className="mb-6 w-max rounded-full bg-blue-50 px-6 py-2 text-base text-blue-700">
                   Organisations
                 </h3>
-                <p className="text-neutral-400">You don't belong to any organisations</p>
+                {/* <p className="text-neutral-400">You don't belong to any organisations</p> */}
+                { !loadingOrganisations ? 
+                  <OrganisationsListing organisations={myOrganisations} /> : "Loading Organisations" 
+                }
               </section>
             )}
           </div>
