@@ -51,7 +51,7 @@ const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
     mutationKey: ['organisations', 'creation'],
     onSuccess(data) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      queryClient.setQueryData(['organisations', user?.id], (prevContent: any) => {
+      queryClient.setQueryData(['organisations', user?._id], (prevContent: any) => {
         return [...prevContent, data]
       })
     }
