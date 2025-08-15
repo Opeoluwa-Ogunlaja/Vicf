@@ -24,7 +24,7 @@ export class OrganisationService {
 
   get_organisations_for_user = async (userId: string) => {
     return await this.repository.findAll({
-      owner: userId
+      members: { $in: [userId] }
     })
   }
 
