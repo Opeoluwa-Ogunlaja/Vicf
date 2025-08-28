@@ -7,6 +7,8 @@ import contactsRouter from './routers/contactsRouter'
 import organisationsRouter from './routers/organisationsRouter'
 import path from 'path'
 import { nodeEnv } from './config'
+import subscriptionRouter from './routers/subscriptionRouter'
+import dashboardRouter from './routers/dashboardRouter'
 
 const app = express()
 
@@ -18,6 +20,8 @@ app.use(cors({ origin: (o, cb) => cb(null, true), credentials: true }))
 app.use('/users', userRouter)
 app.use('/contacts', contactsRouter)
 app.use('/organisations', organisationsRouter)
+app.use('/api/subscribe', subscriptionRouter)
+app.use('/api/dashboard', dashboardRouter)
 
 if (nodeEnv == 'production') {
   app.use(express.static(path.join(__dirname, 'client')))

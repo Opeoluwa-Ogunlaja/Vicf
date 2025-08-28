@@ -1,5 +1,5 @@
 import userService, { UserService } from './../services/UserService'
-import { IContactGroup, IContactGroupDocument, IOrganisation } from '../types'
+import { IContactGroup, IContactGroupDocument, IOrganisation, IContact } from '../types'
 import organisationService, { OrganisationService } from '../services/OrganisationService'
 import { ForbiddenError, NotFoundError } from '../lib/utils/AppErrors'
 import { contactsRepository, ContactsRepository } from '../repositories/ContactsRepository'
@@ -9,6 +9,28 @@ import {
 } from '../repositories/ContactGroupsRepository'
 
 export class ContactUseCases {
+  // --- DASHBOARD STATS METHODS ---
+  async countListingsCreatedByUser(userId: string): Promise<number> {
+    // TODO: Implement logic to count listings created by user
+    return 0
+  }
+
+  async countListingsUpdatedToDriveByUser(userId: string): Promise<number> {
+    // TODO: Implement logic to count listings updated to drive by user
+    return 0
+  }
+  // --- END DASHBOARD STATS METHODS ---
+  // --- TEMPLATE: Add ContactUseCases Methods ---
+  async update_contact(userId: string, contactId: string, data: Partial<IContact>) {
+    // TODO: Implement update contact use case
+    return null
+  }
+
+  async delete_contact(userId: string, contactId: string) {
+    // TODO: Implement delete contact use case
+    return null
+  }
+  // --- END TEMPLATE ---
   contacts_repository: ContactsRepository
   groups_repository: ContactGroupsRepository
   user_service: UserService

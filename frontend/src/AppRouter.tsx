@@ -24,6 +24,8 @@ const Organisations = lazy(() => import('./pages/organisations/Organisations'))
 const Organisation = lazy(() => import('./pages/organisations/Organisation'))
 const OrganisationHome = lazy(() => import('./pages/organisations/OrganisationsHome'))
 
+const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'))
+
 const router = (onlineStatus: boolean, setters: RouteDataType) =>
   createBrowserRouter(
     [
@@ -86,6 +88,10 @@ const router = (onlineStatus: boolean, setters: RouteDataType) =>
                 element: <OrganisationHome />
               }
             ]
+          },
+          {
+            path: 'dashboard',
+            element: <Dashboard />
           },
           {
             path: 'home',

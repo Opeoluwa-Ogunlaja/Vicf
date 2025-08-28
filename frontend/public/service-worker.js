@@ -1,17 +1,15 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME = 'app-cache-v1'
+const CACHE_NAME = 'app-cache-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
-  '/favicon.ico'
-]
+  '/favicon.ico',
+  '/manifest.json',
+];
 
 self.addEventListener('install', event => {
-  const swEvent = event
-  swEvent.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE)))
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE)));
 })
 
 self.addEventListener('activate', event => {
@@ -27,7 +25,17 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const fetchEvent = event
-  fetchEvent.respondWith(fetch(fetchEvent.request).catch(() => caches.match(fetchEvent.request)))
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, responseClone);
+        });
+        return response;
+      })
+      .catch(() => caches.match(event.request))
+  );
 })
 
 self.addEventListener('message', event => {
@@ -36,3 +44,12 @@ self.addEventListener('message', event => {
     self.skipWaiting()
   }
 })
+self.addEventListener('sync', event => {
+  if (event.tag === 'sync-tasks') {
+    // @ts-ignore
+    // eslint-disable-next-line no-undef
+    self.clients.matchAll().then(clients => {
+      clients.forEach(client => client.postMessage({ type: 'SYNC_TASKS' }));
+    });
+  }
+});

@@ -88,12 +88,20 @@ const Sidenav = () => {
                 </NavigationLink>
               </li>
               {loggedIn && (
-                <li className="flex items-center gap-4">
-                  <UsersOrgIcon className="text-neutral-500" />
-                  <NavigationLink to="/organisations" className="after:!mix-blend-normal">
-                    Organisations
-                  </NavigationLink>
-                </li>
+                <>
+                  <li className="flex items-center gap-4">
+                    <UsersOrgIcon className="text-neutral-500" />
+                    <NavigationLink to="/organisations" className="after:!mix-blend-normal">
+                      Organisations
+                    </NavigationLink>
+                  </li>
+                  <li className="flex items-center gap-4">
+                    <HomeSmileIcon className="text-neutral-500" />
+                    <NavigationLink to="/dashboard" className="after:!mix-blend-normal">
+                      Dashboard
+                    </NavigationLink>
+                  </li>
+                </>
               )}
               {!isOnSave && (
                 <li className="flex items-center gap-4">

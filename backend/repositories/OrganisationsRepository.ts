@@ -5,6 +5,27 @@ import { createOrganisationType } from '../lib/validators/zodSchemas'
 import { IContactGroup, IOrganisationDocument } from '../types'
 
 export class OrganisationRepository {
+  // --- TEMPLATE: Add OrganisationRepository Methods ---
+  async update_organisation(organisationId: string, data: Partial<IOrganisationDocument>) {
+    // TODO: Implement update organisation
+    return null
+  }
+
+  async delete_organisation(organisationId: string) {
+    // TODO: Implement delete organisation
+    return null
+  }
+
+  async invite_member(organisationId: string, memberId: string) {
+    // TODO: Implement invite member
+    return null
+  }
+
+  async remove_member(organisationId: string, memberId: string) {
+    // TODO: Implement remove member
+    return null
+  }
+  // --- END TEMPLATE ---
   dal: MongooseDAL<IOrganisationDocument, OrganisationModelType>
   constructor(model: any) {
     this.dal = new MongooseDAL<IOrganisationDocument, OrganisationModelType>(model)

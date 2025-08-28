@@ -1,3 +1,8 @@
+// --- TEMPLATE: Add OrganisationCard Methods ---
+// TODO: Implement handleEditOrganisation
+// TODO: Implement handleDeleteOrganisation
+// TODO: Implement handleInviteMember
+// --- END TEMPLATE ---
 import { BellIcon, DotsHorizontalIcon, UserPlusIcon, UsersOrgIcon } from '@/assets/icons'
 import { FC } from 'react'
 import { Button } from './ui/button'

@@ -5,6 +5,27 @@ import {
 import { IOrganisation } from '../types'
 
 export class OrganisationService {
+  // --- TEMPLATE: Add OrganisationService Methods ---
+  async update_organisation(organisationId: string, data: Partial<IOrganisation>) {
+    // TODO: Implement update organisation
+    return null
+  }
+
+  async delete_organisation(organisationId: string) {
+    // TODO: Implement delete organisation
+    return null
+  }
+
+  async invite_member(organisationId: string, memberId: string) {
+    // TODO: Implement invite member
+    return null
+  }
+
+  async remove_member(organisationId: string, memberId: string) {
+    // TODO: Implement remove member
+    return null
+  }
+  // --- END TEMPLATE ---
   repository: OrganisationRepository
   constructor(repository: OrganisationRepository) {
     this.repository = repository

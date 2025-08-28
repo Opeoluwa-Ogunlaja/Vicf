@@ -10,6 +10,23 @@ import generateToken, { generateAccessToken, verifyRefreshToken } from '../lib/u
 import { loginTokenName, nodeEnv } from '../config'
 
 class UserController {
+  // --- TEMPLATE: Add User CRUD/Feature Methods ---
+  update_user: AsyncHandler<any, any, { userId: string }> = async (req, res) => {
+    // TODO: Implement update user
+    res.json({ ok: true, data: null })
+  }
+
+  delete_user: AsyncHandler<any, any, { userId: string }> = async (req, res) => {
+    // TODO: Implement delete user
+    res.json({ ok: true, data: null })
+  }
+
+  change_password: AsyncHandler<any, any, { userId: string }> = async (req, res) => {
+    // TODO: Implement change password
+    res.json({ ok: true, data: null })
+  }
+
+  // --- END TEMPLATE ---
   service: UserService
 
   constructor(service: UserService) {

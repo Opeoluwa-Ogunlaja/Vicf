@@ -7,6 +7,28 @@ import { flattenZodErrorMessage } from '../lib/utils/zodErrors'
 import { RequestError } from '../lib/utils/AppErrors'
 
 class OrganisationController {
+  // --- TEMPLATE: Add Organisation CRUD/Feature Methods ---
+  update_organisation: AsyncHandler<any, any, { organisationId: string }> = async (req, res) => {
+    // TODO: Implement update organisation
+    res.json({ ok: true, data: null })
+  }
+
+  delete_organisation: AsyncHandler<any, any, { organisationId: string }> = async (req, res) => {
+    // TODO: Implement delete organisation
+    res.json({ ok: true, data: null })
+  }
+
+  invite_member: AsyncHandler<any, any, { organisationId: string }> = async (req, res) => {
+    // TODO: Implement invite member to organisation
+    res.json({ ok: true, data: null })
+  }
+
+  remove_member: AsyncHandler<any, any, { organisationId: string; memberId: string }> = async (req, res) => {
+    // TODO: Implement remove member from organisation
+    res.json({ ok: true, data: null })
+  }
+
+  // --- END TEMPLATE ---
   service: OrganisationService
 
   constructor(service: OrganisationService) {

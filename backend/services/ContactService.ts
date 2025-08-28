@@ -9,6 +9,17 @@ import { NotFoundError } from '../lib/utils/AppErrors'
 import { convertSlug } from '../lib/utils/convertSlug'
 
 export class ContactService {
+  // --- TEMPLATE: Add ContactService Methods ---
+  async update_contact(contactId: string, data: Partial<IContact>) {
+    // TODO: Implement update contact
+    return null
+  }
+
+  async get_contact(contactId: string) {
+    // TODO: Implement get contact by id
+    return null
+  }
+  // --- END TEMPLATE ---
   groups_repository: ContactGroupsRepository
   contacts_repository: ContactsRepository
   constructor(group_repository: ContactGroupsRepository, contacts_repository: ContactsRepository) {

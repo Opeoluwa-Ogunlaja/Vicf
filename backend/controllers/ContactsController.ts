@@ -14,6 +14,18 @@ import { contactUseCases, ContactUseCases } from '../use cases/ContactUseCases'
 import { z } from 'zod'
 
 export class ContactsController {
+  // --- TEMPLATE: Add Contact CRUD/Feature Methods ---
+  update_contact: AsyncHandler<any, any, { contactId: string }> = async (req, res) => {
+    // TODO: Implement update contact
+    res.json({ ok: true, data: null })
+  }
+
+  get_contact: AsyncHandler<any, any, { contactId: string }> = async (req, res) => {
+    // TODO: Implement get contact by id
+    res.json({ ok: true, data: null })
+  }
+
+  // --- END TEMPLATE ---
   service: ContactService
   use_case: ContactUseCases
   constructor(service: ContactService, use_case: ContactUseCases) {

@@ -1,3 +1,8 @@
+// --- TEMPLATE: Add ContactsTable Methods ---
+// TODO: Implement fetchContacts
+// TODO: Implement updateContact
+// TODO: Implement deleteContact
+// --- END TEMPLATE ---
 import {
   Table,
   TableBody,

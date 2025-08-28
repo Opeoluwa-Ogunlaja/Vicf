@@ -1,3 +1,9 @@
+// --- TEMPLATE: Add ContactForm Methods ---
+// TODO: Implement handleCreateContact
+// TODO: Implement handleUpdateContact
+// TODO: Implement handleDeleteContact
+// TODO: Implement handleFetchContact
+// --- END TEMPLATE ---
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ContactFormSchema, ContactFormType, phoneNumberType } from '@/lib/utils/form-schemas'
 import { useForm, SubmitHandler, useWatch } from 'react-hook-form'
@@ -151,7 +157,7 @@ const ContactForm = () => {
       })
     }
 
-    formHook.clearErrors('number')
+    return () => {formHook.clearErrors('number')}
   }, [number, formHook.setError, formHook.formState.errors.number, formHook.clearErrors])
 
   useFormValueChangeDebounce({
