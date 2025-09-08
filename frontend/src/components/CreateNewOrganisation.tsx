@@ -23,14 +23,13 @@ import {
 } from './ui/form'
 import { Input } from './ui/input'
 import { useUser } from '@/hooks/useUser'
-import { PlusIcon } from '@radix-ui/react-icons'
+import { ClipboardIcon, PlusIcon } from '@radix-ui/react-icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { CreateOrganisationSchema, CreateOrganisationType } from '@/lib/utils/form-schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createOrganisation } from '@/lib/utils/requestUtils'
 import { wait } from '@/lib/utils/promiseUtils'
-import { EditIcon } from '@/assets/icons'
 
 const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
   const [isProcessing] = useToggle(false)
@@ -68,6 +67,10 @@ const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const handleCopyLink = () => {
+    navigator.clipboard.write(createOrganisationMutation.data.inviteCode)
   }
 
   return (
@@ -136,8 +139,8 @@ const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
                         {createOrganisationMutation.data &&
                           `https://vicf.onrender.com/organisations/invitation/${createOrganisationMutation.data.inviteCode}`}
                       </button>
-                      <Button size="icon" className="text-white">
-                        <EditIcon />
+                      <Button size="icon" className="text-white" onClick={handleCopyLink}>
+                        <ClipboardIcon />
                       </Button>
                     </div>
                   </div>

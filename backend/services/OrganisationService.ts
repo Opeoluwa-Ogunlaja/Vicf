@@ -31,8 +31,8 @@ export class OrganisationService {
     this.repository = repository
   }
 
-  async create_organisation(organisation: Partial<IOrganisation>) {
-    return await this.repository.create(organisation as IOrganisation)
+  async create_organisation(organisation: Partial<IOrganisation>, userId: string) {
+    return await this.repository.create({...organisation, members: [userId]} as IOrganisation)
   }
 
   get_organisation: typeof organisationRepository.findOne = async query => {

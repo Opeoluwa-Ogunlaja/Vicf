@@ -44,7 +44,7 @@ class OrganisationController {
       throw new RequestError('Organisation Already Exists')
     }
 
-    const newOrganisation = await this.service.create_organisation(validation.data)
+    const newOrganisation = await this.service.create_organisation(validation.data, req.user?.id)
 
     res.json({ ok: true, data: newOrganisation })
   }

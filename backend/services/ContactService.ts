@@ -184,6 +184,15 @@ export class ContactService {
 
     return deletedContact
   }
+
+   async deleteContactListing(listingId: string) {
+    const deletedContact = await this.groups_repository.runInTransaction(async session => {
+      let deleted = await this.groups_repository.deleteById(listingId, session)
+      return deleted
+    })
+
+    return deletedContact
+  }
 }
 
 export const contactService = new ContactService(contactGroupsRepository, contactsRepository)

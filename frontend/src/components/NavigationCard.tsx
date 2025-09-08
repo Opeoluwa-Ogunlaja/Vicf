@@ -11,6 +11,8 @@ import {
 import { ChevronDownIcon } from '@/assets/icons'
 import { cn } from '@/lib/utils'
 import { useUser } from '@/hooks/useUser'
+import { NavLink } from 'react-router-dom'
+import clsx from 'clsx'
 
 const NavigationCard: FC<{ className?: string }> = ({ className }) => {
   const [isOpen, toggle] = useToggle(false)
@@ -49,10 +51,10 @@ const NavigationCard: FC<{ className?: string }> = ({ className }) => {
       >
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Home</DropdownMenuItem>
-        <DropdownMenuItem>Dasboard</DropdownMenuItem>
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Organizations</DropdownMenuItem>
+        <DropdownMenuItem className="transition-colors hover:bg-neutral-50 focus:bg-neutral-50"><NavLink to="/" className={({ isActive }) => clsx('block w-full h-full', { 'text-neutral-600': isActive })}>Home</NavLink></DropdownMenuItem>
+        <DropdownMenuItem className="transition-colors hover:bg-neutral-50 focus:bg-neutral-50"><NavLink to="/" className={({ isActive }) => clsx('block w-full h-full', { 'text-neutral-600': isActive })}>Dasboard</NavLink></DropdownMenuItem>
+        <DropdownMenuItem className="transition-colors hover:bg-neutral-50 focus:bg-neutral-50"><NavLink to="/" className={({ isActive }) => clsx('block w-full h-full', { 'text-neutral-600': isActive })}>Profile</NavLink></DropdownMenuItem>
+        <DropdownMenuItem className="transition-colors hover:bg-neutral-50 focus:bg-neutral-50"><NavLink to="/" className={({ isActive }) => clsx('block w-full h-full', { 'text-neutral-600': isActive })}>Organizations</NavLink></DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

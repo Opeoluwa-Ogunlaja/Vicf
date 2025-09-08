@@ -142,6 +142,7 @@ const ContactForm = () => {
   })
 
   const number = useWatch({ control: formHook.control, name: 'number' })
+  // const previousErrorRef = useRef(number);
 
   useUpdateEffect(() => {
     if (!number || formHook.formState.errors.number) return
@@ -156,8 +157,6 @@ const ContactForm = () => {
         message: 'This number has already been entered'
       })
     }
-
-    return () => {formHook.clearErrors('number')}
   }, [number, formHook.setError, formHook.formState.errors.number, formHook.clearErrors])
 
   useFormValueChangeDebounce({
@@ -174,21 +173,19 @@ const ContactForm = () => {
 
   const [startManagerCreationTimeout] = useTimeout(
     () => {
-      if (!user.loggedIn) {
-        createManager(
-          {
-            _id: generateMongoId(),
-            backed_up: false,
-            contacts_count: contacts.contacts.length,
-            url_id: contacts.url_id as string,
-            input_backup: JSON.stringify({ ...formHook.getValues(), name: undefined }),
-            name: formHook.getValues().name
-          },
-          user.loggedIn
-        )
-      }
+      createManager(
+        {
+          _id: generateMongoId(),
+          backed_up: false,
+          contacts_count: contacts.contacts.length,
+          url_id: contacts.url_id as string,
+          input_backup: JSON.stringify({ ...formHook.getValues(), name: undefined }),
+          name: formHook.getValues().name
+        },
+        user.loggedIn
+      )
     },
-    2500,
+    1500,
     false,
     [contactManager, formHook, user.loggedIn, contacts]
   )

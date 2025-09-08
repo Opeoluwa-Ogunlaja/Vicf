@@ -68,3 +68,10 @@ export const CreateOrganisationSchema = z.object({
 })
 
 export type CreateOrganisationType = z.infer<typeof CreateOrganisationSchema>
+
+export const MoveListingSchema = z.object({
+  from: z.string(),
+  to: z.string()
+})
+
+export type MoveListingType = z.infer<typeof MoveListingSchema>

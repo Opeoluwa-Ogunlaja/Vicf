@@ -172,6 +172,16 @@ export class ContactsController {
     res.json({ ok: true, data: { ...deletedContact?.toObject() } })
   }
 
+  delete_contact_listing: AsyncHandler<{}, {}, { listingId: string; contactId: string }> = async (
+    req,
+    res
+  ) => {
+    const { listingId } = req.params
+
+    const deletedListing = await this.service.deleteContactListing(listingId)
+    res.json({ ok: true, data: { ...deletedListing?.toObject() } })
+  }
+
   socket_add_contact: SocketHandlerFn<Partial<IContact> & { listingId: string }> = async (
     message,
     socket,

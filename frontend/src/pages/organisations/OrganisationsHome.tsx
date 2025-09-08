@@ -13,8 +13,8 @@ const OrganisationsHome = () => {
   })
   return (
     <>
-      <h3 className="mb-8 text-lg font-medium">
-        Your Organisations <CreateNewOrganisation className="ml-4 py-4" />
+      <h3 className="mb-8 text-lg font-medium max-md:text-center">
+        Your Organisations <CreateNewOrganisation className="md:ml-4 py-4 max-md:mt-2 max-md:w-full" />
       </h3>
 
       {loadingOrganisations ? (

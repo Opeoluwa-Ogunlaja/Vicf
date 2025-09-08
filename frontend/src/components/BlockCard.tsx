@@ -13,6 +13,8 @@ import {
 } from './ui/dropdown-menu'
 import { Button } from './ui/button'
 import { Link } from 'react-router-dom'
+import ListingDeleteButton from './card-components/ListingDeleteButton'
+import MoveListingButton from './MoveListingButton'
 
 const BlockCard: FC<{
   manager: Partial<ContactManagerEntry>
@@ -22,13 +24,12 @@ const BlockCard: FC<{
 
   return (
     <div
-      className="grid origin-center cursor-pointer grid-rows-2 overflow-hidden rounded-lg shadow-neutral-400/5 drop-shadow-lg transition-transform hover:scale-[1.0125] md:max-w-[17.25rem]"
+      className="grid origin-center cursor-pointer grid-rows-2 bg-white overflow-hidden rounded-lg shadow-neutral-400/5 drop-shadow-lg transition-transform hover:scale-[1.0125] md:max-w-[17.25rem]"
       style={{
         gridTemplateRows: '156px max-content'
       }}
-      onClick={() => navigate(`/save/${manager.url_id}`)}
     >
-      <div className="relative isolate grid overflow-clip bg-primary">
+      <div className="relative isolate grid overflow-clip bg-primary" onClick={() => {navigate(`/save/${manager.url_id}`)}}>
         <div className="absolute inset-0 -z-10">
           <MultiBackgroundPatterns
             count={10}
@@ -37,11 +38,10 @@ const BlockCard: FC<{
           />
         </div>
         <DropdownMenu dir="ltr" modal={true}>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
             <Button
               variant={'outline'}
               size={'icon'}
-              onClick={e => e.stopPropagation()}
               className="pointer-events-auto z-10 m-4 h-11 w-11 justify-self-end rounded-full border-primary outline-primary hover:bg-white hover:shadow-inner"
             >
               <DotsHorizontalIcon className="w-4" />
@@ -55,12 +55,18 @@ const BlockCard: FC<{
             }}
           >
             <Link to={`/save/${manager.url_id}`}>
-              <DropdownMenuItem>Open</DropdownMenuItem>
+              <DropdownMenuItem className='block p-2'>Open</DropdownMenuItem>
             </Link>
+            <MoveListingButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-neutral-50 hover:text-neutral-600 transition-colors text-left text-sm'>
+              Move
+            </MoveListingButton>
+            <ListingDeleteButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-red-50 hover:text-red-400 transition-colors text-left text-sm'>
+              Delete
+            </ListingDeleteButton>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="flex items-center space-x-4 overflow-hidden bg-white p-3 sm:p-4">
+      <div className="flex items-center space-x-4 overflow-hidden p-3 sm:p-4">
         <PhonePlusIcon className="mx-2 w-5 self-start pt-2" />
         <div className="flex flex-1 flex-col gap-1 text-left text-sm">
           <h4 className="text-lg font-semibold">{manager.name}</h4>

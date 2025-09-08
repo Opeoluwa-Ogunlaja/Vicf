@@ -68,6 +68,10 @@ export class ContactGroupsRepository {
     return await this.group_dal.updateById(id, data)
   }
 
+  deleteById: typeof this.group_dal.delete = async (id) => {
+    return await this.group_dal.delete(id)
+  }
+
   aggregate: typeof this.group_dal.aggregate = async (...args: any[]) => {
     return await this.group_dal.aggregate(...args)
   }

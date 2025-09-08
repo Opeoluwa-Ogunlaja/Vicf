@@ -227,6 +227,19 @@ export const delete_contact = async (
   }
 }
 
+export const delete_contact_listing = async (
+  listing_id: string,
+): Promise<ContactManagerEntry | undefined> => {
+  try {
+    const deletedListing = await axiosInstance.delete(`/contacts/${listing_id}`) as ContactManagerEntry
+
+    return deletedListing
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
 export const testPromise = async () => {
   await wait(Math.random() * 15000)
   if (Math.random() < 0.7) {

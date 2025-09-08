@@ -2,7 +2,7 @@ import { RootFilterQuery } from 'mongoose'
 import MongooseDAL from '../data access layers/MongooseDal'
 import Organisation, { OrganisationModelType } from '../entities/Organisation'
 import { createOrganisationType } from '../lib/validators/zodSchemas'
-import { IContactGroup, IOrganisationDocument } from '../types'
+import { IContactGroup, IOrganisationDocument, IOrganisation } from '../types'
 
 export class OrganisationRepository {
   // --- TEMPLATE: Add OrganisationRepository Methods ---
@@ -31,10 +31,8 @@ export class OrganisationRepository {
     this.dal = new MongooseDAL<IOrganisationDocument, OrganisationModelType>(model)
   }
 
-  async create({ name }: createOrganisationType) {
-    return await this.dal.create({
-      name
-    })
+  async create(data: Partial<IOrganisation>) {
+    return await this.dal.create({...data });
   }
 
   async findAll(query: RootFilterQuery<IOrganisationDocument>, ...args: any[]) {

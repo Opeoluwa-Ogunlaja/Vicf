@@ -9,6 +9,7 @@ import path from 'path'
 import { nodeEnv } from './config'
 import subscriptionRouter from './routers/subscriptionRouter'
 import dashboardRouter from './routers/dashboardRouter'
+import { authMiddleware } from './lib/middleware/users/authMiddleware'
 
 const app = express()
 
@@ -16,6 +17,8 @@ app.use(cookieParser())
 app.use(express.json())
 
 app.use(cors({ origin: (o, cb) => cb(null, true), credentials: true }))
+
+app.use(authMiddleware)
 
 app.use('/users', userRouter)
 app.use('/contacts', contactsRouter)

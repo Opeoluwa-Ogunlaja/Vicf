@@ -60,6 +60,29 @@ export const useContactManagerStore = create<ContactManager>()(set => {
 
         if (errorsPresent) throw new Error('Something occured')
       },
+    async deleteManager(id: string, upstream = false) {
+        let errorsPresent = false
+        await myTaskManager.run('delete_listing', upstream, id)
+        const newManagerFlow = async () => {
+          try {
+            set(state => {
+              return { manager: [...state.manager].filter((manager) => manager._id !== id) as ContactManagerEntry[] }
+            })
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (e: unknown) {
+            if (upstream) {
+              errorsPresent = true
+            }
+            set(state => {
+              return { manager: [...state.manager].filter((manager) => manager._id !== id) as ContactManagerEntry[] }
+            })
+          }
+        }
+
+        await newManagerFlow()
+
+        if (errorsPresent) throw new Error('Something occured')
+      },
       updateContactCount(id, dec) {
         set(state => {
           const manager = state.manager.map(entry => {
