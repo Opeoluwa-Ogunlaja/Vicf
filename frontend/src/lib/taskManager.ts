@@ -72,7 +72,7 @@ export const taskRegistry: RegistryTask = {
       return await delete_contact_listing(id) as T
     },
     onlineFn: async <T = any>(id: string): Promise<T> => {
-      return await Promise.resolve() as T
+      return await Promise.resolve(id) as T
     },
     retry: {
       retries: 3,
@@ -89,7 +89,7 @@ export const taskRegistry: RegistryTask = {
       return await move_listing_to_organisation(id, organisationId) as T
     },
     onlineFn: async <T = any>(id: string, organisationId: string): Promise<T> => {
-      return await Promise.resolve() as T
+      return await Promise.resolve([id, organisationId]) as T
     },
     retry: {
       retries: 3,
