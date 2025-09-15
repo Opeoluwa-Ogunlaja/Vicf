@@ -27,8 +27,14 @@ export class OrganisationRepository {
   }
   // --- END TEMPLATE ---
   dal: MongooseDAL<IOrganisationDocument, OrganisationModelType>
+  runInTransaction: typeof this.dal.runInTransaction
   constructor(model: any) {
     this.dal = new MongooseDAL<IOrganisationDocument, OrganisationModelType>(model)
+    this.runInTransaction = this.dal.runInTransaction
+  }
+
+  getModel(){
+    return this.dal.getModel()
   }
 
   async create(data: Partial<IOrganisation>) {

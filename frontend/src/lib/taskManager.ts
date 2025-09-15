@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { OnlineTaskQueue } from '@/queue'
-import { create_contact_listing, delete_contact_listing } from './utils/requestUtils'
+import { create_contact_listing, delete_contact_listing, move_listing_to_organisation } from './utils/requestUtils'
 import { generateMongoId } from './utils/idUtils'
 import { db } from '@/stores/dexie/db'
 
@@ -72,7 +72,7 @@ export const taskRegistry: RegistryTask = {
       return await delete_contact_listing(id) as T
     },
     onlineFn: async <T = any>(id: string): Promise<T> => {
-      return await delete_contact_listing(id) as T
+      return await Promise.resolve() as T
     },
     retry: {
       retries: 3,
@@ -81,6 +81,23 @@ export const taskRegistry: RegistryTask = {
     },
     onSuccess: () => console.log('successfully deleted listing'),
     onFailure: err => console.warn('failed to delete listing', err),
+    onDeadLetter: err => console.error('Moved to dead letter queue', err)
+  },
+
+  move_listing: {
+    offlineFn: async <T = any>(id: string, organisationId: string): Promise<T> => {
+      return await move_listing_to_organisation(id, organisationId) as T
+    },
+    onlineFn: async <T = any>(id: string, organisationId: string): Promise<T> => {
+      return await Promise.resolve() as T
+    },
+    retry: {
+      retries: 3,
+      delay: 1000,
+      backoffFactor: 2
+    },
+    onSuccess: () => console.log('successfully moved listing'),
+    onFailure: err => console.warn('failed to move listing', err),
     onDeadLetter: err => console.error('Moved to dead letter queue', err)
   }
 }

@@ -15,12 +15,14 @@ import { Button } from './ui/button'
 import { Link } from 'react-router-dom'
 import ListingDeleteButton from './card-components/ListingDeleteButton'
 import MoveListingButton from './MoveListingButton'
+import { useUser } from '@/hooks/useUser'
 
 const BlockCard: FC<{
   manager: Partial<ContactManagerEntry>
 }> = ({ manager }) => {
   const status = manager.backed_up ? 'uploaded' : 'not-uploaded'
   const navigate = useNavigate()
+  const { loggedIn } = useUser()
 
   return (
     <div
@@ -57,9 +59,10 @@ const BlockCard: FC<{
             <Link to={`/save/${manager.url_id}`}>
               <DropdownMenuItem className='block p-2'>Open</DropdownMenuItem>
             </Link>
-            <MoveListingButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-neutral-50 hover:text-neutral-600 transition-colors text-left text-sm'>
+
+            { loggedIn && <MoveListingButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-neutral-50 hover:text-neutral-600 transition-colors text-left text-sm'>
               Move
-            </MoveListingButton>
+            </MoveListingButton>}
             <ListingDeleteButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-red-50 hover:text-red-400 transition-colors text-left text-sm'>
               Delete
             </ListingDeleteButton>

@@ -4,7 +4,7 @@ const useOrganisationsListing = (organisationId: string) => {
   const managers = useManager()
 
   return managers.filter(manager => {
-    return manager.organisation == organisationId
+    return manager.organisation?._id == organisationId
   })
 }
 

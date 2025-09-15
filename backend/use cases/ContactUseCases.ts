@@ -83,6 +83,22 @@ export class ContactUseCases {
       return group
     })
   }
+
+  async MoveListingToOrganisation(listingId: string, organisationId: string){
+    return await this.groups_repository.runInTransaction(async session => {
+      const manager = await this.groups_repository.findById(listingId)
+      if(!manager) throw new NotFoundError("Listing")
+      const organisationFound = await this.organisations_service.get_organisation_by_id(organisationId)
+      if(!organisationFound) throw new NotFoundError("Organisation")
+      await this.organisations_service.remove_listing_from_organisation(manager.organisation?.toString() as string, listingId, session)
+      await this.organisations_service.add_listing_to_organisation(organisationId, listingId, session)
+      const listing = await this.groups_repository.updateById(listingId, { organisation: organisationId }, session)
+      return {...listing, organisation: {
+        _id: organisationFound!._id,
+        name: organisationFound!.name
+      }}
+    })
+  }
 }
 
 export const contactUseCases = new ContactUseCases(

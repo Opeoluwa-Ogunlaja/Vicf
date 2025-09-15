@@ -6,6 +6,7 @@ import {
 } from '@/lib/utils/requestUtils'
 import { ContactManager, ContactManagerEntry } from '@/types/contacts_manager'
 import { create } from 'zustand'
+import { queryClient } from '@/queryClient';
 
 export const useContactManagerStore = create<ContactManager>()(set => {
   return {
@@ -36,6 +37,44 @@ export const useContactManagerStore = create<ContactManager>()(set => {
         set(state => {
           return { manager: [...managers, ...state.manager] as ContactManagerEntry[] }
         })
+      },
+      async updateManagerOrganisation(id, newOrganisationId, upstream) {
+        let errorsPresent = false
+        let pastOrganisation !: string | null
+        // let listingIndex!: number | null
+        const updated = await myTaskManager.run('move_listing', true, id, newOrganisationId)
+        const updateManagerFlow = async () => {
+          try {
+            set(state => {
+              const manager = state.manager.map((entry,) => {
+                if ((updated as ContactManagerEntry)._id === id) {
+                  pastOrganisation = entry.organisation?._id ?? null
+                  // listingIndex = i ?? null
+                  return {
+                    ...entry,
+                    organisation: (updated as ContactManagerEntry).organisation!
+                  }
+                }
+                return entry
+              })
+              return { manager }
+            })
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (e: unknown) {
+            if (upstream) {
+              errorsPresent = true
+            }
+          }
+        }
+
+        await updateManagerFlow()
+
+        if(pastOrganisation && pastOrganisation != newOrganisationId){
+          queryClient.invalidateQueries({queryKey: ['organisation', pastOrganisation]})
+          queryClient.invalidateQueries({queryKey: ['organisation', newOrganisationId]})
+        }
+
+        if (errorsPresent) throw new Error('Something occured')
       },
       async createManager(data, upstream = false) {
         let errorsPresent = false

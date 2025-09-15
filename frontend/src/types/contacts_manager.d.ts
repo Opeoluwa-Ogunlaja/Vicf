@@ -12,7 +12,7 @@ export type ContactManagerEntry = {
   contacts_count: number
   input_backup: string
   preferences?: Preferences
-  organisation?: string
+  organisation?: { _id: string, name: string }
 }
 
 export type ContactManagerState = {
@@ -24,6 +24,7 @@ export type ContactManagerActions = {
   setManager: (manager: ContactManagerEntry[]) => void
   setPreferences: (id: string, preferences: Partial<Preferences>) => void
   createManager: (data: ContactManagerEntry, upstream?: boolean) => Promise<void>
+  updateManagerOrganisation: (id: string, newOrganisationId: string, upstream: boolean) => Promise<void>
   updateBackup: (
     id: string,
     backup: Omit<ContactFormType, 'name'>,

@@ -17,6 +17,11 @@ contactsRouter.patch(
 )
 
 contactsRouter.patch(
+  '/:listingId/move-to-org',
+  contactsController.move_manager.bind(contactsController)
+)
+
+contactsRouter.patch(
   '/:listingId/slug-type',
   contactsController.update_slug_type.bind(contactsController)
 )

@@ -1,3 +1,4 @@
+import { ClientSession } from 'mongoose'
 import {
   OrganisationRepository,
   organisationRepository
@@ -32,7 +33,7 @@ export class OrganisationService {
   }
 
   async create_organisation(organisation: Partial<IOrganisation>, userId: string) {
-    return await this.repository.create({...organisation, members: [userId]} as IOrganisation)
+    return await this.repository.create({...organisation, members: [userId], creator: userId} as IOrganisation)
   }
 
   get_organisation: typeof organisationRepository.findOne = async query => {
@@ -41,6 +42,11 @@ export class OrganisationService {
 
   get_organisation_by_id = async (id: string) => {
     return this.repository.getOrganisationWithListings(id)
+  }
+
+  get_organisation_from_invite_code = async (inviteCode: string) => {
+    const org = await this.repository.getModel().findOne({ inviteCode }).populate({ path: 'creator', select: 'name profile_photo' })
+    return org
   }
 
   get_organisations_for_user = async (userId: string) => {
@@ -83,6 +89,22 @@ export class OrganisationService {
     return this.repository.updateById(id, {
       verified: true
     })
+  }
+
+  add_listing_to_organisation = async (organisationId: string, listingId: string, session?: ClientSession) => {
+    return await this.repository.updateById(organisationId, {
+      $addToSet: {
+        contact_groupings: listingId
+      }
+    }, session)
+  }
+
+  remove_listing_from_organisation = async (organisationId: string, listingId: string, session?: ClientSession) => {
+    return await this.repository.updateById(organisationId, {
+      $pull: {
+        contact_groupings: listingId
+      }
+    }, session)
   }
 }
 

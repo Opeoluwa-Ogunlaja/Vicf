@@ -1,6 +1,6 @@
 import expressAsyncHandler from 'express-async-handler'
 import { contactService, ContactService } from '../services/ContactService'
-import { AsyncHandler, IContact, IContactGroup, SocketHandlerFn } from '../types'
+import { AsyncHandler, IContact, IContactGroup, IContactGroupDocument, SocketHandlerFn } from '../types'
 import {
   createContactGroupSchema,
   createContactGroupType,
@@ -82,6 +82,14 @@ export class ContactsController {
     const userId = req.user?.id
     const manager = await this.service.getManagerForUser(userId)
     res.json({ ok: true, data: manager })
+  }
+
+  move_manager: AsyncHandler<{organisationId: string}, any, { listingId: string  }> = async (req, res) => {
+    const userId = req.user?.id
+    const { listingId } = req.params
+    const { organisationId } = req.body
+    const moved_manager = await this.use_case.MoveListingToOrganisation(listingId, organisationId)
+    res.json({ ok: true, data: moved_manager })
   }
 
   get_contacts: AsyncHandler<{}, {}, { listingId: string }> = async (req, res) => {

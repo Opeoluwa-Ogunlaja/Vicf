@@ -284,9 +284,44 @@ export const get_organisation = async (organisationId: string) => {
   }
 }
 
+export const get_organisation_from_invite = async (inviteCode: string) => {
+  try {
+    const newUser = await axiosInstance.get(`/organisations/inviteCode/${inviteCode}`)
+
+    return newUser.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
+export const join_organisation_from_invite = async (inviteCode: string) => {
+  try {
+    const newUser = await axiosInstance.put(`/organisations/inviteCode/${inviteCode}`)
+
+    return newUser.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
 export const get_organisation_members = async (organisationId: string) => {
   try {
     const newUser = await axiosInstance.get(`/organisations/${organisationId}/members`)
+
+    return newUser.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
+export const move_listing_to_organisation = async (listingId: string, organisationId: string) => {
+  try {
+    const newUser = await axiosInstance.patch(`/contacts/${listingId}/move-to-org`, {
+      organisationId
+    })
 
     return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

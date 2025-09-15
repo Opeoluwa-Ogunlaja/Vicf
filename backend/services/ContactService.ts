@@ -98,6 +98,27 @@ export class ContactService {
     const manager = await this.groups_repository.aggregate([
       { $match: { userId: new mongoose.Types.ObjectId(userId) } },
       {
+        $lookup: {
+          foreignField: "_id",
+          from: 'organisations',
+          localField: "organisation",
+          as: 'organisation',
+          pipeline: [{
+            $project: {
+              _id: 1,
+              name: 1
+            }
+          }]
+        }
+      },
+      {
+        $set: {
+          organisation: {
+            $first: '$organisation'
+          }
+        }
+      },
+      {
         $unset: 'contacts'
       }
     ])

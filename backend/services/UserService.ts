@@ -57,6 +57,10 @@ export class UserService {
       session
     )
   }
+
+  add_user_to_organisation = async (userId: string, organisationID: string) => {
+    return true
+  }
 }
 
 const userService = new UserService(userRepository)

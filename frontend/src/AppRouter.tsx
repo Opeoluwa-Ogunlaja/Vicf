@@ -12,6 +12,7 @@ import useToken from './hooks/useToken'
 import { useUserUpdate } from './hooks/useUserUpdate'
 import { RouteDataType } from './types'
 import LoadingScreen from './components/LoadingScreen'
+import OrganisationInvite from './pages/organisations/OrganisationInvite'
 
 const Layout = lazy(() => import('./hoc/Layout'))
 const Save = lazy(() => import('./pages/save/Save'))
@@ -82,11 +83,17 @@ const router = (onlineStatus: boolean, setters: RouteDataType) =>
             element: <Organisations />,
             shouldRevalidate: () => false,
             children: [
-              { path: ':organisationId', element: <Organisation /> },
               {
                 path: '',
-                element: <OrganisationHome />
-              }
+                shouldRevalidate: () => true,
+                element: <OrganisationHome />,
+                children: [
+                {
+                  path: 'invitation/:inviteCode',
+                  element: <OrganisationInvite />
+                }]
+              },
+              { path: ':organisationId', element: <Organisation /> }
             ]
           },
           {

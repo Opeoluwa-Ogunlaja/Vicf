@@ -8,6 +8,8 @@ organisationsRouter.post(
   organisationController.create_organisation.bind(organisationController)
 )
 
+organisationsRouter.post('/join/:inviteCode', () => {})
+
 organisationsRouter.get(
   '/me',
   organisationController.get_organisations.bind(organisationController)
@@ -22,5 +24,9 @@ organisationsRouter.get(
   '/:organisationId/members',
   organisationController.get_members.bind(organisationController)
 )
+
+organisationsRouter.get('/inviteCode/:inviteCode', organisationController.get_from_invite.bind(organisationController))
+
+organisationsRouter.put('/inviteCode/:inviteCode', organisationController.join_from_invite.bind(organisationController))
 
 export default organisationsRouter
