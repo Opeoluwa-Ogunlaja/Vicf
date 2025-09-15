@@ -1,6 +1,6 @@
 import expressAsyncHandler from 'express-async-handler'
 import { contactService, ContactService } from '../services/ContactService'
-import { AsyncHandler, IContact, IContactGroup, SocketHandlerFn } from '../types'
+import { AsyncHandler, IContact, IContactGroup, IContactGroupDocument, SocketHandlerFn } from '../types'
 import {
   createContactGroupSchema,
   createContactGroupType,
@@ -14,6 +14,18 @@ import { contactUseCases, ContactUseCases } from '../use cases/ContactUseCases'
 import { z } from 'zod'
 
 export class ContactsController {
+  // --- TEMPLATE: Add Contact CRUD/Feature Methods ---
+  update_contact: AsyncHandler<any, any, { contactId: string }> = async (req, res) => {
+    // TODO: Implement update contact
+    res.json({ ok: true, data: null })
+  }
+
+  get_contact: AsyncHandler<any, any, { contactId: string }> = async (req, res) => {
+    // TODO: Implement get contact by id
+    res.json({ ok: true, data: null })
+  }
+
+  // --- END TEMPLATE ---
   service: ContactService
   use_case: ContactUseCases
   constructor(service: ContactService, use_case: ContactUseCases) {
@@ -70,6 +82,14 @@ export class ContactsController {
     const userId = req.user?.id
     const manager = await this.service.getManagerForUser(userId)
     res.json({ ok: true, data: manager })
+  }
+
+  move_manager: AsyncHandler<{organisationId: string}, any, { listingId: string  }> = async (req, res) => {
+    const userId = req.user?.id
+    const { listingId } = req.params
+    const { organisationId } = req.body
+    const moved_manager = await this.use_case.MoveListingToOrganisation(listingId, organisationId)
+    res.json({ ok: true, data: moved_manager })
   }
 
   get_contacts: AsyncHandler<{}, {}, { listingId: string }> = async (req, res) => {
@@ -158,6 +178,16 @@ export class ContactsController {
 
     const deletedContact = await this.service.deleteContact(listingId, contactId)
     res.json({ ok: true, data: { ...deletedContact?.toObject() } })
+  }
+
+  delete_contact_listing: AsyncHandler<{}, {}, { listingId: string; contactId: string }> = async (
+    req,
+    res
+  ) => {
+    const { listingId } = req.params
+
+    const deletedListing = await this.service.deleteContactListing(listingId)
+    res.json({ ok: true, data: { ...deletedListing?.toObject() } })
   }
 
   socket_add_contact: SocketHandlerFn<Partial<IContact> & { listingId: string }> = async (

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, FC } from 'react'
+import { useLayoutEffect, useRef, FC, memo } from 'react'
 import { cn } from '../../lib/utils'
 
 const BackgroundPattern: FC<{
@@ -36,7 +36,7 @@ const BackgroundPattern: FC<{
   )
 }
 
-export const MultiBackgroundPatterns = ({
+export const MultiBackgroundPatterns = memo(({
   className,
   count = 2,
   source
@@ -50,6 +50,6 @@ export const MultiBackgroundPatterns = ({
     .map((...args: unknown[]) => (
       <BackgroundPattern className={className ?? ''} source={source} key={`pattern-${args[1]}`} />
     ))
-}
+})
 
-export default BackgroundPattern
+export default memo(BackgroundPattern)

@@ -5,6 +5,17 @@ import { userRegisterType } from '../lib/validators/zodSchemas'
 import { IUser, IUserDocument } from '../types'
 
 export class UserRepository {
+  // --- TEMPLATE: Add UserRepository Methods ---
+  async update_user(userId: string, data: Partial<IUser>) {
+    // TODO: Implement update user
+    return null
+  }
+
+  async delete_user(userId: string) {
+    // TODO: Implement delete user
+    return null
+  }
+  // --- END TEMPLATE ---
   dal: MongooseDAL<IUserDocument, UserModelType>
   runInTransaction: typeof this.dal.runInTransaction
   constructor(model: any) {

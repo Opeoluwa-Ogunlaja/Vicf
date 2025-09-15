@@ -9,6 +9,17 @@ import { NotFoundError } from '../lib/utils/AppErrors'
 import { convertSlug } from '../lib/utils/convertSlug'
 
 export class ContactService {
+  // --- TEMPLATE: Add ContactService Methods ---
+  async update_contact(contactId: string, data: Partial<IContact>) {
+    // TODO: Implement update contact
+    return null
+  }
+
+  async get_contact(contactId: string) {
+    // TODO: Implement get contact by id
+    return null
+  }
+  // --- END TEMPLATE ---
   groups_repository: ContactGroupsRepository
   contacts_repository: ContactsRepository
   constructor(group_repository: ContactGroupsRepository, contacts_repository: ContactsRepository) {
@@ -86,6 +97,27 @@ export class ContactService {
   async getManagerForUser(userId: string) {
     const manager = await this.groups_repository.aggregate([
       { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+      {
+        $lookup: {
+          foreignField: "_id",
+          from: 'organisations',
+          localField: "organisation",
+          as: 'organisation',
+          pipeline: [{
+            $project: {
+              _id: 1,
+              name: 1
+            }
+          }]
+        }
+      },
+      {
+        $set: {
+          organisation: {
+            $first: '$organisation'
+          }
+        }
+      },
       {
         $unset: 'contacts'
       }
@@ -168,6 +200,15 @@ export class ContactService {
           session
         )
 
+      return deleted
+    })
+
+    return deletedContact
+  }
+
+   async deleteContactListing(listingId: string) {
+    const deletedContact = await this.groups_repository.runInTransaction(async session => {
+      let deleted = await this.groups_repository.deleteById(listingId, session)
       return deleted
     })
 

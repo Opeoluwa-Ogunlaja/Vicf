@@ -44,7 +44,7 @@ const SaveLayout: FC<{ name?: string }> = memo(() => {
   }
 
   return (
-    <div className="animate-in">
+    <div className="animate-in contents">
       <aside className="space-x-2 bg-secondary py-2 text-center font-medium max-md:text-xs">
         <AnnouncementIcon className="inline-block w-5 align-middle max-md:w-3" />
         <p className="inline-block">Tip: Use the settings page to customise your display</p>

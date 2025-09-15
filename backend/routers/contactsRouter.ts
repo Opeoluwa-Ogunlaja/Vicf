@@ -5,8 +5,6 @@ import { socketsController } from '../controllers/SocketController'
 
 const contactsRouter = express.Router()
 
-contactsRouter.use(authMiddleware)
-
 contactsRouter.post('/create', contactsController.create_group.bind(contactsController))
 
 contactsRouter.patch(
@@ -16,6 +14,11 @@ contactsRouter.patch(
 contactsRouter.patch(
   '/:listingId/name',
   contactsController.update_listing_name.bind(contactsController)
+)
+
+contactsRouter.patch(
+  '/:listingId/move-to-org',
+  contactsController.move_manager.bind(contactsController)
 )
 
 contactsRouter.patch(
@@ -32,6 +35,11 @@ contactsRouter.get('/:listingId/contacts', contactsController.get_contacts.bind(
 contactsRouter.delete(
   '/:listingId/:contactId',
   contactsController.delete_contact.bind(contactsController)
+)
+
+contactsRouter.delete(
+  '/:listingId',
+  contactsController.delete_contact_listing.bind(contactsController)
 )
 
 socketsController.registerHandler(

@@ -5,6 +5,17 @@ import { IContactDocument } from '../types'
 import { IContact } from './../types/contacts.d'
 
 export class ContactsRepository {
+  // --- TEMPLATE: Add ContactsRepository Methods ---
+  async update_contact(contactId: string, data: Partial<IContact>) {
+    // TODO: Implement update contact
+    return null
+  }
+
+  async get_contact(contactId: string) {
+    // TODO: Implement get contact by id
+    return null
+  }
+  // --- END TEMPLATE ---
   contact_dal: MongooseDAL<IContactDocument, ContactModelType>
   runInTransaction: typeof this.contact_dal.runInTransaction
   constructor(contact_model: typeof Contact) {

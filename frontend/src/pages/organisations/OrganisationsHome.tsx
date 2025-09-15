@@ -3,6 +3,7 @@ import OrganisationsListing from './OrganisationsListing'
 import CreateNewOrganisation from '@/components/CreateNewOrganisation'
 import { get_organisations_for_me } from '@/lib/utils/requestUtils'
 import { useUser } from '@/hooks/useUser'
+import { useMatch, Outlet } from 'react-router-dom'
 
 const OrganisationsHome = () => {
   const { loggedIn, user } = useUser()
@@ -11,16 +12,22 @@ const OrganisationsHome = () => {
     queryKey: ['organisations', user?._id],
     enabled: loggedIn
   })
+  const isWithInvite = useMatch('/organisations/invitation/:inviteCode')
+
   return (
     <>
-      <h3 className="mb-8 text-lg font-medium">
-        Your Organisations <CreateNewOrganisation className="ml-4 py-4" />
+      <h3 className="mb-8 text-lg font-medium max-md:text-center">
+        Your Organisations{' '}
+        <CreateNewOrganisation className="py-4 max-md:mt-2 max-md:w-full md:ml-4" />
       </h3>
 
       {loadingOrganisations ? (
         <span>Loading Organisations</span>
       ) : (
-        <OrganisationsListing organisations={myOrganisations} />
+        <>
+          {isWithInvite && <Outlet />}
+          <OrganisationsListing organisations={myOrganisations} />
+        </>
       )}
     </>
   )

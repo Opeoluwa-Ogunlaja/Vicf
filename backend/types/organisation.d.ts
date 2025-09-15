@@ -4,7 +4,7 @@ export interface IOrganisation {
   name: string
   members: RefType[]
   contact_groupings: RefType[]
-  owner: RefType
+  creator: RefType
   inviteCode: string
 }
 

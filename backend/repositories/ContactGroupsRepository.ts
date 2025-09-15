@@ -4,6 +4,17 @@ import ContactGroup, { ContactGroupModelType } from '../entities/Contact_Group'
 import { IContactGroup, IContactGroupDocument } from '../types'
 
 export class ContactGroupsRepository {
+  // --- TEMPLATE: Add ContactGroupsRepository Methods ---
+  async update_group(groupId: string, data: Partial<IContactGroup>) {
+    // TODO: Implement update group
+    return null
+  }
+
+  async delete_group(groupId: string) {
+    // TODO: Implement delete group
+    return null
+  }
+  // --- END TEMPLATE ---
   group_dal: MongooseDAL<IContactGroupDocument, ContactGroupModelType>
   runInTransaction: typeof this.group_dal.runInTransaction
   constructor(contacts_group_model: typeof ContactGroup) {
@@ -55,6 +66,10 @@ export class ContactGroupsRepository {
 
   updateById: typeof this.group_dal.updateById = async (id, data) => {
     return await this.group_dal.updateById(id, data)
+  }
+
+  deleteById: typeof this.group_dal.delete = async (id) => {
+    return await this.group_dal.delete(id)
   }
 
   aggregate: typeof this.group_dal.aggregate = async (...args: any[]) => {

@@ -2,18 +2,43 @@ import { RootFilterQuery } from 'mongoose'
 import MongooseDAL from '../data access layers/MongooseDal'
 import Organisation, { OrganisationModelType } from '../entities/Organisation'
 import { createOrganisationType } from '../lib/validators/zodSchemas'
-import { IContactGroup, IOrganisationDocument } from '../types'
+import { IContactGroup, IOrganisationDocument, IOrganisation } from '../types'
 
 export class OrganisationRepository {
-  dal: MongooseDAL<IOrganisationDocument, OrganisationModelType>
-  constructor(model: any) {
-    this.dal = new MongooseDAL<IOrganisationDocument, OrganisationModelType>(model)
+  // --- TEMPLATE: Add OrganisationRepository Methods ---
+  async update_organisation(organisationId: string, data: Partial<IOrganisationDocument>) {
+    // TODO: Implement update organisation
+    return null
   }
 
-  async create({ name }: createOrganisationType) {
-    return await this.dal.create({
-      name
-    })
+  async delete_organisation(organisationId: string) {
+    // TODO: Implement delete organisation
+    return null
+  }
+
+  async invite_member(organisationId: string, memberId: string) {
+    // TODO: Implement invite member
+    return null
+  }
+
+  async remove_member(organisationId: string, memberId: string) {
+    // TODO: Implement remove member
+    return null
+  }
+  // --- END TEMPLATE ---
+  dal: MongooseDAL<IOrganisationDocument, OrganisationModelType>
+  runInTransaction: typeof this.dal.runInTransaction
+  constructor(model: any) {
+    this.dal = new MongooseDAL<IOrganisationDocument, OrganisationModelType>(model)
+    this.runInTransaction = this.dal.runInTransaction
+  }
+
+  getModel(){
+    return this.dal.getModel()
+  }
+
+  async create(data: Partial<IOrganisation>) {
+    return await this.dal.create({...data });
   }
 
   async findAll(query: RootFilterQuery<IOrganisationDocument>, ...args: any[]) {

@@ -3,6 +3,22 @@ import { UserRepository, userRepository } from '../repositories/UserRepository'
 import { IUser, Repository } from '../types'
 
 export class UserService {
+  // --- TEMPLATE: Add UserService Methods ---
+  async update_user(userId: string, data: Partial<IUser>) {
+    // TODO: Implement update user
+    return null
+  }
+
+  async delete_user(userId: string) {
+    // TODO: Implement delete user
+    return null
+  }
+
+  async change_password(userId: string, newPassword: string) {
+    // TODO: Implement change password
+    return null
+  }
+  // --- END TEMPLATE ---
   repository: UserRepository
   constructor(repository: UserRepository) {
     this.repository = repository
@@ -40,6 +56,10 @@ export class UserService {
       },
       session
     )
+  }
+
+  add_user_to_organisation = async (userId: string, organisationID: string) => {
+    return true
   }
 }
 

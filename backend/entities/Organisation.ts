@@ -22,7 +22,7 @@ const organisationSchema = new Schema<IOrganisationDocument, OrganisationModelTy
       ref: 'Contact_Group'
     }
   ],
-  owner: {
+  creator: {
     type: Schema.Types.ObjectId,
     ref: 'User'
   }

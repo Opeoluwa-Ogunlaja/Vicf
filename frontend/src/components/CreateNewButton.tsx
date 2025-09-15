@@ -83,6 +83,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
         loggedIn
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ) as any
+      setOpen(false)
       navigate(`/save/${id}?new=true`)
     }
   }, 5000)

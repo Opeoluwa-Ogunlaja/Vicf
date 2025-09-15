@@ -1,3 +1,8 @@
+// --- TEMPLATE: Add OrganisationCard Methods ---
+// TODO: Implement handleEditOrganisation
+// TODO: Implement handleDeleteOrganisation
+// TODO: Implement handleInviteMember
+// --- END TEMPLATE ---
 import { BellIcon, DotsHorizontalIcon, UserPlusIcon, UsersOrgIcon } from '@/assets/icons'
 import { FC } from 'react'
 import { Button } from './ui/button'
@@ -20,7 +25,7 @@ const OrganisationCard: FC<{
       onClick={handleCardClick}
       className="grid cursor-pointer overflow-clip rounded-lg border border-neutral-200/60 bg-white shadow-neutral-400/5 drop-shadow-md transition-transform hover:scale-[1.05]"
     >
-      <div className="flex items-center space-x-4 overflow-hidden bg-white p-4">
+      <div className="flex items-center space-x-4 overflow-hidden bg-white p-6">
         <UsersOrgIcon className="mx-2 w-5 self-start justify-self-start" />
         <div className="relative flex flex-1 flex-col gap-1 text-left text-sm">
           <div className="flex items-baseline justify-between">
