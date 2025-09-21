@@ -23,7 +23,7 @@ const BlockCard: FC<{
   const status = manager.backed_up ? 'uploaded' : 'not-uploaded'
   const navigate = useNavigate()
   const { loggedIn, user } = useUser()
-  const owner = loggedIn && user?._id == manager.userId
+  const owner = loggedIn && user?._id == manager?.userId
 
   return (
     <div
