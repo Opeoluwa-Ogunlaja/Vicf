@@ -74,7 +74,6 @@ export const socketAuthMiddleware = async (
   const loggedInToken =
     (loginTokenName && cookies[loginTokenName]) ??
     socket.handshake?.headers.authorization?.replace('Bearer ', '')
-
   if (!loggedInToken) return next()
 
   const refreshToken = loggedInToken
@@ -85,13 +84,21 @@ export const socketAuthMiddleware = async (
   const user = await userRepository.findById(decoded?._id)
   if (!user || !isValidId) return next()
 
-  // Attatch the user to the request object
+  // Clone user object to avoid shared references
+  const userObj = user.toObject?.() ?? { ...user }
+
   clients.set(socket.id, {
     socket,
-    user: user,
+    user: userObj,
     socketId: socket.id
   })
-  userSockets.set(user?.id, socket.id)
+
+  // Support multiple sockets per user
+  if (!userSockets.has(userObj.id)) {
+  userSockets.set(userObj.id, [socket.id])
+} else {
+  userSockets.get(userObj.id)!.push(socket.id)
+}
 
   next()
 }

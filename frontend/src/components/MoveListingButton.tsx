@@ -25,7 +25,7 @@ const MoveListingButton: FC<{
   const listing_id = props.listing_id
   const { toast } = useToast()
   const { loggedIn, user } = useUser()
-  const [selectedOrganisation, selectOrganisation] = useState(organisation?._id)
+  const [selectedOrganisation, selectOrganisation] = useState(organisation?._id || '-')
 
   const { data: myOrganisations, isPending: organisationPending } = useQuery({
     queryFn: get_organisations_for_me,
@@ -55,20 +55,19 @@ const MoveListingButton: FC<{
   })
 
   const { isPending: moving } = moveMutation
-
+  
   const [reset] = useTimeout(() => {
     setSelectOpen(false)
-  }, 1500 , false, [setSelectOpen])
+  }, 3000 , false, [setSelectOpen])
 
   useUpdateEffect(() => {
     reset()
   },[selectedOrganisation])
 
-  if(!organisation) {return}
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleOrganisationSelection = async (orgId: any) => {
     selectOrganisation(orgId)
+    if(orgId == '-') return
     moveMutation.mutate()
   }
 
@@ -78,7 +77,6 @@ const MoveListingButton: FC<{
       onOpenChange={(isOpen) => !moving && setSelectOpen(isOpen)}
       value={selectedOrganisation}
       onValueChange={handleOrganisationSelection}
-      
     >
       <SelectTrigger
         onClick={e => {
@@ -95,6 +93,10 @@ const MoveListingButton: FC<{
         <h2>Move</h2>
         { organisationPending ? <Loader className="w-6 h-6"/> : 
           <SelectGroup>
+            {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              <SelectItem onClick={(e: any) => e.stopPropagation()} className='p-2' value={'-'}>--</SelectItem>
+            }
             {myOrganisations.map((org: { name: string, _id: string }) => {
               return <SelectItem key={org._id} onClick={(e) => e.stopPropagation()} className='p-2' value={org._id}>{org.name}</SelectItem>
             })}

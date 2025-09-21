@@ -9,3 +9,5 @@ export const pipe =
   (...fns: ((...args: unknown[]) => unknown)[]) =>
   (x: unknown) =>
     fns.reduce((v, f) => f(v), x)
+
+export const abbreviateName = (name: string) => name.split(" ").map((word) => word[0].toUpperCase()).join('')

@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast'
 import { useMutation } from '@tanstack/react-query'
 import Loader from '../ui/loader'
 
-const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string }> = props => {
+const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string, disabled?: boolean }> = props => {
   const { _id, number } = props.contact
   const listing_id = props.listing_id
   const [open, , set] = useToggle(false)
@@ -37,7 +37,8 @@ const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string }> = pro
     <Popover open={open} onOpenChange={set}>
       <PopoverTrigger
         onClick={() => !deleting && set(true)}
-        className="-pb-1 border-b-2 border-dotted border-neutral-400 bg-clip-padding text-neutral-600 transition-colors hover:border-neutral-600"
+        disabled={props?.disabled}
+        className="-pb-1 border-b-2 border-dotted border-neutral-400 disabled:opacity-70 bg-clip-padding text-neutral-600 transition-colors hover:border-neutral-600"
       >
         {!deleting ? <TrashIcon /> : <Loader className="w-2" />}
       </PopoverTrigger>

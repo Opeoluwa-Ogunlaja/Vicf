@@ -8,6 +8,8 @@ export interface IContact {
   overwrite_name?: string
   time_added: string
   time_updated: string
+  locked?: boolean
+  locked_by?: string
 }
 
 export type contactsArray = IContact[]

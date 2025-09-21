@@ -136,6 +136,24 @@ export const useContactManagerStore = create<ContactManager>()(set => {
           return { manager }
         })
       },
+      setEditors(id, editors) {
+        const colors = ['blue', 'green', 'yellow', 'red', 'cyan'];
+        set(state => {
+          const manager = state.manager.map(entry => {
+            if (entry._id === id) {
+              return {
+                ...entry,
+                users_editing: editors!.map((e) => ({
+                  ...e,
+                  color: colors[Math.floor(Math.random() * colors.length)]
+                })) as [typeof editors][0]
+              }
+            }
+            return entry
+          })
+          return { manager }
+        })
+      },
       async updateBackup(id, backup, upstream = false) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let updated_backup: any

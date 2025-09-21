@@ -7,8 +7,8 @@ import { IContact } from './../types/contacts.d'
 export class ContactsRepository {
   // --- TEMPLATE: Add ContactsRepository Methods ---
   async update_contact(contactId: string, data: Partial<IContact>) {
-    // TODO: Implement update contact
-    return null
+    // Update a contact by ID
+    return await this.contact_dal.updateById(contactId, data)
   }
 
   async get_contact(contactId: string) {

@@ -32,8 +32,17 @@ class SocketIOHandler {
 
       // Handle disconnection
       socket.on('disconnect', () => {
-        if (this.clients.get(socket.id)?.user?.id)
-          this.usersSockets.delete(this.clients.get(socket.id)?.user?.id)
+        const userId = this.clients.get(socket.id)?.user?.id
+        if (userId) {
+          const sockets = this.usersSockets.get(userId) || []
+          this.usersSockets.set(
+            userId,
+            sockets.filter(id => id !== socket.id)
+          )
+          if (this.usersSockets.get(userId)?.length === 0) {
+            this.usersSockets.delete(userId)
+          }
+        }
         this.clients.delete(socket.id)
       })
     })

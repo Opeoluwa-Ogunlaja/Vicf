@@ -84,7 +84,7 @@ export class ContactUseCases {
     })
   }
 
-  async MoveListingToOrganisation(listingId: string, organisationId: string){
+    async MoveListingToOrganisation(listingId: string, organisationId: string){
     return await this.groups_repository.runInTransaction(async session => {
       const manager = await this.groups_repository.findById(listingId)
       if(!manager) throw new NotFoundError("Listing")

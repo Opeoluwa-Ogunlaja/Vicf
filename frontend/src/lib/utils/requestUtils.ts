@@ -185,6 +185,17 @@ export const update_manager_slug = async (id: string, slug_type: string) => {
   }
 }
 
+export const update_contact = async (id: string, data: Partial<IContact>) => {
+  try {
+    const newListing = await axiosInstance.patch(`/contacts/contact/${id}/`, data)
+
+    return newListing.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
 export const get_contact_listing = async (
   listing_id: string
 ): Promise<ContactManagerEntry[] | undefined> => {

@@ -21,7 +21,7 @@ export type SocketClientValue = {
 }
 
 export type SocketClients = Map<string, SocketClientValue>
-export type SocketUsers = Map<string, string>
+export type SocketUsers = Map<string, string[]>
 export type SocketHandlerFn<MessageType = any> = (
   message: MessageType,
   socket: Socket,

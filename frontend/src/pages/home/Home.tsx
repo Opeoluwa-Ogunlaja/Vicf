@@ -81,7 +81,7 @@ const Home = () => {
             <AccessibileCreateButton />
             <h3 className="mb-8 text-lg font-medium">Home</h3>
             <h3 className="mb-6 w-max rounded-full bg-blue-50 px-6 py-2 text-base text-blue-700">
-              Recent Listings
+              Listings
             </h3>
             <section className="contacts-grid grid gap-8 pb-10 max-sm:justify-center">
               <Suspense fallback={<SkeletonCon />}>

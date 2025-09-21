@@ -74,7 +74,7 @@ const Organisation = () => {
           <OrganisationListings organisationId={currentOrganisation._id} />
         </TabsContent>
         <TabsContent value="members" className="py-4 animate-in fade-in-45">
-          <OrganisationMembers organisationId={currentOrganisation._id} />
+          <OrganisationMembers creator={currentOrganisation.creator} organisationId={currentOrganisation._id} />
         </TabsContent>
       </Tabs>
     </>

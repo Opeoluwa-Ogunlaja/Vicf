@@ -1,6 +1,12 @@
 import expressAsyncHandler from 'express-async-handler'
 import { contactService, ContactService } from '../services/ContactService'
-import { AsyncHandler, IContact, IContactGroup, IContactGroupDocument, SocketHandlerFn } from '../types'
+import {
+  AsyncHandler,
+  IContact,
+  IContactGroup,
+  IContactGroupDocument,
+  SocketHandlerFn
+} from '../types'
 import {
   createContactGroupSchema,
   createContactGroupType,
@@ -9,15 +15,20 @@ import {
   updateContactInputBackupSchema
 } from '../validators/contactsValidators'
 import { flattenZodErrorMessage } from '../lib/utils/zodErrors'
-import { AccessError, RequestError } from './../lib/utils/AppErrors'
+import { AccessError, NotFoundError, RequestError } from './../lib/utils/AppErrors'
 import { contactUseCases, ContactUseCases } from '../use cases/ContactUseCases'
 import { z } from 'zod'
+import { sendEventToRoom } from '../lib/utils/socketUtils'
 
 export class ContactsController {
-  // --- TEMPLATE: Add Contact CRUD/Feature Methods ---
-  update_contact: AsyncHandler<any, any, { contactId: string }> = async (req, res) => {
-    // TODO: Implement update contact
-    res.json({ ok: true, data: null })
+  update_contact: AsyncHandler<IContact, any, { contactId: string }> = async (req, res) => {
+    const { email, overwrite_name, overwrite, additional_information, number } = req.body
+    const updated_contact = await this.service.update_contact(req.params.contactId, {
+      number, email, overwrite_name, additional_information, overwrite
+    })
+    
+    sendEventToRoom(`${updated_contact?.contact_group}-editing-room`, 'edit-contact', updated_contact?.toObject)
+    res.json({ ok: true, data: updated_contact })
   }
 
   get_contact: AsyncHandler<any, any, { contactId: string }> = async (req, res) => {
@@ -70,7 +81,7 @@ export class ContactsController {
       name
     })
 
-    if (!newContact) throw new Error("Could'nt complete your request")
+    if (!newContact) throw new Error("Couldn't complete your request")
 
     res.json({
       ok: true,
@@ -84,7 +95,10 @@ export class ContactsController {
     res.json({ ok: true, data: manager })
   }
 
-  move_manager: AsyncHandler<{organisationId: string}, any, { listingId: string  }> = async (req, res) => {
+  move_manager: AsyncHandler<{ organisationId: string }, any, { listingId: string }> = async (
+    req,
+    res
+  ) => {
     const userId = req.user?.id
     const { listingId } = req.params
     const { organisationId } = req.body
@@ -177,6 +191,7 @@ export class ContactsController {
     const { listingId, contactId } = req.params
 
     const deletedContact = await this.service.deleteContact(listingId, contactId)
+    sendEventToRoom(`${listingId}-editing-room`, 'delete-contact', deletedContact?.toObject())
     res.json({ ok: true, data: { ...deletedContact?.toObject() } })
   }
 
@@ -210,7 +225,98 @@ export class ContactsController {
       overwrite: contactToAdd.overwrite,
       overwrite_name: contactToAdd.overwrite_name
     })
+
+    socket.to(`${message.listingId}-editing-room`).emit('add-contact', contactToAdd);
     socket.emit('add-contact', contactToAdd)
+  }
+
+  socket_set_editing_contacts: SocketHandlerFn<Partial<IContact> & { listingId: string }> = async (
+    message,
+    socket,
+    clients
+  ) => {
+    const user = clients.get(socket.id)?.user;
+    const { listingId } = message;
+    if (!user) throw new AccessError("Not logged in");
+
+    // Add user to editors
+    await this.service.updateManager(listingId, {
+      $addToSet: { users_editing: (user!._id as string).toString() }
+    })
+
+    // Fetch updated editors list
+    const updatedEditors = await this.service.getManagerEditing(listingId);
+
+    // Join the editing room if not already
+    socket.join(`${listingId}-editing-room`);
+
+    // Emit to all in the room
+    socket.to(`${listingId}-editing-room`).emit('editing', {
+      listingId,
+      editors: updatedEditors
+    });
+    socket.emit('editing', {
+      listingId,
+      editors: updatedEditors
+    });
+  }
+
+  socket_set_not_editing_contacts: SocketHandlerFn<Partial<IContact> & { listingId: string }> = async (
+    message,
+    socket,
+    clients
+  ) => {
+    const user = clients.get(socket.id)?.user;
+    const { listingId } = message;
+    if (!user) return;
+
+    // Remove user from editors
+    await this.service.updateManager(listingId, {
+      $pull: { users_editing: (user!._id as string).toString() }
+    });
+
+    // Fetch updated editors list
+    const updatedEditors = await this.service.getManagerEditing(listingId);
+
+    // Emit to all in the room
+    socket.to(`${listingId}-editing-room`).emit('editing', {
+      listingId,
+      editors: updatedEditors
+    });
+    socket.emit('editing', {
+      listingId,
+      editors: updatedEditors
+    });
+  }
+
+  socket_lock_contact: SocketHandlerFn<Partial<IContact> & { listingId: string, contactId: string }> = async (
+    message,
+    socket,
+    clients
+  ) => {
+    const user = clients.get(socket.id)?.user
+    const { listingId, contactId } = message
+    if (!user) return
+    // Lock the contact
+    const updatedContact = await this.service.update_contact(contactId, { locked: true, locked_by: (user!._id as string).toString() })
+    // Notify all clients in the room
+    socket.to(`${listingId}-editing-room`).emit('contact-locked', { contact: updatedContact })
+    socket.emit('contact-locked', { contact: updatedContact })
+  }
+
+  socket_unlock_contact: SocketHandlerFn<Partial<IContact> & { listingId: string, contactId: string }> = async (
+    message,
+    socket,
+    clients
+  ) => {
+    const user = clients.get(socket.id)?.user
+    const { listingId, contactId } = message
+    if (!user) return
+    // Unlock the contact
+    const updatedContact = await this.service.unlock_contact(contactId)
+    // Notify all clients in the room
+    socket.to(`${listingId}-editing-room`).emit('contact-unlocked', { contact: updatedContact })
+    socket.emit('contact-unlocked', { contact: updatedContact })
   }
 }
 

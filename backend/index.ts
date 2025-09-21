@@ -7,7 +7,9 @@ import { createAdapter } from '@socket.io/redis-adapter'
 
 dbConnection()
 ;(async () => {
-  const io = await connectSocketIo()
+  const io = await connectSocketIo();
+
+  (global as any).io = io
 
   if (nodeEnv !== 'production') {
     // const pubClient = createClient({ url: 'redis://localhost:6379' })

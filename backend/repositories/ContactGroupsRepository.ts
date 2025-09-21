@@ -24,6 +24,10 @@ export class ContactGroupsRepository {
     this.runInTransaction = this.group_dal.runInTransaction
   }
 
+  getModel(){
+    return this.group_dal.getModel()
+  }
+
   generateId = () => {
     return new mongoose.Types.ObjectId()
   }
@@ -45,7 +49,6 @@ export class ContactGroupsRepository {
     return await this.group_dal
       .getModel()
       .findOne({
-        userId,
         _id: groupId
       })
       .populate({ path: 'contacts', select: '-contact_group' })

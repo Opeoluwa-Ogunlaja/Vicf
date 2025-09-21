@@ -17,6 +17,11 @@ contactsRouter.patch(
 )
 
 contactsRouter.patch(
+  '/contact/:contactId',
+  contactsController.update_contact.bind(contactsController)
+)
+
+contactsRouter.patch(
   '/:listingId/move-to-org',
   contactsController.move_manager.bind(contactsController)
 )
@@ -46,6 +51,30 @@ socketsController.registerHandler(
   'add-contacts',
   mustAuthSocketMiddleware,
   contactsController.socket_add_contact.bind(contactsController)
+)
+
+socketsController.registerHandler(
+  'set-editing',
+  mustAuthSocketMiddleware,
+  contactsController.socket_set_editing_contacts.bind(contactsController)
+)
+
+socketsController.registerHandler(
+  'not-editing',
+  mustAuthSocketMiddleware,
+  contactsController.socket_set_not_editing_contacts.bind(contactsController)
+)
+
+socketsController.registerHandler(
+  'lock-contact',
+  mustAuthSocketMiddleware,
+  contactsController.socket_lock_contact.bind(contactsController)
+)
+
+socketsController.registerHandler(
+  'unlock-contact',
+  mustAuthSocketMiddleware,
+  contactsController.socket_unlock_contact.bind(contactsController)
 )
 
 export default contactsRouter

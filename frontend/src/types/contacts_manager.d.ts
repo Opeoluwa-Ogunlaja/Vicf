@@ -13,6 +13,7 @@ export type ContactManagerEntry = {
   input_backup: string
   preferences?: Preferences
   organisation?: { _id: string, name: string }
+  users_editing?: [{ _id: string, name: string, email: string, color?: string }]
 }
 
 export type ContactManagerState = {
@@ -37,7 +38,8 @@ export type ContactManagerActions = {
     slug_type: 'title_number' | 'title_hash',
     upstream?: boolean
   ) => Promise<string>
-  updateContactCount: (id: string, dec?: boolean = false) => void
+  updateContactCount: (id: string, dec?: boolean = false) => void,
+  setEditors: (id: string, editors: ContactManagerEntry['users_editing']) => void
 }
 
 export type ContactManager = ContactManagerState & { actions: ContactManagerActions }
