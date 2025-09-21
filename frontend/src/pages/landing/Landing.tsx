@@ -1,6 +1,6 @@
 import { TaskQueue } from '@/lib/taskQueue'
 import { wait } from '@/lib/utils/promiseUtils'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 
 const Landing = () => {
   const queue = useMemo(() => {
@@ -19,4 +19,4 @@ const Landing = () => {
   )
 }
 
-export default Landing
+export default memo(Landing)

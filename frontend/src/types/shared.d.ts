@@ -1,7 +1,7 @@
 import { LoaderFunction } from 'react-router-dom'
 import { ContactManagerActions } from '@/types/contacts_manager'
 import { useUserUpdate } from '@/hooks/useUserUpdate'
-import { MutableRefObject } from 'react'
+import { Dispatch, MutableRefObject } from 'react'
 
 export type LoaderData<TLoaderFn extends LoaderFunction> =
   Awaited<ReturnType<TLoaderFn>> extends Response | infer D ? D : never
@@ -20,4 +20,5 @@ export type RouteDataType = {
   currentToken: MutableRefObject<string>
   setManager: ContactManagerActions['setManager']
   setToken: Dispatch<string>
+  setReady: Dispatch<boolean>
 } & Pick<ReturnType<typeof useUserUpdate>, 'login_user' | 'set_loaded'>

@@ -1,4 +1,4 @@
-import { FC, ReactNode, useLayoutEffect } from 'react'
+import { FC, ReactNode, useLayoutEffect, memo } from 'react'
 // import { IContact } from '@/types/contacts'
 import { Popover, PopoverContent, PopoverTrigger,  } from '@/components/ui/popover'
 // import { TrashIcon } from '@/assets/icons'
@@ -75,4 +75,4 @@ const ListingDeleteButton: FC<{ listing: Partial<ContactManagerEntry>, className
   )
 }
 
-export default ListingDeleteButton
+export default memo(ListingDeleteButton)

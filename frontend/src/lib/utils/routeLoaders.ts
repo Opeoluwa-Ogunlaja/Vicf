@@ -11,7 +11,7 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
     const fetchAccessToken = async () => {
       try {
         const token = await getAccessToken()
-        setters.setToken(token?.token)
+        setters.setToken(token?.token as string)
         // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
       } catch (error) {
         setters.setToken(' ')
@@ -51,6 +51,7 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
           )
           .finally(() => {
             setters.set_loaded()
+            setters.setReady(true)
           })
       }
     } catch (error) {
@@ -91,7 +92,7 @@ export const authLoader = (onlineStatus: boolean, setters: RouteDataType) =>
     const fetchAccessToken = async () => {
       try {
         const token = await getAccessToken()
-        setters.setToken(token?.token)
+        setters.setToken(token?.token as string)
         // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
       } catch (error) {
         setters.setToken(' ')
@@ -113,6 +114,10 @@ export const authLoader = (onlineStatus: boolean, setters: RouteDataType) =>
         const fetching_promise = queryClient.fetchQuery({
           queryKey: ['user', 'logged_in'],
           queryFn: get_profile
+        })
+
+        fetching_promise.finally(() => {
+          setters.setReady(true)
         })
 
         userPromise = fetching_promise

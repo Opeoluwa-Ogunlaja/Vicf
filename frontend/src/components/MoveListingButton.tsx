@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from 'react'
+import { FC, memo, ReactNode, useState } from 'react'
 // import { IContact } from '@/types/contacts'
 // import { TrashIcon } from '@/assets/icons'
 import { useToast } from '@/hooks/use-toast'
@@ -132,4 +132,4 @@ const MoveListingButton: FC<{
   )
 }
 
-export default MoveListingButton
+export default memo(MoveListingButton)

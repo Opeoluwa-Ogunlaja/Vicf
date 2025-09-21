@@ -121,4 +121,4 @@ const ContactsTable = memo(
   }
 )
 
-export default ContactsTable
+export default memo(ContactsTable)

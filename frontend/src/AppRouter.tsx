@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { FC, lazy, memo, Suspense, useMemo } from 'react'
+import { Dispatch, FC, lazy, memo, Suspense, useMemo } from 'react'
 import { authLoader, rootLoader } from './lib/utils/routeLoaders'
 import { saveLoader } from './pages/save/saveLoaders'
 import { redirect } from 'react-router-dom'
@@ -118,7 +118,7 @@ const router = (onlineStatus: boolean, setters: RouteDataType) =>
     {}
   )
 
-const AppRouter: FC = () => {
+const AppRouter: FC<{ setReady: Dispatch<boolean> }> = ({ setReady }) => {
   // const { isOnline } = useOnline()
   const setManager = useContactManagerStore(state => state.actions.setManager)
   const { setToken, token } = useToken()
@@ -129,9 +129,9 @@ const AppRouter: FC = () => {
       setManager: setManager,
       setToken: setToken,
       login_user,
-      set_loaded
+      set_loaded, setReady: setReady
     })
-  }, [setToken, setManager, login_user, set_loaded, token])
+  }, [setToken, setManager, login_user, set_loaded, token, setReady])
 
   return (
     <Suspense fallback={<LoadingScreen />}>

@@ -4,6 +4,7 @@ import CreateNewOrganisation from '@/components/CreateNewOrganisation'
 import { get_organisations_for_me } from '@/lib/utils/requestUtils'
 import { useUser } from '@/hooks/useUser'
 import { useMatch, Outlet } from 'react-router-dom'
+import { memo } from 'react'
 
 const OrganisationsHome = () => {
   const { loggedIn, user } = useUser()
@@ -33,4 +34,4 @@ const OrganisationsHome = () => {
   )
 }
 
-export default OrganisationsHome
+export default memo(OrganisationsHome)
