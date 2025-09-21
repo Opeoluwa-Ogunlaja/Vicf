@@ -7,7 +7,7 @@ export type Preferences = {
 export type ContactManagerEntry = {
   _id: string
   name: string
-  userId: string
+  userId?: string
   url_id: string
   backed_up: boolean
   contacts_count: number

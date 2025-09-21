@@ -63,7 +63,6 @@ const ContactForm = () => {
   const queryClient = useQueryClient()
   const mounted = useMounted()
   const location = useLocation()
-  const prevLocation = usePrevious(location.pathname)
 
    const { canSendMessages } = useSocketVars()
     const has_set_editing = useRef(false)
