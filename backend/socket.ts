@@ -1,8 +1,10 @@
 import { Server, Socket } from 'socket.io'
+import { instrument } from '@socket.io/admin-ui'
 import { server } from './server'
 import { socketsController } from './controllers/SocketController'
 import { SocketClients, SocketUsers } from './types'
 import { socketAuthMiddleware } from './lib/middleware/users/authMiddleware'
+import { contactUseCases } from './use cases/ContactUseCases'
 
 const io = new Server(server, {
   cors: {
@@ -10,6 +12,12 @@ const io = new Server(server, {
     methods: ['GET', 'POST'],
     credentials: true
   }
+})
+
+instrument(io, {
+  auth: false,
+  namespaceName: '/admin',
+  mode: 'development'
 })
 
 class SocketIOHandler {
@@ -31,9 +39,10 @@ class SocketIOHandler {
       socketsController.attach(socket, this.clients, this.usersSockets)
 
       // Handle disconnection
-      socket.on('disconnect', () => {
+      socket.on('disconnect', async () => {
         const userId = this.clients.get(socket.id)?.user?.id
         if (userId) {
+          await contactUseCases.ResetActions(userId)
           const sockets = this.usersSockets.get(userId) || []
           this.usersSockets.set(
             userId,

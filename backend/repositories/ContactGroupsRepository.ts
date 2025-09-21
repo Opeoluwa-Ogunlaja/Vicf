@@ -67,6 +67,10 @@ export class ContactGroupsRepository {
     return await this.group_dal.getById(id)
   }
 
+  updateMany: typeof this.group_dal.updateMany = async (query, data, session) => {
+    return await this.group_dal.updateMany(query, data, session)
+  }
+
   updateById: typeof this.group_dal.updateById = async (id, data) => {
     return await this.group_dal.updateById(id, data)
   }

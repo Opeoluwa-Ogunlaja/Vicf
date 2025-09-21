@@ -71,7 +71,6 @@ const ContactsTable = memo(
           </TableHeader>
           <TableBody className="text-center [&_td]:!text-center">
             {[...contacts].map(contact => {
-              console.log(contact)
               const lockedColor = contactManager?.users_editing?.find(
                 e => e._id == contact.locked_by
               )?.color

@@ -84,19 +84,69 @@ export class ContactUseCases {
     })
   }
 
-    async MoveListingToOrganisation(listingId: string, organisationId: string){
+  async MoveListingToOrganisation(listingId: string, organisationId: string) {
     return await this.groups_repository.runInTransaction(async session => {
       const manager = await this.groups_repository.findById(listingId)
-      if(!manager) throw new NotFoundError("Listing")
-      const organisationFound = await this.organisations_service.get_organisation_by_id(organisationId)
-      if(!organisationFound) throw new NotFoundError("Organisation")
-      await this.organisations_service.remove_listing_from_organisation(manager.organisation?.toString() as string, listingId, session)
-      await this.organisations_service.add_listing_to_organisation(organisationId, listingId, session)
-      const listing = await this.groups_repository.updateById(listingId, { organisation: organisationId }, session)
-      return {...listing, organisation: {
-        _id: organisationFound!._id,
-        name: organisationFound!.name
-      }}
+      if (!manager) throw new NotFoundError('Listing')
+      const organisationFound =
+        await this.organisations_service.get_organisation_by_id(organisationId)
+      if (!organisationFound) throw new NotFoundError('Organisation')
+      await this.organisations_service.remove_listing_from_organisation(
+        manager.organisation?.toString() as string,
+        listingId,
+        session
+      )
+      await this.organisations_service.add_listing_to_organisation(
+        organisationId,
+        listingId,
+        session
+      )
+      const listing = await this.groups_repository.updateById(
+        listingId,
+        { organisation: organisationId },
+        session
+      )
+      return {
+        ...listing,
+        organisation: {
+          _id: organisationFound!._id,
+          name: organisationFound!.name
+        }
+      }
+    })
+  }
+
+  async ResetActions(userId: string) {
+    return await this.groups_repository.runInTransaction(async session => {
+      const lockedContacts = await this.contacts_repository.findOne({
+        locked: true,
+        lockedBy: userId
+      })
+      if (lockedContacts) {
+        await this.contacts_repository.update_contacts(
+          { locked: true, lockedBy: userId },
+          {
+            locked: false,
+            $unset: {
+              locked_by: 1
+            }
+          },
+          session
+        )
+      }
+
+      await this.groups_repository.updateMany(
+        {
+          users_editing: {
+            $in: userId
+          }
+        },
+        {
+          $pull: {
+            users_editing: userId
+          }
+        }
+      , session)
     })
   }
 }
