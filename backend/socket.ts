@@ -40,7 +40,7 @@ class SocketIOHandler {
 
       // Handle disconnection
       socket.on('disconnect', async () => {
-        const userId = this.clients.get(socket.id)?.user?.id
+        const userId = this.clients.get(socket.id)?.user?._id as string
         if (userId) {
           await contactUseCases.ResetActions(userId)
           const sockets = this.usersSockets.get(userId) || []

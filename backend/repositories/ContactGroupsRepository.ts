@@ -63,6 +63,10 @@ export class ContactGroupsRepository {
     return await this.group_dal.getOne(query, ...args)
   }
 
+  async find(query: RootFilterQuery<IContactGroupDocument>, ...args: any[]) {
+    return await this.group_dal.getMany(query, ...args)
+  }
+
   async findById(id: string, ...args: any[]) {
     return await this.group_dal.getById(id)
   }

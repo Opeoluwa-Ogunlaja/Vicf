@@ -7,6 +7,7 @@ import {
   contactGroupsRepository,
   ContactGroupsRepository
 } from '../repositories/ContactGroupsRepository'
+import { sendEventToRoom } from '../lib/utils/socketUtils'
 
 export class ContactUseCases {
   // --- DASHBOARD STATS METHODS ---
@@ -118,13 +119,19 @@ export class ContactUseCases {
 
   async ResetActions(userId: string) {
     return await this.groups_repository.runInTransaction(async session => {
-      const lockedContacts = await this.contacts_repository.findOne({
+      const lockedContacts = await this.contacts_repository.find({
         locked: true,
-        lockedBy: userId
+        locked_by: userId
       })
-      if (lockedContacts) {
+      if (lockedContacts.length > 0) {
+        lockedContacts.forEach((locked) => {
+          const contact = locked
+          contact.locked = false
+          contact.locked_by = undefined
+          sendEventToRoom(`${locked.contact_group}-editing-room`, 'contact-unlocked', { contact })
+        })
         await this.contacts_repository.update_contacts(
-          { locked: true, lockedBy: userId },
+          { locked: true, locked_by: userId },
           {
             locked: false,
             $unset: {
@@ -135,7 +142,14 @@ export class ContactUseCases {
         )
       }
 
-      await this.groups_repository.updateMany(
+      const groups_editing = await this.groups_repository.find({
+        users_editing: {
+          $in: userId
+        }
+      })
+
+      if(groups_editing.length >= 0){
+        await this.groups_repository.updateMany(
         {
           users_editing: {
             $in: userId
@@ -147,6 +161,8 @@ export class ContactUseCases {
           }
         }
       , session)
+        
+      }
     })
   }
 }

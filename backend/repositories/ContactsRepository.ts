@@ -43,6 +43,10 @@ export class ContactsRepository {
     return await this.contact_dal.getModel().create(data)
   }
 
+  async find(query: RootFilterQuery<IContactDocument>, session?: ClientSession) {
+    return await this.contact_dal.getMany(query, session)
+  }
+
   async findOne(query: RootFilterQuery<IContactDocument>, session?: ClientSession) {
     return await this.contact_dal.getOne(query, session)
   }

@@ -76,6 +76,23 @@ export const useContactManagerStore = create<ContactManager>()(set => {
 
         if (errorsPresent) throw new Error('Something occured')
       },
+      async updateManagerOrganisationDisplay(id, newOrgId, newOrgName) {
+        set(state => {
+          const manager = state.manager.map((entry,) => {
+            if (entry._id=== id) {
+              return {
+                ...entry,
+                organisation: {
+                  _id: newOrgId,
+                  name: newOrgName
+                }
+              }
+            }
+            return entry
+          })
+          return { manager }
+        })
+      },
       async createManager(data, upstream = false) {
         let errorsPresent = false
         const new_manager = await myTaskManager.run('create_listing', true, data)

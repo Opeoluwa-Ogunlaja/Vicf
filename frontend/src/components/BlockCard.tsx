@@ -22,7 +22,8 @@ const BlockCard: FC<{
 }> = ({ manager }) => {
   const status = manager.backed_up ? 'uploaded' : 'not-uploaded'
   const navigate = useNavigate()
-  const { loggedIn } = useUser()
+  const { loggedIn, user } = useUser()
+  const owner = loggedIn && user?._id == manager.userId
 
   return (
     <div
@@ -61,12 +62,12 @@ const BlockCard: FC<{
               <DropdownMenuItem className='block p-2'>Open</DropdownMenuItem>
             </Link>
 
-            { loggedIn && <MoveListingButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-neutral-50 hover:text-neutral-600 transition-colors text-left text-sm'>
+            { owner && <MoveListingButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-neutral-50 hover:text-neutral-600 transition-colors text-left text-sm'>
               Move
             </MoveListingButton>}
-            <ListingDeleteButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-red-50 hover:text-red-400 transition-colors text-left text-sm'>
+            { owner && <ListingDeleteButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-red-50 hover:text-red-400 transition-colors text-left text-sm'>
               Delete
-            </ListingDeleteButton>
+            </ListingDeleteButton>}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
