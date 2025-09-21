@@ -7,6 +7,7 @@ import { useUser } from '@/hooks/useUser'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useOnline } from '@/hooks/useOnline'
+import { memo } from 'react'
 
 const NavigationBar = () => {
   const navIconClass = cn('w-8 max-md:w-6')
@@ -63,4 +64,4 @@ const NavigationBar = () => {
   )
 }
 
-export default NavigationBar
+export default memo(NavigationBar)

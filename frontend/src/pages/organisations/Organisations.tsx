@@ -5,6 +5,7 @@ import Footer from '@/components/Footer'
 
 import { useUser } from '@/hooks/useUser'
 import { Navigate, Outlet } from 'react-router-dom'
+import { memo } from 'react'
 
 const Organisations = () => {
   const { loggedIn } = useUser()
@@ -40,4 +41,4 @@ const Organisations = () => {
   )
 }
 
-export default Organisations
+export default memo(Organisations)

@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import './App.css'
 import AppRouter from './AppRouter'
 import SidenavProvider from './hoc/SidenavProvider'
@@ -9,21 +9,26 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { Toaster } from './components/ui/toaster'
 import OnlineProvider from './hoc/OnlineProvider'
 import SocketProvider from './hoc/SocketProvider'
+import LoadingScreen from './components/LoadingScreen'
 
 const App: FC = () => {
+  const [ready, setReady] = useState(false)
   return (
-    <GoogleOAuthProvider clientId={GClient}>
-      <UserProvider>
-        <SocketProvider>
-          <OnlineProvider>
-            <SidenavProvider>
-              <AppRouter />
-              <Toaster />
-            </SidenavProvider>
-          </OnlineProvider>
-        </SocketProvider>
-      </UserProvider>
-    </GoogleOAuthProvider>
+    <>
+      {!ready && <LoadingScreen />}
+      <GoogleOAuthProvider clientId={GClient}>
+        <UserProvider>
+          <SocketProvider>
+            <OnlineProvider>
+              <SidenavProvider>
+                <AppRouter setReady={setReady} />
+                <Toaster />
+              </SidenavProvider>
+            </OnlineProvider>
+          </SocketProvider>
+        </UserProvider>
+      </GoogleOAuthProvider>
+    </>
   )
 }
 

@@ -28,7 +28,7 @@ import {
 import { Input } from './ui/input'
 import { Checkbox } from './ui/checkbox'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
-import { FocusEvent, FocusEventHandler, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { FocusEvent, FocusEventHandler, memo, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { wait } from '@/lib/utils/promiseUtils'
 import AdditionalInfoSection from '@/pages/save/AdditionalInfoSection'
 import { useManager } from '@/hooks/useManager'
@@ -439,4 +439,4 @@ const ContactForm = () => {
   )
 }
 
-export default ContactForm
+export default memo(ContactForm)

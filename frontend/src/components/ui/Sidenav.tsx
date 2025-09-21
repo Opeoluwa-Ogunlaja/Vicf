@@ -2,7 +2,7 @@ import { ClockRewindIcon, HomeSmileIcon, PlusIcon, UsersOrgIcon, VicfIcon } from
 import { NavigationLink } from './navigation-link'
 import { cn } from '@/lib/utils'
 
-import { MutableRefObject, useEffect, useRef } from 'react'
+import { memo, MutableRefObject, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useClickOutside } from '@/hooks/useClickOutside'
 import useMediaQuery from '@/hooks/useMediaQuery'
@@ -138,4 +138,4 @@ const Sidenav = () => {
   )
 }
 
-export default Sidenav
+export default memo(Sidenav)
