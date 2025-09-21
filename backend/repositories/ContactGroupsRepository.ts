@@ -24,6 +24,10 @@ export class ContactGroupsRepository {
     this.runInTransaction = this.group_dal.runInTransaction
   }
 
+  getModel(){
+    return this.group_dal.getModel()
+  }
+
   generateId = () => {
     return new mongoose.Types.ObjectId()
   }
@@ -45,7 +49,6 @@ export class ContactGroupsRepository {
     return await this.group_dal
       .getModel()
       .findOne({
-        userId,
         _id: groupId
       })
       .populate({ path: 'contacts', select: '-contact_group' })
@@ -60,8 +63,16 @@ export class ContactGroupsRepository {
     return await this.group_dal.getOne(query, ...args)
   }
 
+  async find(query: RootFilterQuery<IContactGroupDocument>, ...args: any[]) {
+    return await this.group_dal.getMany(query, ...args)
+  }
+
   async findById(id: string, ...args: any[]) {
     return await this.group_dal.getById(id)
+  }
+
+  updateMany: typeof this.group_dal.updateMany = async (query, data, session) => {
+    return await this.group_dal.updateMany(query, data, session)
   }
 
   updateById: typeof this.group_dal.updateById = async (id, data) => {

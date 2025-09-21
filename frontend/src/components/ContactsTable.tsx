@@ -26,6 +26,7 @@ import { useSocketEvent } from '@/hooks/useSocketEvent'
 import { useToast } from '@/hooks/use-toast'
 import { useManager } from '@/hooks/useManager'
 import { memo } from 'react'
+import clsx from 'clsx'
 
 const ContactsTable = memo(
   ({
@@ -70,9 +71,17 @@ const ContactsTable = memo(
           </TableHeader>
           <TableBody className="text-center [&_td]:!text-center">
             {[...contacts].map(contact => {
+              const lockedColor = contactManager?.users_editing?.find(
+                e => e._id == contact.locked_by
+              )?.color
               return (
                 <TableRow
-                  className="transition-colors hover:bg-neutral-100"
+                  className={clsx('transition-colors hover:bg-neutral-100', {
+                    ['outline']: contact.locked
+                  })}
+                  style={{
+                    'outlineColor': lockedColor!
+                  }}
                   key={contact.number + contact._id}
                 >
                   <TableCell className="font-medium">
@@ -99,8 +108,8 @@ const ContactsTable = memo(
                     </Popover>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-4 text-center">
-                    <EditButton listing_id={contactManager?._id || ''} contact={contact} />
-                    <DeleteButton listing_id={contactManager?._id || ''} contact={contact} />
+                      <EditButton listing_id={contactManager?._id || ''} contact={contact} disabled={contact.locked}/>
+                      <DeleteButton listing_id={contactManager?._id || ''} contact={contact} disabled={contact.locked}/>
                   </TableCell>
                 </TableRow>
               )

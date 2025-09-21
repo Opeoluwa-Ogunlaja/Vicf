@@ -9,6 +9,7 @@ export interface IContact {
   overwrite_name: string
   contact_group: RefType
   locked: boolean
+  locked_by: RefType
   last_updated_by: RefType
 }
 
@@ -28,6 +29,7 @@ export interface IContactGroup {
     slug_type: 'title_number' | 'title_hash'
   }
   organisation: RefType
+  users_editing: RefType[]
 }
 
 export interface IContactGroupDocument extends IContactGroup, Document {}

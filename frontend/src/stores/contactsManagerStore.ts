@@ -76,6 +76,23 @@ export const useContactManagerStore = create<ContactManager>()(set => {
 
         if (errorsPresent) throw new Error('Something occured')
       },
+      async updateManagerOrganisationDisplay(id, newOrgId, newOrgName) {
+        set(state => {
+          const manager = state.manager.map((entry,) => {
+            if (entry._id=== id) {
+              return {
+                ...entry,
+                organisation: {
+                  _id: newOrgId,
+                  name: newOrgName
+                }
+              }
+            }
+            return entry
+          })
+          return { manager }
+        })
+      },
       async createManager(data, upstream = false) {
         let errorsPresent = false
         const new_manager = await myTaskManager.run('create_listing', true, data)
@@ -129,6 +146,24 @@ export const useContactManagerStore = create<ContactManager>()(set => {
               return {
                 ...entry,
                 contacts_count: !dec ? entry.contacts_count + 1 : entry.contacts_count - 1
+              }
+            }
+            return entry
+          })
+          return { manager }
+        })
+      },
+      setEditors(id, editors) {
+        const colors = ['blue', 'green', 'yellow', 'red', 'cyan'];
+        set(state => {
+          const manager = state.manager.map(entry => {
+            if (entry._id === id) {
+              return {
+                ...entry,
+                users_editing: editors!.map((e) => ({
+                  ...e,
+                  color: colors[Math.floor(Math.random() * colors.length)]
+                })) as [typeof editors][0]
               }
             }
             return entry

@@ -8,13 +8,26 @@ import { useContactsUpdate } from '@/hooks/useContactsUpdate'
 import { useToast } from '@/hooks/use-toast'
 import { useMutation } from '@tanstack/react-query'
 import Loader from '../ui/loader'
+import { useSocketActions } from '@/hooks/useSocketActions'
 
-const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string }> = props => {
+const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string, disabled?: boolean }> = props => {
   const { _id, number } = props.contact
   const listing_id = props.listing_id
-  const [open, , set] = useToggle(false)
+  const [open, toggle] = useToggle(false)
   const { delete: deleteContact } = useContactsUpdate()
   const { toast } = useToast()
+  const { sendMessage } = useSocketActions()
+
+  
+  const handlePopoverChange = (open: boolean) => {
+    toggle()
+    console.log(props.listing_id, _id)
+    if (open) {
+      sendMessage({ listingId: props.listing_id, contactId: _id }, 'lock-contact')
+    } else {
+      sendMessage({ listingId: props.listing_id, contactId: _id }, 'unlock-contact')
+    }
+  }
 
   const deleteMutation = useMutation({
     mutationKey: ['delete_contact', _id],
@@ -27,6 +40,7 @@ const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string }> = pro
     },
     onSuccess() {
       toast({ title: 'Contact Deleted', description: `Deleted ${number}` })
+      handlePopoverChange(false)
     },
     retry: 0
   })
@@ -34,10 +48,10 @@ const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string }> = pro
   const { isPending: deleting } = deleteMutation
 
   return (
-    <Popover open={open} onOpenChange={set}>
+    <Popover open={open} onOpenChange={handlePopoverChange}>
       <PopoverTrigger
-        onClick={() => !deleting && set(true)}
-        className="-pb-1 border-b-2 border-dotted border-neutral-400 bg-clip-padding text-neutral-600 transition-colors hover:border-neutral-600"
+        disabled={props?.disabled}
+        className="-pb-1 border-b-2 border-dotted border-neutral-400 disabled:opacity-70 bg-clip-padding text-neutral-600 transition-colors hover:border-neutral-600"
       >
         {!deleting ? <TrashIcon /> : <Loader className="w-2" />}
       </PopoverTrigger>
@@ -51,7 +65,7 @@ const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string }> = pro
           <Button
             variant={'secondary'}
             className="bg-neutral-100 text-primary"
-            onClick={() => set(false)}
+            onClick={() => handlePopoverChange(false)}
           >
             No
           </Button>

@@ -1,5 +1,5 @@
 import { IContact } from '@/types/contacts'
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import { EditIcon } from '@/assets/icons'
 import {
   Dialog,
@@ -30,32 +30,51 @@ import { additionalInfoValue } from '@/types'
 import { Button } from '../ui/button'
 import { useToggle } from '@/hooks/useToggle'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
+import { useSocketActions } from '@/hooks/useSocketActions'
+import Loader from '../ui/loader'
 
-const EditButton = memo((props: { contact: Partial<IContact>; listing_id: string }) => {
+const EditButton = memo((props: { contact: Partial<IContact>; listing_id: string, disabled?: boolean }) => {
   const { contact } = props
   const formHook = useForm<EditContactFormType>({
     resolver: zodResolver(EditContactFormSchema),
     defaultValues: { ...emptyBaseContact, ...contact }
   })
+
   const [dialogOpen, toggle] = useToggle(false)
   const { edit } = useContactsUpdate()
+  const { sendMessage } = useSocketActions()
+  const listingId = props.listing_id
+  const contactId = contact._id
+  const [isEditing, setIsEditing] = useState(false)
+
+  // Lock on open, unlock on close
+  const handleDialogChange = (open: boolean) => {
+    toggle()
+    if (open) {
+      sendMessage({ listingId, contactId }, 'lock-contact')
+    } else {
+      sendMessage({ listingId, contactId }, 'unlock-contact')
+    }
+  }
 
   const onSubmit: SubmitHandler<EditContactFormType> = async ({ ...data }) => {
+    setIsEditing(true)
     if (edit)
-      edit(contact?._id || '', {
+      await edit(contact?._id || '', {
         ...data,
         _id: contact._id as string,
         name: formHook.getValues().overwrite
           ? (formHook.getValues().overwrite_name as string)
           : (contact.name as string)
       })
-    toggle()
+      setIsEditing(false)
+    handleDialogChange(false)
   }
   const { name } = contact
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={toggle}>
-      <DialogTrigger className="-pb-1 border-b-2 border-dotted border-neutral-400 bg-clip-padding text-neutral-600 transition-colors hover:border-neutral-600">
+    <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
+      <DialogTrigger disabled={props.disabled} className="-pb-1 border-b-2 border-dotted border-neutral-400 disabled:opacity-70 bg-clip-padding text-neutral-600 transition-colors hover:border-neutral-600">
         <EditIcon />
       </DialogTrigger>
       <DialogContent>
@@ -159,7 +178,8 @@ const EditButton = memo((props: { contact: Partial<IContact>; listing_id: string
                 variant="ghost"
                 type="button"
                 className="hover:bg-neutral-100"
-                onClick={toggle}
+                disabled={isEditing}
+                onClick={() => isEditing && handleDialogChange(false)}
               >
                 Close
               </Button>
@@ -167,9 +187,10 @@ const EditButton = memo((props: { contact: Partial<IContact>; listing_id: string
                 id="save-contact-btn"
                 variant="default"
                 type="submit"
+                disabled={isEditing}
                 className="w-max bg-secondary/50 px-5 text-base font-normal max-md:absolute max-md:mx-auto max-md:mt-28 max-md:w-4/5"
               >
-                Edit Contact
+                Edit Contact { isEditing && <Loader className='w-3 h-3'/> }
               </Button>
             </DialogFooter>
           </form>

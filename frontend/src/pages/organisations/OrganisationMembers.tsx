@@ -4,7 +4,7 @@ import { IUser } from '@/types'
 import { useQuery } from '@tanstack/react-query'
 import Skeleton from 'react-loading-skeleton'
 
-const OrganisationMembers = ({ organisationId }: { organisationId: string }) => {
+const OrganisationMembers = ({ organisationId, creator }: { organisationId: string, creator: string }) => {
   const { data: organisation, isPending: loadingMembers } = useQuery({
     queryKey: ['organisations', organisationId, 'members'],
     queryFn: () => get_organisation_members(organisationId)
@@ -28,7 +28,7 @@ const OrganisationMembers = ({ organisationId }: { organisationId: string }) => 
 
       <section className="members-grid mt-10 grid gap-1 pb-10 max-sm:justify-center">
         {organisation.members.map((member: Partial<IUser>) => {
-          return <MemberCard key={member._id} member={member} />
+          return <MemberCard key={member._id} creator={creator} member={member} />
         })}
       </section>
     </>

@@ -3,34 +3,24 @@ import asyncMiddleware from '../lib/asyncMiddleware'
 import { SocketClients, SocketHandlerFn, SocketUsers } from '../types'
 
 export default class SocketsController {
-  socket?: Socket
-  clients?: SocketClients
-  userSockets?: SocketUsers
   handlers: Record<string, any>
   constructor() {
-    this.handlers = []
+    this.handlers = {}
   }
 
   attach(socket: Socket, clients: SocketClients, userSockets: SocketUsers) {
-    this.socket = socket
-    this.clients = clients
-    this.userSockets = userSockets
-
     for (const event in this.handlers) {
-      this.listen(event, ...this.handlers[event])
+      socket!.on(event, message =>
+        asyncMiddleware(
+          this.handlers[event],
+          socket as Socket,
+          clients as SocketClients,
+          userSockets as SocketUsers
+        )(JSON.parse(message))
+      )
     }
   }
 
-  listen(event: string, ...callbacks: any[]) {
-    this.socket!.on(event, message =>
-      asyncMiddleware(
-        callbacks,
-        this.socket as Socket,
-        this.clients as SocketClients,
-        this.userSockets as SocketUsers
-      )(JSON.parse(message))
-    )
-  }
 
   registerHandler(event: string, ...args: SocketHandlerFn[]) {
     if (args.length == 0) throw new Error('No handler for socket event')

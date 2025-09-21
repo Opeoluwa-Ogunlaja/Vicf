@@ -1,4 +1,4 @@
-import mongoose, { ClientSession, RootFilterQuery } from 'mongoose'
+import mongoose, { ClientSession, RootFilterQuery, UpdateQuery } from 'mongoose'
 import MongooseDAL from '../data access layers/MongooseDal'
 import Contact, { ContactModelType } from '../entities/Contact'
 import { IContactDocument } from '../types'
@@ -7,8 +7,13 @@ import { IContact } from './../types/contacts.d'
 export class ContactsRepository {
   // --- TEMPLATE: Add ContactsRepository Methods ---
   async update_contact(contactId: string, data: Partial<IContact>) {
-    // TODO: Implement update contact
-    return null
+    // Update a contact by ID
+    return await this.contact_dal.updateById(contactId, data)
+  }
+
+    async update_contacts(query: RootFilterQuery<IContact>, data: UpdateQuery<IContact>, session?: ClientSession) {
+    // Update a contact by ID
+    return await this.contact_dal.updateMany(query, data, session)
   }
 
   async get_contact(contactId: string) {
@@ -36,6 +41,10 @@ export class ContactsRepository {
 
   create = async (data: Partial<IContact> & { _id: string }) => {
     return await this.contact_dal.getModel().create(data)
+  }
+
+  async find(query: RootFilterQuery<IContactDocument>, session?: ClientSession) {
+    return await this.contact_dal.getMany(query, session)
   }
 
   async findOne(query: RootFilterQuery<IContactDocument>, session?: ClientSession) {

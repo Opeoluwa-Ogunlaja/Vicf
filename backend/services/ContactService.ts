@@ -11,8 +11,12 @@ import { convertSlug } from '../lib/utils/convertSlug'
 export class ContactService {
   // --- TEMPLATE: Add ContactService Methods ---
   async update_contact(contactId: string, data: Partial<IContact>) {
-    // TODO: Implement update contact
-    return null
+    // Update a contact by ID
+    return await this.contacts_repository.update_contact(contactId, data)
+  }
+
+  async unlock_contact(contactId: string){
+    return await this.contacts_repository.updateById(contactId, { locked: false, $unset: { locked_by: 1 } })
   }
 
   async get_contact(contactId: string) {
@@ -39,6 +43,11 @@ export class ContactService {
       )
       return group
     })
+  }
+  
+  async getManagerEditing(listingId: string){
+    const manager = await this.groups_repository.getModel().findById(listingId).select('users_editing').populate<{user_editing: { _id: string, name: string, email: string, id: string }}>({ path: 'users_editing', select: 'name email' })
+    return manager?.users_editing
   }
 
   async getListingByUrl(listing_id: string, user_id: string) {
@@ -96,32 +105,81 @@ export class ContactService {
 
   async getManagerForUser(userId: string) {
     const manager = await this.groups_repository.aggregate([
-      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
       {
         $lookup: {
-          foreignField: "_id",
+          as: 'matchedOrgs',
+          foreignField: '_id',
+          localField: 'organisation',
           from: 'organisations',
-          localField: "organisation",
-          as: 'organisation',
-          pipeline: [{
-            $project: {
-              _id: 1,
-              name: 1
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {  $in: [ new mongoose.Types.ObjectId(userId), '$members' ] },
+                    // {  $eq: ['$creator', new mongoose.Types.ObjectId(userId)] }
+                  ]
+                }
+              }
+            },
+            {
+              $project: {
+                _id: 1,
+                name: 1
+              }
             }
-          }]
+          ]
         }
       },
       {
-        $set: {
-          organisation: {
-            $first: '$organisation'
-          }
+        $match: {
+          $expr: {
+            $or: [
+              { $eq: ['$userId', new mongoose.Types.ObjectId(userId)] },
+              { $in: ['$organisation', '$matchedOrgs._id'] }
+            ],
+          },
         }
       },
       {
         $unset: 'contacts'
+      },
+      {
+        $set: {
+          organisation: {
+            $first: '$matchedOrgs'
+          }
+        }
+      },
+      {  $lookup: {
+          as: 'users_editing',
+          foreignField: '_id',
+          localField: 'users_editing',
+          from: 'users',
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                name: 1,
+                email: 1
+              }
+            }
+          ]
+        }
+      },
+      {
+        $project: {
+          matchedOrgs: 0
+        }
       }
     ])
+
+    return manager
+  }
+
+  async getManager(listingId: string){
+    const manager = await this.groups_repository.getModel().findById(listingId)
+    if (!manager) throw new NotFoundError('Contact Group')
 
     return manager
   }
@@ -206,7 +264,7 @@ export class ContactService {
     return deletedContact
   }
 
-   async deleteContactListing(listingId: string) {
+  async deleteContactListing(listingId: string) {
     const deletedContact = await this.groups_repository.runInTransaction(async session => {
       let deleted = await this.groups_repository.deleteById(listingId, session)
       return deleted

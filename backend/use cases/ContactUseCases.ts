@@ -7,6 +7,7 @@ import {
   contactGroupsRepository,
   ContactGroupsRepository
 } from '../repositories/ContactGroupsRepository'
+import { sendEventToRoom } from '../lib/utils/socketUtils'
 
 export class ContactUseCases {
   // --- DASHBOARD STATS METHODS ---
@@ -84,19 +85,84 @@ export class ContactUseCases {
     })
   }
 
-  async MoveListingToOrganisation(listingId: string, organisationId: string){
+  async MoveListingToOrganisation(listingId: string, organisationId: string) {
     return await this.groups_repository.runInTransaction(async session => {
       const manager = await this.groups_repository.findById(listingId)
-      if(!manager) throw new NotFoundError("Listing")
-      const organisationFound = await this.organisations_service.get_organisation_by_id(organisationId)
-      if(!organisationFound) throw new NotFoundError("Organisation")
-      await this.organisations_service.remove_listing_from_organisation(manager.organisation?.toString() as string, listingId, session)
-      await this.organisations_service.add_listing_to_organisation(organisationId, listingId, session)
-      const listing = await this.groups_repository.updateById(listingId, { organisation: organisationId }, session)
-      return {...listing, organisation: {
-        _id: organisationFound!._id,
-        name: organisationFound!.name
-      }}
+      if (!manager) throw new NotFoundError('Listing')
+      const organisationFound =
+        await this.organisations_service.get_organisation_by_id(organisationId)
+      if (!organisationFound) throw new NotFoundError('Organisation')
+      await this.organisations_service.remove_listing_from_organisation(
+        manager.organisation?.toString() as string,
+        listingId,
+        session
+      )
+      await this.organisations_service.add_listing_to_organisation(
+        organisationId,
+        listingId,
+        session
+      )
+      const listing = await this.groups_repository.updateById(
+        listingId,
+        { organisation: organisationId },
+        session
+      )
+      return {
+        ...listing,
+        organisation: {
+          _id: organisationFound!._id,
+          name: organisationFound!.name
+        }
+      }
+    })
+  }
+
+  async ResetActions(userId: string) {
+    return await this.groups_repository.runInTransaction(async session => {
+      const lockedContacts = await this.contacts_repository.find({
+        locked: true,
+        locked_by: userId
+      })
+      if (lockedContacts.length > 0) {
+        lockedContacts.forEach((locked) => {
+          const contact = locked
+          contact.locked = false
+          contact.locked_by = undefined
+          sendEventToRoom(`${locked.contact_group}-editing-room`, 'contact-unlocked', { contact })
+        })
+        await this.contacts_repository.update_contacts(
+          { locked: true, locked_by: userId },
+          {
+            locked: false,
+            $unset: {
+              locked_by: 1
+            }
+          },
+          session
+        )
+      }
+
+      const groups_editing = await this.groups_repository.find({
+        users_editing: {
+          $in: userId
+        }
+      })
+
+      if(groups_editing.length >= 0){
+        await this.groups_repository.updateMany(
+        {
+          users_editing: {
+            $in: userId
+          }
+        },
+        {
+          $pull: {
+            users_editing: userId
+          }
+        }
+      , session)
+        
+      }
     })
   }
 }

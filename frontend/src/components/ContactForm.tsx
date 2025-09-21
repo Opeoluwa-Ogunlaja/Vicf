@@ -47,6 +47,11 @@ import { contactTasks } from '@/feature/contactTaskQueues'
 import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 import { nanoid } from 'nanoid'
 import useMounted from '@/hooks/useMounted'
+import { useSocketActions } from '@/hooks/useSocketActions'
+import { useSocketVars } from '@/hooks/useSocketVars'
+import { useLocation } from 'react-router-dom'
+import usePrevious from '@/hooks/usePrevious'
+
 
 const ContactForm = () => {
   const manager = useManager()
@@ -57,11 +62,40 @@ const ContactForm = () => {
   const user = useUser()
   const queryClient = useQueryClient()
   const mounted = useMounted()
+  const location = useLocation()
+  const prevLocation = usePrevious(location.pathname)
+
+   const { canSendMessages } = useSocketVars()
+    const has_set_editing = useRef(false)
+    const { sendMessage } = useSocketActions()
+  
 
   const contactManager = useMemo(() => {
     return manager.find(mngr => mngr.url_id == contacts.url_id)
   }, [manager, contacts.url_id])
   const isInManager = Boolean(contactManager)
+
+  const mirrorCanSendMessages = useRef(canSendMessages)
+  const mirrorContactManagerId = useRef(contactManager?._id)
+
+  useEffect(() => {
+      mirrorCanSendMessages.current = canSendMessages
+      mirrorContactManagerId.current = contactManager?._id
+      if(canSendMessages && contactManager?.organisation){
+      if(!has_set_editing.current){
+        sendMessage({ listingId: contactManager?._id }, 'set-editing')
+        has_set_editing.current = true
+      }}
+    }, [canSendMessages, contactManager, sendMessage])
+
+  useEffect(() => {
+    return () => {
+      if(mirrorCanSendMessages.current && mirrorContactManagerId.current){
+        sendMessage({ listingId: mirrorContactManagerId.current }, 'not-editing')
+        has_set_editing.current = false
+      }
+    }
+  }, [sendMessage, location])
 
   const { updateBackup, createManager, updateListingName } = useManagerActions()
   const updateNameMutation = useMutation({

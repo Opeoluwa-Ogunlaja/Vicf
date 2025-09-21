@@ -40,7 +40,11 @@ const contactGroupSchema = new Schema<IContactGroupDocument, ContactGroupModelTy
       enum: ['title_number', 'title_hash'],
       default: 'title_number'
     }
-  }
+  },
+  users_editing: [{
+    type: 'ObjectId',
+    ref: 'User'
+  }]
 })
 
 const ContactGroup = model<IContactGroupDocument, ContactGroupModelType>(

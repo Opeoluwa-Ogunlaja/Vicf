@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import NavigationCard from '@/components/NavigationCard'
-import { cn } from '@/lib/utils'
+import { abbreviateName, cn } from '@/lib/utils'
 import { useUser } from '@/hooks/useUser'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
@@ -62,6 +62,12 @@ const NavigationBar = () => {
   return (
     <nav className="contents">
       <ul className="flex items-center gap-6 max-lg:gap-4">
+        <li className='inline-grid stacker'>
+          {contactManager?.users_editing?.slice(0, 2).map((editor, i) => {
+            return <div  key={editor._id} title={editor.name} className={`text-white aspect-square w-16 grid place-content-center  rounded-full font-bold p-2 border-white shadow border text-2xl`} style={{ marginLeft: `${-i}rem`, backgroundColor: editor?.color || 'hsl(var(--muted))' }}>{abbreviateName(editor.name)}</div>
+          })}
+          {contactManager?.users_editing?.length && contactManager?.users_editing?.length > 2 ? <div className={`text-white aspect-square w-16 grid place-content-center  rounded-full font-bold p-2 bg-muted border-white shadow border text-2xl`} style={{ marginLeft: `-3rem`}}>+{contactManager?.users_editing?.length - 2}</div> : null}
+        </li>
         <li className="inline-flex max-md:hidden">
           <NavigationLink
             to="/home"
