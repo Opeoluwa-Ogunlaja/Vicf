@@ -37,6 +37,10 @@ contactsRouter.get('/:listingId', contactsController.get_contact_listing.bind(co
 
 contactsRouter.get('/:listingId/contacts', contactsController.get_contacts.bind(contactsController))
 
+contactsRouter.get('/:listingId/download-vcf', contactsController.stream_vcf.bind(contactsController))
+contactsRouter.get('/:listingId/download-csv', contactsController.stream_csv.bind(contactsController))
+contactsRouter.get('/:listingId/download-xlsx', contactsController.stream_xlsx.bind(contactsController))
+
 contactsRouter.delete(
   '/:listingId/:contactId',
   contactsController.delete_contact.bind(contactsController)

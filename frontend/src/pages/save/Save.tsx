@@ -19,6 +19,7 @@ import { ContactManager } from '@/types/contacts_manager'
 import { Button } from '@/components/ui/button'
 import LoadingScreen from '@/components/LoadingScreen'
 import { Link } from 'react-router-dom'
+import { downloadCsv, downloadVcf, downloadXlsx } from '@/lib/utils/requestUtils'
 
 const SaveLayout: FC<{ name?: string }> = memo(() => {
   const contacts = useContacts()
@@ -95,12 +96,24 @@ const SaveLayout: FC<{ name?: string }> = memo(() => {
           <div className="mt-10 border border-dashed border-primary p-2 lg:max-w-max">
             <h3 className="font-medium">Export Contacts As:</h3>
             <div className="mt-2 flex flex-1 flex-wrap gap-x-2 gap-y-3 max-lg:flex-col">
-              <Button variant={'outline'}>Virtual Contact File (.vcf)</Button>
+              <Suspense fallback={<>Loading</>}>
+                <Await resolve={contacts_manager_promise} errorElement={<>Omo</>}>
+                  {(manager: { _id: string, url_id: string }[]) => {const managerID = manager.find((m) => m.url_id == contacts.url_id); return <Button variant={'outline'} onClick={() => managerID && downloadVcf(managerID['_id'], console.log)}>Virtual Contact File (.vcf)</Button>}}
+                </Await>
+              </Suspense>
               <Button variant={'outline'} onClick={exportJSON}>
                 JSON (.json)
               </Button>
-              <Button variant={'outline'}>CSV (.csv)</Button>
-              <Button className="bg-green-500 text-white">Excel Document (.xlsx)</Button>
+              <Suspense fallback={<>Loading</>}>
+                <Await resolve={contacts_manager_promise} errorElement={<>Omo</>}>
+                  {(manager: { _id: string, url_id: string }[]) => {const managerID = manager.find((m) => m.url_id == contacts.url_id); return <Button variant={'outline'} onClick={() => managerID && downloadCsv(managerID['_id'], console.log)}>CSV (.csv)</Button>}}
+                </Await>
+              </Suspense>
+              <Suspense fallback={<>Loading</>}>
+                <Await resolve={contacts_manager_promise} errorElement={<>Omo</>}>
+                  {(manager: { _id: string, url_id: string }[]) => {const managerID = manager.find((m) => m.url_id == contacts.url_id); return <Button  className="bg-green-500 text-white" onClick={() => managerID && downloadXlsx(managerID['_id'], console.log)}>Excel Document (.xlsx)</Button>}}
+                </Await>
+              </Suspense>
             </div>
           </div>
         </section>

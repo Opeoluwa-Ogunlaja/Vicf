@@ -1,4 +1,5 @@
 import expressAsyncHandler from 'express-async-handler'
+import { Transform, pipeline, Readable } from 'stream';
 import { contactService, ContactService } from '../services/ContactService'
 import {
   AsyncHandler,
@@ -19,6 +20,9 @@ import { AccessError, NotFoundError, RequestError } from './../lib/utils/AppErro
 import { contactUseCases, ContactUseCases } from '../use cases/ContactUseCases'
 import { z } from 'zod'
 import { sendEventToRoom } from '../lib/utils/socketUtils'
+import { convertJsonToVcf } from '../lib/utils/vcfConverter';
+import { jsonToCsv, jsonToCsvStream } from '../lib/utils/csvConverter';
+import { jsonToExcelStream } from '../lib/utils/xlsxConverter';
 
 export class ContactsController {
   update_contact: AsyncHandler<IContact, any, { contactId: string }> = async (req, res) => {
@@ -203,6 +207,68 @@ export class ContactsController {
 
     const deletedListing = await this.service.deleteContactListing(listingId)
     res.json({ ok: true, data: { ...deletedListing?.toObject() } })
+  }
+
+  stream_vcf: AsyncHandler<{}, {}, { listingId: string }> = async (req, res) => {
+    const listingId = req.params.listingId;
+    const contacts = await this.service.getContactsForListing(listingId, req.user?.id)
+    if(!contacts) throw new RequestError("Invalid Listing ID")
+
+    res.setHeader('Content-Type', 'text/vcard');
+    res.setHeader('Content-Disposition', 'attachment; filename=contacts.vcf');
+
+    const contactStream = Readable.from(contacts);
+
+    const vcfTransform = new Transform({
+      objectMode: true,
+      transform(contact, _, callback) {
+        try {
+          const vcf = convertJsonToVcf(contact) + '\n';
+          callback(null, vcf);
+        } catch (err) {
+          callback(err as Error);
+        }
+      }
+    });
+
+    pipeline(contactStream, vcfTransform, res, (err) => {
+      if (err) {
+        console.error('Pipeline failed', err);
+        res.status(500).end('Streaming failed.');
+      }
+    });
+  }
+
+  stream_csv: AsyncHandler<{}, {}, { listingId: string }> = async (req, res) => {
+    const listingId = req.params.listingId;
+    const contacts = await this.service.getContactsForListing(listingId, req.user?.id)
+    if(!contacts) throw new RequestError("Invalid Listing ID")
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename=contacts.csv');
+
+    pipeline(await jsonToCsvStream(contacts.map((c: any) => c.toObject())), res, (err) => {
+      if (err) {
+        console.error('Pipeline failed', err);
+        res.status(500).end('Streaming failed.');
+      }
+    });
+  }
+
+  stream_xlsx: AsyncHandler<{}, {}, { listingId: string }> = async (req, res) => {
+    const listingId = req.params.listingId;
+    const contacts = await this.service.getContactsForListing(listingId, req.user?.id)
+    if(!contacts) throw new RequestError("Invalid Listing ID")
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=contacts.xlsx');
+
+    pipeline(await jsonToExcelStream(contacts.map((c: any) => c.toObject())), res, (err) => {
+      if (err) {
+        console.error('Pipeline failed', err);
+        res.status(500).end('Streaming failed.');
+      }
+    });
   }
 
   socket_add_contact: SocketHandlerFn<Partial<IContact> & { listingId: string }> = async (
