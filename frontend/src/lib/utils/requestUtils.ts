@@ -340,3 +340,72 @@ export const move_listing_to_organisation = async (listingId: string, organisati
     checkError(error)
   }
 }
+
+export async function downloadVcf(listingId: string, onProgress: (percentage: number) => void) {
+  const response = await axiosInstance.get(`/contacts/${listingId}/download-vcf`, {
+    responseType: 'blob',
+    onDownloadProgress: (event) => {
+      if (event.lengthComputable && onProgress) {
+        const percent = (event.loaded / event.total!) * 100;
+        onProgress(percent);
+      }
+    }
+  });
+
+  const blob = new Blob([response.data], { type: 'text/vcard' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'contacts.vcf';
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+export async function downloadCsv(listingId: string, onProgress: (percentage: number) => void) {
+  const response = await axiosInstance.get(`/contacts/${listingId}/download-csv`, {
+    responseType: 'blob',
+    onDownloadProgress: (event) => {
+      if (event.lengthComputable && onProgress) {
+        const percent = (event.loaded / event.total!) * 100;
+        onProgress(percent);
+      }
+    }
+  });
+
+  const blob = new Blob([response.data], { type: 'text/csv; charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'contacts.csv';
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+export async function downloadXlsx(listingId: string, onProgress: (percentage: number) => void) {
+  const response = await axiosInstance.get(`/contacts/${listingId}/download-xlsx`, {
+    responseType: 'blob',
+    onDownloadProgress: (event) => {
+      if (event.lengthComputable && onProgress) {
+        const percent = (event.loaded / event.total!) * 100;
+        onProgress(percent);
+      }
+    }
+  });
+
+  const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'contacts.xlsx';
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
