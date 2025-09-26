@@ -46,6 +46,10 @@ export class UserService {
     })
   }
 
+  verifyPassword(doc: any, password: string){
+    return doc.isPasswordMatched(password)
+  }
+
   add_contact_group_to_user = async (userId: string, groupId: string, session?: ClientSession) => {
     await this.repository.updateById(
       userId,
