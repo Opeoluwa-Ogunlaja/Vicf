@@ -194,12 +194,14 @@ function rewriteAggregationPipeline(
   });
 }
 
+const ENCRYPTED_FIELDS = Symbol("encryptedFields");
+
 export function encryptedFieldPlugin(schema: Schema, options: EncryptedFieldPluginOptions) {
   const { fields } = options;
 
   // Track all encrypted fields
-  if (!(schema as any).encryptedFields) {
-    (schema as any).encryptedFields = [];
+  if (!(schema as any)[ENCRYPTED_FIELDS]) {
+    (schema as any)[ENCRYPTED_FIELDS] = [];
   }
 
   for (const f of fields) {
@@ -248,7 +250,7 @@ export function encryptedFieldPlugin(schema: Schema, options: EncryptedFieldPlug
     });
 
     // Register for aggregation post-processing
-    (schema as any).encryptedFields.push({ field, hashField, encryptedField });
+    (schema as any)[ENCRYPTED_FIELDS].push({ field, hashField, encryptedField });
   }
 
   /**
@@ -303,7 +305,7 @@ export function encryptedFieldPlugin(schema: Schema, options: EncryptedFieldPlug
    * 📊 Secure aggregate (rewrites $match/$project & decrypts)
    */
   schema.statics.secureAggregate = async function (pipeline: any[]) {
-    const encryptedFields = (this as any).encryptedFields || [];
+    const encryptedFields = (this as any)[ENCRYPTED_FIELDS] || [];
     const rewritten = rewriteAggregationPipeline(pipeline, encryptedFields);
 
     const docs = await this.aggregate(rewritten);
