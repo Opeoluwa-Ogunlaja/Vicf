@@ -188,7 +188,17 @@ export class ContactService {
     const manager = await this.groups_repository.getContactsForGroup(userId, listingId)
     if (!manager) throw new NotFoundError('Contact Group')
 
-    return manager!.contacts
+    return manager!.contacts.map((contact) => {
+      return {
+        ...(contact as any).toObject(),
+        number: contact.number,
+        email: contact.email,
+        numberEncrypted: undefined,
+        numberHash: undefined,
+        emailEncrypted: undefined,
+        emailHash: undefined,
+      }
+    })
   }
 
   async updateManagerInputBackup(listingId: string, backup: Partial<IContact>) {

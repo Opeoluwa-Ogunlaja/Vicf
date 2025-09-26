@@ -1,9 +1,11 @@
 import mongoose, { Model, Schema } from 'mongoose'
 import { IUserDocument } from '../types/'
+import { encryptedFieldPlugin } from '../lib/utils/mongooseEncryptedFieldPlugin'
+import bcrypt from 'bcryptjs'
 
 export type UserModelType = Model<IUserDocument>
 
-const userSchema = new Schema<IUserDocument, UserModelType>({
+const userSchema = new Schema<IUserDocument, UserModelType, { isPasswordMatched: (enteredPassword: string) => void }>({
   name: String,
   email: String,
   password: String,
@@ -25,6 +27,25 @@ const userSchema = new Schema<IUserDocument, UserModelType>({
       'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
   }
 })
+
+userSchema.methods.isPasswordMatched = async function (enteredPassword: string) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
+
+userSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) {
+        next();
+    }
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt)
+});
+
+userSchema.plugin(encryptedFieldPlugin, {fields: [{ field: "email" }]});
+
+// userSchema.pre('findOne', function(next){
+//   console.log(this.getQuery())
+//   next()
+// })
 
 const User = mongoose.model('User', userSchema)
 

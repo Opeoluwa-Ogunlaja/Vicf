@@ -54,8 +54,8 @@ class UserController {
       throw new RequestError('Invalid Credentials')
     }
 
-    if (password !== userExists.password) {
-      throw new RequestError('Invalid User information')
+    if (!(await this.service.verifyPassword(userExists, password))) {
+      throw new RequestError('Invalid User credentials')
     }
 
     const refreshToken: string = generateToken(userExists?.id as string)

@@ -247,7 +247,7 @@ export class ContactsController {
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename=contacts.csv');
 
-    pipeline(await jsonToCsvStream(contacts.map((c: any) => c.toObject())), res, (err) => {
+    pipeline(await jsonToCsvStream(contacts), res, (err) => {
       if (err) {
         console.error('Pipeline failed', err);
         res.status(500).end('Streaming failed.');
@@ -263,7 +263,7 @@ export class ContactsController {
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename=contacts.xlsx');
 
-    pipeline(await jsonToExcelStream(contacts.map((c: any) => c.toObject())), res, (err) => {
+    pipeline(await jsonToExcelStream(contacts), res, (err) => {
       if (err) {
         console.error('Pipeline failed', err);
         res.status(500).end('Streaming failed.');

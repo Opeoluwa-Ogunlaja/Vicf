@@ -1,5 +1,6 @@
 import { Schema, model, Model } from 'mongoose'
 import { IContactDocument } from '../types/'
+import { encryptedFieldPlugin } from '../lib/utils/mongooseEncryptedFieldPlugin'
 
 export type ContactModelType = Model<IContactDocument>
 
@@ -38,6 +39,8 @@ const contactSchema = new Schema<IContactDocument>(
     }
   }
 )
+
+contactSchema.plugin(encryptedFieldPlugin, { fields: [{field: "email"}, {field: "number"}] });
 
 const Contact = model<IContactDocument, ContactModelType>('Contact', contactSchema)
 
