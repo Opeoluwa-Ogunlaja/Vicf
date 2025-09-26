@@ -1,7 +1,7 @@
 import mongoose, { Model, Schema } from 'mongoose'
 import { IUserDocument } from '../types/'
 import { encryptedFieldPlugin } from '../lib/utils/mongooseEncryptedFieldPlugin'
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcrypt'
 
 export type UserModelType = Model<IUserDocument>
 
