@@ -13,6 +13,9 @@ export default {
   			DEFAULT: 'axiforma',
   			axiforma: 'axiforma'
   		},
+		letterSpacing: {
+			"heading": "-0.03em"
+		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

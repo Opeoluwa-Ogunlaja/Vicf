@@ -66,8 +66,8 @@ const OrganisationInvite = () => {
               <div>
                 <h4 className='text-primary'>Creator</h4>
                 <div className='flex items-start gap-4 mt-2'>
-                  <img className='inline-block rounded-full w-10 aspect-square shadow-inner border-neutral-50 border-2' src={invite_organisation.creator.profile_photo} alt={invite_organisation.creator.name.split(' ')[0]} />
-                  <p className='text-neutral-500 font-medium text-md'>{invite_organisation.creator.name}</p>
+                  <img className='inline-block rounded-full w-10 aspect-square shadow-inner border-neutral-50 border-2' src={invite_organisation.creator?.profile_photo} alt={invite_organisation.creator?.name.split(' ')[0]} />
+                  <p className='text-neutral-500 font-medium text-md'>{invite_organisation.creator?.name}</p>
                 </div>
               </div>
             </div>

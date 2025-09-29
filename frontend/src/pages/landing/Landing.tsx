@@ -1,20 +1,14 @@
-import { TaskQueue } from '@/lib/taskQueue'
-import { wait } from '@/lib/utils/promiseUtils'
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
+import NavigationBar from './NavigationBar'
+import HeroSection from './HeroSection'
+import ButtressSection from './ButtressSection'
 
 const Landing = () => {
-  const queue = useMemo(() => {
-    const taskQueue = new TaskQueue(3)
-    return taskQueue
-  }, [])
-
-  const hello = () => wait(2000, 'hello').then(res => console.log(res, queue.paused))
   return (
-    <div className="flex gap-4">
-      Landing
-      <button onClick={() => queue.runTask(hello)}>QueueTask</button>
-      <button onClick={() => queue.pause()}>Pause</button>
-      <button onClick={() => queue.resume()}>Resume</button>
+    <div className="grid gap-8 bg-[#FEFEFF]">
+      <NavigationBar />
+      <HeroSection />
+      <ButtressSection />
     </div>
   )
 }

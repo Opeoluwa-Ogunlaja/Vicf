@@ -10,7 +10,7 @@ import { convertSlug } from '../lib/utils/convertSlug'
 
 export class ContactService {
   // --- TEMPLATE: Add ContactService Methods ---
-  async update_contact(contactId: string, data: Partial<IContact>) {
+  async update_contact(contactId: string, data: UpdateQuery<IContact>) {
     // Update a contact by ID
     return await this.contacts_repository.update_contact(contactId, data)
   }
@@ -19,9 +19,9 @@ export class ContactService {
     return await this.contacts_repository.updateById(contactId, { locked: false, $unset: { locked_by: 1 } })
   }
 
-  async get_contact(contactId: string) {
+  async getContactById(contactId: string) {
     // TODO: Implement get contact by id
-    return null
+    return await this.contacts_repository.findById(contactId)
   }
   // --- END TEMPLATE ---
   groups_repository: ContactGroupsRepository

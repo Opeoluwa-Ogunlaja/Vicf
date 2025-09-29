@@ -77,7 +77,7 @@ const ContactsTable = memo(
               return (
                 <TableRow
                   className={clsx('transition-colors hover:bg-neutral-100', {
-                    ['outline']: contact.locked
+                    ['outline']: contact.locked && contactManager?.organisation
                   })}
                   style={{
                     'outlineColor': lockedColor!

@@ -360,14 +360,16 @@ export class ContactsController {
     socket,
     clients
   ) => {
-    const user = clients.get(socket.id)?.user
-    const { listingId, contactId } = message
-    if (!user) return
-    // Lock the contact
-    const updatedContact = await this.service.update_contact(contactId, { locked: true, locked_by: (user!._id as string).toString() })
+    const user = clients.get(socket.id)?.user;
+    const { listingId, contactId } = message;
+    if (!user) return;
+    // Use atomic update
+    await this.service.update_contact(contactId, { $set: { locked: true, locked_by: user.id } });
+    // Fetch fresh contact after update
+    const freshContact = await this.service.getContactById(contactId);
     // Notify all clients in the room
-    socket.to(`${listingId}-editing-room`).emit('contact-locked', { contact: updatedContact })
-    socket.emit('contact-locked', { contact: updatedContact })
+    socket.to(`${listingId}-editing-room`).emit('contact_locked', { contact: freshContact });
+    socket.emit('contact_locked', { contact: freshContact });
   }
 
   socket_unlock_contact: SocketHandlerFn<Partial<IContact> & { listingId: string, contactId: string }> = async (
@@ -375,14 +377,16 @@ export class ContactsController {
     socket,
     clients
   ) => {
-    const user = clients.get(socket.id)?.user
-    const { listingId, contactId } = message
-    if (!user) return
-    // Unlock the contact
-    const updatedContact = await this.service.unlock_contact(contactId)
+    const user = clients.get(socket.id)?.user;
+    const { listingId, contactId } = message;
+    if (!user) return;
+    // Use atomic update
+    await this.service.update_contact(contactId, { $set: { locked: false, locked_by: null } });
+    // Fetch fresh contact after update
+    const freshContact = await this.service.getContactById(contactId);
     // Notify all clients in the room
-    socket.to(`${listingId}-editing-room`).emit('contact-unlocked', { contact: updatedContact })
-    socket.emit('contact-unlocked', { contact: updatedContact })
+    socket.to(`${listingId}-editing-room`).emit('contact_unlocked', { contact: freshContact });
+    socket.emit('contact_unlocked', { contact: freshContact });
   }
 }
 

@@ -2,7 +2,7 @@ import { frontendUrl, GClientId, GSecret } from '../../config'
 import jwt from 'jsonwebtoken'
 import jwksClient from 'jwks-rsa'
 
-import { OAuth2Client, TokenPayload } from 'google-auth-library'
+import { OAuth2Client } from 'google-auth-library'
 import { RequestError } from './AppErrors'
 
 export type GoogleUserResponse = Partial<{
@@ -31,6 +31,7 @@ export async function verifyGoogleToken(code: string) {
     ;(client as any).scope = [
       'https://www.googleapis.com/auth/userinfo.profile',
       'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/contacts',
       'openid'
     ]
 

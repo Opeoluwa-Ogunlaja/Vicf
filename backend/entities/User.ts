@@ -25,7 +25,8 @@ const userSchema = new Schema<IUserDocument, UserModelType, { isPasswordMatched:
     type: String,
     default:
       'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
-  }
+  },
+  g_refreshToken: String
 })
 
 userSchema.methods.isPasswordMatched = async function (enteredPassword: string) {
@@ -43,7 +44,7 @@ userSchema.pre("save", async function (next) {
     }
 });
 
-userSchema.plugin(encryptedFieldPlugin, {fields: [{ field: "email" }]});
+userSchema.plugin(encryptedFieldPlugin, {fields: [{ field: "email" }, { field: "g_refreshToken" }]});
 
 // userSchema.pre('findOne', function(next){
 //   console.log(this.getQuery())
