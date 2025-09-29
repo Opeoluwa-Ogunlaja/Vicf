@@ -33,7 +33,7 @@ import { useContactsUpdate } from '@/hooks/useContactsUpdate'
 import { useSocketActions } from '@/hooks/useSocketActions'
 import Loader from '../ui/loader'
 
-const EditButton = memo((props: { contact: Partial<IContact>; listing_id: string, disabled?: boolean }) => {
+const EditButton = memo((props: { contact: Partial<IContact>; listing_id: string, disabled?: boolean, organisational?: boolean }) => {
   const { contact } = props
   const formHook = useForm<EditContactFormType>({
     resolver: zodResolver(EditContactFormSchema),
@@ -50,10 +50,12 @@ const EditButton = memo((props: { contact: Partial<IContact>; listing_id: string
   // Lock on open, unlock on close
   const handleDialogChange = (open: boolean) => {
     toggle()
-    if (open) {
-      sendMessage({ listingId, contactId }, 'lock-contact')
-    } else {
-      sendMessage({ listingId, contactId }, 'unlock-contact')
+    if(props?.organisational){
+      if (open) {
+        sendMessage({ listingId, contactId }, 'lock-contact')
+      } else {
+        sendMessage({ listingId, contactId }, 'unlock-contact')
+      }
     }
   }
 

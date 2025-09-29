@@ -10,7 +10,7 @@ import { useMutation } from '@tanstack/react-query'
 import Loader from '../ui/loader'
 import { useSocketActions } from '@/hooks/useSocketActions'
 
-const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string, disabled?: boolean }> = props => {
+const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string, disabled?: boolean, organisational?: boolean }> = props => {
   const { _id, number } = props.contact
   const listing_id = props.listing_id
   const [open, toggle] = useToggle(false)
@@ -21,11 +21,12 @@ const DeleteButton: FC<{ contact: Partial<IContact>; listing_id: string, disable
   
   const handlePopoverChange = (open: boolean) => {
     toggle()
-    console.log(props.listing_id, _id)
-    if (open) {
-      sendMessage({ listingId: props.listing_id, contactId: _id }, 'lock-contact')
-    } else {
-      sendMessage({ listingId: props.listing_id, contactId: _id }, 'unlock-contact')
+    if (props?.organisational) {
+      if (open) {
+        sendMessage({ listingId: props.listing_id, contactId: _id }, 'lock-contact')
+      } else {
+        sendMessage({ listingId: props.listing_id, contactId: _id }, 'unlock-contact')
+      }
     }
   }
 

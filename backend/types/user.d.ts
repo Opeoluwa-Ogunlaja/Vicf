@@ -9,6 +9,7 @@ export interface IUser {
   contact_groupings: RefType[]
   refreshToken: string
   profile_photo: string
+  g_refreshToken: string
 }
 
 export interface IUserDocument extends IUser, Document {}

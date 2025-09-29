@@ -33,8 +33,15 @@ export class OrganisationService {
   }
 
   async create_organisation(organisation: Partial<IOrganisation>, userId: string) {
-    return await this.repository.create({...organisation, members: [userId], creator: userId} as IOrganisation)
-  }
+    // Ensure creator is added to members array and as creator
+    let members = Array.isArray(organisation.members) ? [...organisation.members] : [];
+    if (!members.includes(userId)) members.push(userId);
+    return await this.repository.create({
+      ...organisation,
+      members,
+      creator: userId
+    } as IOrganisation);
+}
 
   get_organisation: typeof organisationRepository.findOne = async query => {
     return this.repository.findOne(query)
