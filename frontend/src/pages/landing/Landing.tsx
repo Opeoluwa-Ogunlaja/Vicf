@@ -2,6 +2,7 @@ import { memo } from 'react'
 import NavigationBar from './NavigationBar'
 import HeroSection from './HeroSection'
 import ButtressSection from './ButtressSection'
+import FeaturesSection from './FeaturesSection'
 
 const Landing = () => {
   return (
@@ -9,6 +10,7 @@ const Landing = () => {
       <NavigationBar />
       <HeroSection />
       <ButtressSection />
+      <FeaturesSection />
     </div>
   )
 }
