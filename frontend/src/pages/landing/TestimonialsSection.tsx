@@ -1,4 +1,5 @@
 import { ArrowLeftIcon, ArrowRightIcon } from '@/assets/icons';
+import { StarsIllustration } from '@/assets/illustrations';
 import clsx from 'clsx';
 import { FC, memo, ReactEventHandler } from 'react'
 import Slider from 'react-slick'
@@ -50,7 +51,10 @@ const TestimonialsSection = () => {
     }
   ]
   return (
-    <section className='mt-16'>
+    <section className='mt-16 relative isolate'>
+      <div className='absolute -left-4 -translate-y-1/2 -z-10'>
+        <StarsIllustration className='w-[200px] xl:w-[400px]'/>
+      </div>
       <h1 className="text-xl font-bold text-center">Testimonials</h1>
       <div
         className="slider-container relative mx-auto self-stretch mt-4 max-md:max-w-[340px] max-w-[450px]"
@@ -59,18 +63,21 @@ const TestimonialsSection = () => {
           {data.map(feature => {
             return (
               <div key={ feature.name }>
-                <div className="grid grid-flow-row items-center max-md:gap-2 gap-4">
+                <div className="grid grid-flow-row items-center max-md:gap-2 gap-4 h-[250px]">
                   <img loading='lazy' src={feature.img} className='shadow-inner !w-[80px] mx-auto aspect-square rounded-full' alt={feature.name} />
                   <div className="flex flex-col">
-                    <h3 className="text-lg font-bold text-center">{feature.name}</h3>
+                    <h3 className="text-lg font-bold text-center text-neutral-600">{feature.name}</h3>
                     <h4 className="text-sm font-medium text-center text-neutral-400">{feature.position}</h4>
-                    <p className="p-1 testimonial-quote text-center mx-auto mt-2 font-playfair">{feature.quo}</p>
+                    <p className="p-1 testimonial-quote text-center mx-auto mt-2 font-playfair max-w-[28ch]">{feature.quo}</p>
                   </div>
                 </div>
               </div>
             )
           })}
         </Slider>
+      </div>
+       <div className='absolute -right-4 -bottom-24 -translate-y-1/2 -z-10'>
+        <StarsIllustration className='w-[200px] xl:w-[400px]'/>
       </div>
     </section>
   )

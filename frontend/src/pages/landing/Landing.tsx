@@ -11,7 +11,7 @@ import CajoleSection from './CajoleSection'
 const Landing = () => {
   return (
     <>
-    <main className="grid gap-8 bg-[#FEFEFF]">
+    <main className="grid gap-8 overflow-x-hidden bg-[#FEFEFF]">
       <NavigationBar />
       <HeroSection />
       <ButtressSection />
