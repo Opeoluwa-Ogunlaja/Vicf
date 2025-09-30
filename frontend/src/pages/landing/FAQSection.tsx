@@ -57,7 +57,7 @@ const FAQSection = () => {
   return (
     <section className='mt-24 px-16'>
       <h1 className="text-xl font-bold text-center">Frequently Asked Questions</h1>
-      <div className="mx-auto md:max-w-[60vw]">
+      <div className="mx-auto mt-8 md:max-w-[60vw]">
         <Accordion
         type="single"
       collapsible>

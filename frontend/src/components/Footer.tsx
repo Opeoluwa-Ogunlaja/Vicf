@@ -2,8 +2,10 @@ import { FC } from 'react'
 import { FacebookIcon, InstagramIcon, VicfIcon } from '@/assets/icons'
 import { NavigationLink } from './ui/navigation-link'
 import { twMerge } from 'tailwind-merge'
+import { useUser } from '@/hooks/useUser'
 
 const Footer: FC<{ className?: string }> = ({ className }) => {
+  const { loggedIn } = useUser()
   return (
     <footer className={twMerge("app-footer mt-12 relative flex items-center justify-center self-end bg-secondary/5 px-14 pb-24 pt-8 mix-blend-exclusion max-md:flex-col max-md:gap-8 max-sm:px-10", className)}>
       <h2 className="inline-block text-6xl max-md:text-4xl">
@@ -14,9 +16,9 @@ const Footer: FC<{ className?: string }> = ({ className }) => {
           <li>
             <NavigationLink to="/home">Home</NavigationLink>
           </li>
-          <li>
+          {loggedIn && <li>
             <NavigationLink to="/organisations">Organisations</NavigationLink>
-          </li>
+          </li>}
           <li>
             <NavigationLink to="/save">Save Contacts</NavigationLink>
           </li>

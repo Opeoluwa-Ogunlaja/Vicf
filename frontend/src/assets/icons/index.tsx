@@ -6,6 +6,8 @@ import VicfIcon from './Vicf.svg?react'
 import BellIcon from './bell.svg?react'
 import SettingsIcon from './settings.svg?react'
 import ChevronDownIcon from './chevron-down.svg?react'
+import ArrowLeftIcon from './arrow-left.svg?react'
+import ArrowRightIcon from './arrow-right.svg?react'
 import PhonePlusIcon from './phone-plus.svg?react'
 import UserPlusIcon from './user-plus.svg?react'
 import HomeSmileIcon from './home-smile.svg?react'
@@ -39,5 +41,7 @@ export {
   DotsHorizontalIcon,
   PlusIcon,
   HomeSmileIcon,
-  UsersOrgIcon
+  UsersOrgIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon
 }
