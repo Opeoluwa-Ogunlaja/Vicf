@@ -1,9 +1,11 @@
+import { FC } from 'react'
 import { FacebookIcon, InstagramIcon, VicfIcon } from '@/assets/icons'
 import { NavigationLink } from './ui/navigation-link'
+import { twMerge } from 'tailwind-merge'
 
-const Footer = () => {
+const Footer: FC<{ className?: string }> = ({ className }) => {
   return (
-    <footer className="app-footer relative mt-12 flex items-center justify-center self-end bg-secondary/5 px-14 pb-24 pt-8 mix-blend-exclusion max-md:flex-col max-md:gap-8 max-sm:px-10">
+    <footer className={twMerge("app-footer mt-12 relative flex items-center justify-center self-end bg-secondary/5 px-14 pb-24 pt-8 mix-blend-exclusion max-md:flex-col max-md:gap-8 max-sm:px-10", className)}>
       <h2 className="inline-block text-6xl max-md:text-4xl">
         <VicfIcon width={'1em'} />
       </h2>

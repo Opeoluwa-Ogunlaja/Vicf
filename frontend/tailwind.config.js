@@ -11,7 +11,8 @@ export default {
   		},
   		fontFamily: {
   			DEFAULT: 'axiforma',
-  			axiforma: 'axiforma'
+  			axiforma: 'axiforma',
+			playfair: 'Playfair Display'
   		},
 		letterSpacing: {
 			"heading": "-0.03em"
