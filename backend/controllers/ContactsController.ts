@@ -23,6 +23,7 @@ import { sendEventToRoom } from '../lib/utils/socketUtils'
 import { convertJsonToVcf } from '../lib/utils/vcfConverter';
 import { jsonToCsv, jsonToCsvStream } from '../lib/utils/csvConverter';
 import { jsonToExcelStream } from '../lib/utils/xlsxConverter';
+import { filteredContacts } from '../lib/utils';
 
 export class ContactsController {
   update_contact: AsyncHandler<IContact, any, { contactId: string }> = async (req, res) => {
@@ -217,7 +218,7 @@ export class ContactsController {
     res.setHeader('Content-Type', 'text/vcard');
     res.setHeader('Content-Disposition', 'attachment; filename=contacts.vcf');
 
-    const contactStream = Readable.from(contacts);
+    const contactStream = Readable.from(filteredContacts(contacts));
 
     const vcfTransform = new Transform({
       objectMode: true,
@@ -247,7 +248,7 @@ export class ContactsController {
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename=contacts.csv');
 
-    pipeline(await jsonToCsvStream(contacts), res, (err) => {
+    pipeline(await jsonToCsvStream(filteredContacts(contacts)), res, (err) => {
       if (err) {
         console.error('Pipeline failed', err);
         res.status(500).end('Streaming failed.');
@@ -263,7 +264,7 @@ export class ContactsController {
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename=contacts.xlsx');
 
-    pipeline(await jsonToExcelStream(contacts), res, (err) => {
+    pipeline(await jsonToExcelStream(filteredContacts(contacts)), res, (err) => {
       if (err) {
         console.error('Pipeline failed', err);
         res.status(500).end('Streaming failed.');
