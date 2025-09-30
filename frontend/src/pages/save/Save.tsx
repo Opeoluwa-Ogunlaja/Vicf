@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button'
 import LoadingScreen from '@/components/LoadingScreen'
 import { Link } from 'react-router-dom'
 import { downloadCsv, downloadVcf, downloadXlsx } from '@/lib/utils/requestUtils'
+import { filteredContacts } from '@/lib/utils'
 
 const SaveLayout: FC<{ name?: string }> = memo(() => {
   const contacts = useContacts()
@@ -29,7 +30,7 @@ const SaveLayout: FC<{ name?: string }> = memo(() => {
 
   const exportJSON = async () => {
     try {
-      const all_contacts_export = contacts.contacts
+      const all_contacts_export = filteredContacts(contacts.contacts)
       const json_contacts = JSON.stringify(all_contacts_export, null, 2)
       const blob = new Blob([json_contacts], { type: 'application/json' })
       const url = URL.createObjectURL(blob)

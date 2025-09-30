@@ -13,7 +13,7 @@ export const pipe =
 
 export const abbreviateName = (name: string) => name.split(" ").map((word) => word[0].toUpperCase()).join('')
 
-export const filteredContacts = (contacts: Partial<IContact>[]): Pick<IContact, '_id' | 'additional_information' | 'email' | 'name' | 'time_added' | 'time_updated'>[] => {
+export const filteredContacts = (contacts: Partial<IContact>[]): ({ tel: string } & Pick<IContact, '_id' | 'additional_information' | 'email' | 'name' | 'time_added' | 'time_updated'>)[] => {
   return contacts.map(contact => {
     return {
       _id: contact._id!,
@@ -21,7 +21,8 @@ export const filteredContacts = (contacts: Partial<IContact>[]): Pick<IContact, 
       name: contact.overwrite_name ?? contact.name!,
       time_added: contact.time_added!,
       email: contact.email!,
-      time_updated: contact.time_updated!
+      time_updated: contact.time_updated!,
+      tel: contact.number!
     }
   })
 }
