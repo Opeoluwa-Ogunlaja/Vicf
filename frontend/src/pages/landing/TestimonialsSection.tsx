@@ -1,5 +1,27 @@
+import { ArrowLeftIcon, ArrowRightIcon } from '@/assets/icons';
+import clsx from 'clsx';
+import { FC, memo, ReactEventHandler } from 'react'
 import Slider from 'react-slick'
 
+const PrevArrow: FC<{ className?: string, style?: Record<string, string>, onClick?: ReactEventHandler<HTMLButtonElement>}>  = memo(({ className, style, onClick }) => (
+  <button
+    className={clsx("absolute left-4 top-1/2 -translate-y-1/2 z-10 transition text-neutral-500 hover:text-neutral-600", className)}
+    onClick={onClick}
+    style={{ ...style }}
+  >
+    <ArrowLeftIcon />
+  </button>
+));
+
+const NextArrow: FC<{ className?: string, style?: Record<string, string>, onClick?: ReactEventHandler<HTMLButtonElement>}>  = memo(({ className, style, onClick }) => (
+  <button
+    className={clsx("absolute right-4 top-1/2 -translate-y-1/2 z-10 transition text-neutral-500 hover:text-neutral-600", className)}
+    onClick={onClick}
+    style={{ ...style }}
+  >
+    <ArrowRightIcon />
+  </button>
+));
 
 const TestimonialsSection = () => {
   const settings = {
@@ -9,20 +31,22 @@ const TestimonialsSection = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplaySpeed: 3000,
+    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />,
   }
 
   const data = [
     {
       img: '/assets/offline-first.png',
-      name: 'John Doe',
-      position: "Sales Manager",
-      quo: "Keep your contact list updated even when you're offline. Perfect for solo travelers, field workers, and offline-first use cases."
+      name: 'Opeoluwa Ogunlaja',
+      position: "Fullstack Developer",
+      quo: "So useful for quick networking. A gem!"
     },
     {
       img: '/assets/sync-online.png',
-      name: 'Jane Doe',
-      position: "Sales Manager",
-      quo: "Syncs securely in the background as soon as you're connected without any hassle."
+      name: 'Samuel',
+      position: "Graphics Designer",
+      quo: "This is so useful for my church. We use it to manage first timer lists efficiently"
     }
   ]
   return (
