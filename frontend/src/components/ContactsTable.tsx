@@ -108,8 +108,8 @@ const ContactsTable = memo(
                     </Popover>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-4 text-center">
-                      <EditButton listing_id={contactManager?._id || ''} contact={contact} disabled={contact.locked}/>
-                      <DeleteButton listing_id={contactManager?._id || ''} contact={contact} disabled={contact.locked}/>
+                      <EditButton listing_id={contactManager?._id || ''} contact={contact} disabled={contact.locked} organisational={Boolean(contactManager?.organisation)}/>
+                      <DeleteButton listing_id={contactManager?._id || ''} contact={contact} disabled={contact.locked} organisational={Boolean(contactManager?.organisation)}/>
                   </TableCell>
                 </TableRow>
               )
