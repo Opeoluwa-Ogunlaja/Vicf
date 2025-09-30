@@ -64,9 +64,9 @@ const NavigationBar = () => {
       <ul className="flex items-center gap-6 max-lg:gap-4">
         <li className='inline-grid stacker'>
           {contactManager?.users_editing?.slice(0, 2).map((editor, i) => {
-            return <div  key={editor._id} title={editor.name} className={`text-white aspect-square w-16 grid place-content-center  rounded-full font-bold p-2 border-white shadow border text-2xl`} style={{ marginLeft: `${-i}rem`, backgroundColor: editor?.color || 'hsl(var(--muted))' }}>{abbreviateName(editor.name)}</div>
+            return <div  key={editor._id} title={editor.name} className={`text-white aspect-square w-10 grid place-content-center  rounded-full font-medium border-white shadow border`} style={{ marginLeft: `${-i}rem`, backgroundColor: editor?.color || 'hsl(var(--muted))' }}>{abbreviateName(editor.name)}</div>
           })}
-          {contactManager?.users_editing?.length && contactManager?.users_editing?.length > 2 ? <div className={`text-white aspect-square w-16 grid place-content-center  rounded-full font-bold p-2 bg-muted border-white shadow border text-2xl`} style={{ marginLeft: `-3rem`}}>+{contactManager?.users_editing?.length - 2}</div> : null}
+          {contactManager?.users_editing?.length && contactManager?.users_editing?.length > 2 ? <div className={`text-white aspect-square w-10 grid place-content-center  rounded-full font-bold bg-muted border-white shadow border`} style={{ marginLeft: `-3rem`}}>+{contactManager?.users_editing?.length - 2}</div> : null}
         </li>
         <li className="inline-flex max-md:hidden">
           <NavigationLink

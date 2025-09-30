@@ -80,14 +80,14 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   useSocketEvent('add-contact', (contact: any) => {
-      queryClient.setQueryData(['contacts', url_id], (formerProps: IContact[]) => {
-        return [...formerProps, contact]
-      })
-      updateContactCount(contactManager?._id as string)
-      return queryClient.getQueryData(['contacts', url_id]) as contactsArray
-    },
-    [url_id, contactManager]
-  )
+    queryClient.setQueryData(['contacts', url_id], (formerProps: IContact[]) => {
+      // Prevent duplicate contacts by _id
+      if (formerProps.some(c => c._id === contact._id)) return formerProps;
+      return [...formerProps, contact];
+    });
+    updateContactCount(contactManager?._id as string);
+    return queryClient.getQueryData(['contacts', url_id]) as contactsArray;
+  }, [url_id, contactManager]);
 
   
 
