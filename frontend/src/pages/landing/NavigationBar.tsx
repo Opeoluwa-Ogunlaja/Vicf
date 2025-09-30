@@ -2,10 +2,11 @@ import { VicfIcon } from '@/assets/icons'
 import NavigationCard from '@/components/NavigationCard'
 import { Button } from '@/components/ui/button'
 import { useUser } from '@/hooks/useUser'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const NavigationBar = () => {
   const { loggedIn } = useUser()
+  const navigate = useNavigate()
     
 return <header className="main-navigation relative w-full h-max border-b border-neutral-50 px-16 max-md:px-8 max-sm:px-3 bg-white drop-shadow-sm">
       <div className="flex items-center justify-between self-start py-6">
@@ -19,7 +20,7 @@ return <header className="main-navigation relative w-full h-max border-b border-
           <ul className="flex items-center gap-6 max-lg:gap-4">
             <li>
               {!loggedIn ? 
-               <Button variant="secondary" className="mt-2 w-fit px-12 py-5 max-md:mx-auto max-md:justify-self-center">Get Started</Button>
+               <Button variant="secondary" onClick={() => navigate("/auth")} className="mt-2 w-fit px-12 py-5 max-md:mx-auto max-md:justify-self-center">Get Started</Button>
                 :
                <NavigationCard />
               }  
