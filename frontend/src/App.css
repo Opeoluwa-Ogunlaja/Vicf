@@ -12,6 +12,13 @@
     min-height: 100dvh;
   }
 
+  .playfair-display-ita {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
   img{
     display: inline-blockck;
   }
@@ -110,6 +117,33 @@
     inset: 0;
     transition: all 0.3s;
   }
+
+  .testimonial-quote{
+    position: relative;
+    display: grid;
+  }
+
+  .testimonial-quote::before, .testimonial-quote::after{
+    position: absolute;
+    font-size: 28px;
+    width: fit-content;
+    height: fit-content; 
+    color: black;
+  }
+
+  .testimonial-quote::before{
+    align-self: flex-start;
+    content: "\"";
+    margin-top: -1rem;
+  }
+
+  .testimonial-quote::after{
+    right: 4px;
+    bottom: -4px;
+    content: "\"";
+    rotate: 180deg;
+  }
+
 
   .button-component:hover::before {
     filter: brightness(0.9) contrast(1.2);
