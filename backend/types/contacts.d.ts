@@ -11,6 +11,8 @@ export interface IContact {
   locked: boolean
   locked_by: RefType
   last_updated_by: RefType
+  time_added: Date
+  time_updated: Date
 }
 
 export interface IContactDocument extends IContact, Document {}
