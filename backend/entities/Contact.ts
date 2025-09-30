@@ -36,11 +36,17 @@ const contactSchema = new Schema<IContactDocument>(
     timestamps: {
       createdAt: 'time_added',
       updatedAt: 'time_modified'
+    },
+    toObject: {
+      virtuals: true
+    },
+    toJSON: {
+      virtuals: true
     }
   }
 )
 
-contactSchema.plugin(encryptedFieldPlugin, { fields: [{field: "email"}, {field: "number"}] });
+contactSchema.plugin(encryptedFieldPlugin, { fields: [{ field: 'email' }, { field: 'number' }] })
 
 const Contact = model<IContactDocument, ContactModelType>('Contact', contactSchema)
 

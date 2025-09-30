@@ -364,12 +364,12 @@ export class ContactsController {
     const { listingId, contactId } = message;
     if (!user) return;
     // Use atomic update
-    await this.service.update_contact(contactId, { $set: { locked: true, locked_by: user.id } });
+    await this.service.update_contact(contactId, { $set: { locked: true, locked_by: user._id } });
     // Fetch fresh contact after update
     const freshContact = await this.service.getContactById(contactId);
     // Notify all clients in the room
-    socket.to(`${listingId}-editing-room`).emit('contact_locked', { contact: freshContact });
-    socket.emit('contact_locked', { contact: freshContact });
+    socket.to(`${listingId}-editing-room`).emit('contact-locked', { contact: freshContact });
+    socket.emit('contact-locked', { contact: freshContact });
   }
 
   socket_unlock_contact: SocketHandlerFn<Partial<IContact> & { listingId: string, contactId: string }> = async (
@@ -385,8 +385,8 @@ export class ContactsController {
     // Fetch fresh contact after update
     const freshContact = await this.service.getContactById(contactId);
     // Notify all clients in the room
-    socket.to(`${listingId}-editing-room`).emit('contact_unlocked', { contact: freshContact });
-    socket.emit('contact_unlocked', { contact: freshContact });
+    socket.to(`${listingId}-editing-room`).emit('contact-unlocked', { contact: freshContact });
+    socket.emit('contact-unlocked', { contact: freshContact });
   }
 }
 
