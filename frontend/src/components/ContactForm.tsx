@@ -88,7 +88,7 @@ const ContactForm = () => {
 
   useEffect(() => {
     return () => {
-      if(mirrorCanSendMessages.current && mirrorContactManagerId.current){
+      if(mirrorCanSendMessages.current && mirrorContactManagerId.current && contactManager?.organisation){
         sendMessage({ listingId: mirrorContactManagerId.current }, 'not-editing')
         has_set_editing.current = false
       }

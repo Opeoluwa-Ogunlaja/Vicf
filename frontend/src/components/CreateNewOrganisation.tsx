@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { Button } from './ui/button'
 import { cx } from 'class-variance-authority'
 import Loader from './ui/loader'
@@ -23,7 +23,7 @@ import {
 } from './ui/form'
 import { Input } from './ui/input'
 import { useUser } from '@/hooks/useUser'
-import { ClipboardIcon, PlusIcon } from '@radix-ui/react-icons'
+import { CheckIcon, ClipboardIcon, PlusIcon } from '@radix-ui/react-icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { CreateOrganisationSchema, CreateOrganisationType } from '@/lib/utils/form-schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -34,6 +34,7 @@ import { wait } from '@/lib/utils/promiseUtils'
 const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
   const [isProcessing] = useToggle(false)
   const [open, setOpen] = useState(false)
+  const [ copied, setCopied ] = useState<boolean>(false)
 
   const { user } = useUser()
 
@@ -45,22 +46,29 @@ const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
   })
   const queryClient = useQueryClient()
   const [success, setSuccess] = useState<boolean>(false)
+  const invitationCodeRef = useRef<string | null>(null)
   const createOrganisationMutation = useMutation({
     mutationFn: (data: { name: string }) => createOrganisation(data.name),
-    mutationKey: ['organisations', 'creation'],
-    onSuccess(data) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      queryClient.setQueryData(['organisations', user?._id], (prevContent: any) => {
-        return [...prevContent, data]
-      })
-    }
+    mutationKey: ['organisations', 'creation']
   })
   const { isSubmitting, errors } = formHook.formState
-  const [view, setView] = useState<'login' | 'success'>('login')
+  const [view, setView] = useState<'creation' | 'success'>('creation')
 
   const onSubmit: SubmitHandler<CreateOrganisationType> = async data => {
     try {
-      await createOrganisationMutation.mutateAsync({ name: data.name })
+      await createOrganisationMutation.mutateAsync(
+        { name: data.name },
+        {
+          onSuccess(data) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            queryClient.setQueryData(['organisations', user?._id], (prevContent: any) => {
+              return [...prevContent, data]
+            })
+
+            invitationCodeRef.current = data.inviteCode
+          }
+        }
+      )
       setSuccess(true)
       await wait(800)
       setView('success')
@@ -70,7 +78,14 @@ const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
   }
 
   const handleCopyLink = () => {
-    navigator.clipboard.write(createOrganisationMutation.data.inviteCode)
+    const type = "text/plain";
+    const clipboardItemData = {
+      [type]: `https://vicf.onrender.com/organisations/invitation/${invitationCodeRef.current}`,
+    };
+    const clipboardItem = new ClipboardItem(clipboardItemData);
+    navigator.clipboard.write([clipboardItem]).then(() => {
+      setCopied(true)
+    })
   }
 
   return (
@@ -90,7 +105,7 @@ const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
         </DialogHeader>
         <Form {...formHook}>
           <form onSubmit={formHook.handleSubmit(onSubmit)}>
-            {view == 'login' ? (
+            {view == 'creation' ? (
               <div className="flex flex-col gap-2">
                 {errors.root?.message && (
                   <div className="-mt-2 mb-2 bg-red-50 py-2 text-center text-sm font-medium text-destructive">
@@ -99,7 +114,7 @@ const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
                 )}
                 {success && (
                   <div className="-mt-2 mb-2 bg-green-50 py-2 text-center text-sm font-medium text-accent">
-                    Login successful
+                    Organisation created successfully
                   </div>
                 )}
                 <section className="grid grid-cols-2 max-md:grid-cols-1">
@@ -136,11 +151,11 @@ const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
                       }}
                     >
                       <button className="inline-block overflow-hidden text-ellipsis rounded-md bg-neutral-200 px-3 py-2">
-                        {createOrganisationMutation.data &&
-                          `https://vicf.onrender.com/organisations/invitation/${createOrganisationMutation.data.inviteCode}`}
+                        {invitationCodeRef.current &&
+                          `https://vicf.onrender.com/organisations/invitation/${invitationCodeRef.current}`}
                       </button>
-                      <Button size="icon" className="text-white" onClick={handleCopyLink}>
-                        <ClipboardIcon />
+                      <Button size="icon" type='button' className="text-white" onClick={() => !copied && handleCopyLink()}>
+                        {!copied ? <ClipboardIcon /> : <CheckIcon />}
                       </Button>
                     </div>
                   </div>
@@ -156,7 +171,7 @@ const CreateNewOrganisation: FC<{ className?: string }> = ({ className }) => {
               >
                 Close
               </Button>
-              {view == 'login' && (
+              {view == 'creation' && (
                 <Button
                   id="save-contact-btn"
                   variant="default"
