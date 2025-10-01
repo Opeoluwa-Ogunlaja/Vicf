@@ -1,3 +1,4 @@
+import { StarsBgIllustration, StarsIllustration } from "@/assets/illustrations"
 import { Button } from "@/components/ui/button"
 import { useUser } from "@/hooks/useUser"
 import { useNavigate } from "react-router-dom"
@@ -7,7 +8,7 @@ const HeroSection = () => {
   const { loggedIn } = useUser()
 
   return (
-    <div className="grid min-h-[750px] bg-[#F2F2FE]/20 max-xl:gap-6 px-16 xl:grid-flow-col -mt-2">
+    <div className="grid min-h-[750px] bg-[#F2F2FE]/20 isolate max-xl:gap-6 px-16 xl:grid-flow-col -mt-2">
         <div className="xl:mt-[140px] mt-[20px] flex flex-col gap-4 max-xl:text-center z-10">
             <h2 className="max-w-[22ch] max-xl:mx-auto max-md:text-center text-5xl font-bold tracking-heading leading-[80px] max-xl:text-3xl">Contact Management for Individuals & Teams</h2>
             <p className="text-neutral-500 max-xl:text-center xl:max-w-[60ch] font-medium">Whether you’re managing your own network or collaborating across a team, our contact manager keeps everyone organized—even offline.</p>
@@ -17,11 +18,17 @@ const HeroSection = () => {
               <Button variant="secondary" onClick={() => navigate('/home')} className="mt-2 w-fit px-12 py-5 max-xl:mx-auto max-xl:justify-self-center">Continue to Home</Button>
             }
         </div>
+        <div className="absolute left-[80px] mt-8 -z-10">
+            <StarsIllustration className="max-sm:w-[200px] w-[400px]"/>
+        </div>
         <picture className="xl:absolute justify-self-center xl:justify-self-end xl:-mr-16 max-xl:-ml-4 -mt-4 max-xl:w-[70vw]">
             <source srcSet="/showcase.webp" media="(width >= 1280px)" />
             <source srcSet="/showcase-small.webp" media="(width < 1280px)" />
             <img loading="lazy" src="/showcase.webp" alt="Show off" />
         </picture>
+        <div className="absolute left-[40dvw] max-md:top-[14%] max-xl:top-[10%] xl:left-[700px] -z-10">
+            <StarsBgIllustration className="w-[200px] xl:w-[500px]"/>
+        </div>
     </div>
   )
 }

@@ -138,9 +138,11 @@
   }
 
   .testimonial-quote::after{
-    right: 4px;
-    bottom: -4px;
+    right: -4px;
+    bottom: 0;
+    margin-bottom: -1rem;
     content: "\"";
+    scale: 1 -1;
     rotate: 180deg;
   }
 
