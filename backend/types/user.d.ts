@@ -6,6 +6,7 @@ export interface IUser {
   password: string
   verified: boolean
   provider?: string
+  drive_linked: boolean
   contact_groupings: RefType[]
   refreshToken: string
   profile_photo: string

@@ -32,6 +32,8 @@ export async function verifyGoogleToken(code: string) {
       'https://www.googleapis.com/auth/userinfo.profile',
       'https://www.googleapis.com/auth/userinfo.email',
       'https://www.googleapis.com/auth/contacts',
+      'https://www.googleapis.com/auth/drive.file',
+      'https://www.googleapis.com/auth/directory.readonly',
       'openid'
     ]
 
@@ -39,7 +41,7 @@ export async function verifyGoogleToken(code: string) {
       url: 'https://openidconnect.googleapis.com/v1/userinfo'
     })
     // Payload contains user information (sub, name, email, etc.)
-    return userInfoResponse.data as GoogleUserResponse
+    return {...Object(userInfoResponse.data), refreshToken: tokens.refresh_token } as GoogleUserResponse & { refreshToken: typeof tokens.refresh_token }
   } catch (error) {
     throw new RequestError((error as { message: string })?.message ?? 'Invalid Google Token')
   }

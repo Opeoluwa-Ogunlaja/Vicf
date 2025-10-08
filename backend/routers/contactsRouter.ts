@@ -1,5 +1,5 @@
 import express from 'express'
-import { authMiddleware, mustAuthSocketMiddleware } from '../lib/middleware/users/authMiddleware'
+import { mustAuthMiddleware, mustAuthSocketMiddleware } from '../lib/middleware/users/authMiddleware'
 import { contactsController } from '../controllers/ContactsController'
 import { socketsController } from '../controllers/SocketController'
 
@@ -51,10 +51,10 @@ contactsRouter.delete(
   contactsController.delete_contact_listing.bind(contactsController)
 )
 
-socketsController.registerHandler(
-  'add-contacts',
-  mustAuthSocketMiddleware,
-  contactsController.socket_add_contact.bind(contactsController)
+contactsRouter.post(
+  '/:listingId/add-contact',
+  mustAuthMiddleware,
+  contactsController.add_contact.bind(contactsController)
 )
 
 socketsController.registerHandler(

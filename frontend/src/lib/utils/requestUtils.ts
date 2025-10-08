@@ -128,20 +128,35 @@ export const get_contacts_manager = async (
 }
 
 export const create_contact_listing = async ({
+  _id,
   url_id,
   name,
   input_backup
 }: {
+  _id: string,
   url_id: string
   name?: string
   input_backup?: string
 }) => {
   try {
     const newListing = await axiosInstance.post('/contacts/create', {
+      _id,
       url_id,
       name,
       input_backup
     })
+
+    return newListing.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const add_contact_listing = async (listingId: string, data: any) => {
+  try {
+    const newListing = await axiosInstance.post(`/contacts/${listingId}/add-contact`, data)
 
     return newListing.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -408,4 +423,35 @@ export async function downloadXlsx(listingId: string, onProgress: (percentage: n
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+}
+
+export function connectGoogle() {
+  return new Promise((res, rej) => {
+    window.open(
+    "http://localhost:3002/users/permissions", // backend endpoint
+    "googleLogin",
+    "width=500,height=600"
+  );
+
+  // Listen for message from popup
+  window.addEventListener("message", (event) => {
+    if (event.origin !== window.location.origin) rej(new Error("Forbidden"));
+
+    if (event.data.success) {
+     res(event.data.userId);
+      // Update state or trigger refetch
+    } else {
+      res(event.data.error);
+    }
+  });
+  })
+}
+
+export const initiate_drive_for_user = async () => {
+  try {
+    return await connectGoogle()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
 }

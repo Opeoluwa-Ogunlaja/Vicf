@@ -164,6 +164,8 @@ const ContactForm = () => {
 
   const lastNameUpdate = useRef<string | null>(contactManager?.name || null)
   const formHook = useForm<ContactFormType>({
+    mode: "onChange",
+    shouldFocusError: true,
     resolver: zodResolver(ContactFormSchema),
     defaultValues: isInManager
       ? { ...JSON.parse(contactManager?.input_backup as string), name: contactManager?.name }
@@ -174,6 +176,7 @@ const ContactForm = () => {
   })
 
   const number = useWatch({ control: formHook.control, name: 'number' })
+  const overwrite_name = useWatch({ control: formHook.control, name: 'overwrite_name' })
   // const previousErrorRef = useRef(number);
 
   useUpdateEffect(() => {
@@ -191,6 +194,21 @@ const ContactForm = () => {
     }
   }, [number, formHook.setError, formHook.formState.errors.number, formHook.clearErrors])
 
+  useUpdateEffect(() => {
+    if (!overwrite_name || formHook.formState.errors.overwrite_name) return
+
+    if (
+      contacts.contacts.findIndex(
+        contact => contact.name == overwrite_name
+      ) > -1
+    ) {
+      formHook.setError('overwrite_name', {
+        type: 'manual',
+        message: 'There is a contact with this name already'
+      })
+    }
+  }, [overwrite_name, formHook.setError, formHook.formState.errors.overwrite_name, formHook.clearErrors])
+
   useFormValueChangeDebounce({
     formHook,
     delay: isInManager ? 2000 : 4000,
@@ -205,17 +223,19 @@ const ContactForm = () => {
 
   const [startManagerCreationTimeout] = useTimeout(
     () => {
-      createManager(
-        {
-          _id: generateMongoId(),
-          backed_up: false,
-          contacts_count: contacts.contacts.length,
-          url_id: contacts.url_id as string,
-          input_backup: JSON.stringify({ ...formHook.getValues(), name: undefined }),
-          name: formHook.getValues().name
-        },
-        user.loggedIn
-      )
+      if(user.loggedIn){
+        createManager(
+          {
+            _id: generateMongoId(),
+            backed_up: false,
+            contacts_count: contacts.contacts.length,
+            url_id: contacts.url_id as string,
+            input_backup: JSON.stringify({ ...formHook.getValues(), name: undefined }),
+            name: formHook.getValues().name
+          },
+          user.loggedIn
+        )
+      }
     },
     1500,
     false,
@@ -414,7 +434,7 @@ const ContactForm = () => {
                 <Button
                   variant="secondary"
                   type="submit"
-                  disabled={!isInManager}
+                  disabled={!isInManager || Boolean(formHook.formState.errors.overwrite_name)}
                   className="w-max px-5 text-lg font-normal max-md:w-full"
                 >
                   Save Contact
@@ -425,7 +445,7 @@ const ContactForm = () => {
                   id="save-contact-btn"
                   variant="secondary"
                   type="submit"
-                  disabled={!isInManager}
+                  disabled={!isInManager || Boolean(formHook.formState.errors.overwrite_name)}
                   className="w-max bg-secondary/50 px-5 text-base font-normal max-md:absolute max-md:mx-auto max-md:mt-28 max-md:w-4/5"
                 >
                   Save just number

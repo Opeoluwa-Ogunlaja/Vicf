@@ -16,10 +16,10 @@ import {
   updateContactInputBackupSchema
 } from '../validators/contactsValidators'
 import { flattenZodErrorMessage } from '../lib/utils/zodErrors'
-import { AccessError, NotFoundError, RequestError } from './../lib/utils/AppErrors'
+import { AccessError, AppError, NotFoundError, RequestError } from './../lib/utils/AppErrors'
 import { contactUseCases, ContactUseCases } from '../use cases/ContactUseCases'
 import { z } from 'zod'
-import { sendEventToRoom } from '../lib/utils/socketUtils'
+import { sendEventToRoom, sendEventToUser } from '../lib/utils/socketUtils'
 import { convertJsonToVcf } from '../lib/utils/vcfConverter';
 import { jsonToCsv, jsonToCsvStream } from '../lib/utils/csvConverter';
 import { jsonToExcelStream } from '../lib/utils/xlsxConverter';
@@ -32,7 +32,7 @@ export class ContactsController {
       number, email, overwrite_name, additional_information, overwrite
     })
     
-    sendEventToRoom(`${updated_contact?.contact_group}-editing-room`, 'edit-contact', updated_contact?.toObject)
+    sendEventToRoom(`${updated_contact?.contact_group}-editing-room`, 'edit-contact', updated_contact?.toObject())
     res.json({ ok: true, data: updated_contact })
   }
 
@@ -53,9 +53,10 @@ export class ContactsController {
     const userId = req?.user?.id
     const validation = await createContactGroupSchema.safeParseAsync(req.body)
     if (!validation.success) throw new RequestError(flattenZodErrorMessage(validation.error.errors))
-    const { url_id, description, name } = validation.data
+    const { _id, url_id, description, name } = validation.data
 
     const newContact = await this.use_case.CreateContactAndUpdate(userId, {
+      _id,
       url_id,
       description,
       name
@@ -78,7 +79,7 @@ export class ContactsController {
     const userId = req?.user?.id
     const validation = await createContactGroupSchema.safeParseAsync(req.body)
     if (!validation.success) throw new RequestError(flattenZodErrorMessage(validation.error.errors))
-    const { url_id, description, name } = validation.data
+    const { _id, url_id, description, name } = validation.data
 
     const newContact = await this.use_case.CreateContactForOrganisation(userId, organisationId, {
       url_id,
@@ -272,18 +273,17 @@ export class ContactsController {
     });
   }
 
-  socket_add_contact: SocketHandlerFn<Partial<IContact> & { listingId: string }> = async (
-    message,
-    socket,
-    clients
+  add_contact: AsyncHandler<Partial<IContact>, any, { listingId: string }> = async (
+    req, res
   ) => {
-    const listingFound = await this.service.getManagerForUser(message.listingId)
+    const listingId = req.params.listingId
+    const listingFound = await this.service.getManagerForUser(listingId)
     if (!listingFound) throw new AccessError('You are not the owner of the listing')
-    const validation = await createContactSchema.partial().strip().safeParseAsync(message)
+    const validation = await createContactSchema.partial().strip().safeParseAsync(req.body)
     if (!validation.success) throw new RequestError(flattenZodErrorMessage(validation.error.errors))
     const contactToAdd = validation.data as createContactType
 
-    const contact = await this.service.addContact(message.listingId, {
+    const contact = await this.service.addContact(listingId, {
       name: contactToAdd.name,
       _id: contactToAdd._id,
       number: contactToAdd.number,
@@ -293,8 +293,15 @@ export class ContactsController {
       overwrite_name: contactToAdd.overwrite_name
     })
 
-    socket.to(`${message.listingId}-editing-room`).emit('add-contact', contactToAdd);
-    socket.emit('add-contact', contactToAdd)
+    if(!contact) throw new AppError("Something went wrong")
+
+    sendEventToRoom(`${listingId}-editing-room`, 'add-contact', contact[0])
+    sendEventToUser(req.user?.id, 'add-contact', contact[0])
+
+    res.json({ 
+      ok: true,
+      data: contact[0]
+    })
   }
 
   socket_set_editing_contacts: SocketHandlerFn<Partial<IContact> & { listingId: string }> = async (

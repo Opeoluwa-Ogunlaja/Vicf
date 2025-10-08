@@ -51,6 +51,7 @@ export class ContactUseCases {
 
   CreateContactAndUpdate = async (userId: string, data: Partial<IContactGroupDocument>) => {
     return await this.groups_repository.runInTransaction(async session => {
+      console.log(data)
       const group = await this.groups_repository.create({ ...data, userId }, session)
       await this.user_service.add_contact_group_to_user(userId, group.id, session)
       return group

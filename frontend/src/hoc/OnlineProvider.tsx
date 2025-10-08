@@ -27,7 +27,7 @@ const OnlineProvider = memo(({ children }: { children: ReactNode }) => {
   }, [])
 
   const computeOnline = useCallback(
-    () => isConnected.current && navigator.onLine && isUserLoggedIn,
+    () => isConnected.current && navigator.onLine,
     [isConnected, isUserLoggedIn]
   )
 
@@ -105,7 +105,8 @@ const OnlineProvider = memo(({ children }: { children: ReactNode }) => {
   return (
     <OnlineContext.Provider
       value={{
-        isOnline: online,
+        isOnline: online && isUserLoggedIn,
+        online,
         lastOnline: lastOnlineRef.current,
         lastCheck: lastCheckRef.current
       }}

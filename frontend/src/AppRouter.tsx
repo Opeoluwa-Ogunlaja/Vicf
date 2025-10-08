@@ -5,7 +5,7 @@ import { saveLoader } from './pages/save/saveLoaders'
 import { redirect } from 'react-router-dom'
 import { generateListingId } from './lib/utils/idUtils'
 
-// import { useOnline } from './hooks/useOnline'
+import { useOnline } from './hooks/useOnline'
 
 import { useContactManagerStore } from './stores/contactsManagerStore'
 import useToken from './hooks/useToken'
@@ -119,12 +119,12 @@ const router = (onlineStatus: boolean, setters: RouteDataType) =>
   )
 
 const AppRouter: FC<{ setReady: Dispatch<boolean> }> = ({ setReady }) => {
-  // const { isOnline } = useOnline()
+  const { online } = useOnline()
   const setManager = useContactManagerStore(state => state.actions.setManager)
   const { setToken, token } = useToken()
   const { login_user, set_loaded } = useUserUpdate()
   const routerMemoized = useMemo(() => {
-    return router(true, {
+    return router(online, {
       currentToken: token!,
       setManager: setManager,
       setToken: setToken,

@@ -4,6 +4,7 @@ import { get_contacts_manager, get_profile, getAccessToken } from './requestUtil
 import { ContactManagerEntry } from '@/types/contacts_manager'
 import { IUser, RouteDataType } from '@/types'
 import { waitForInterceptor } from './tokenReady'
+import { db } from '@/stores/dexie/db'
 // import { db } from '@/stores/dexie/db'
 
 export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
@@ -30,21 +31,31 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
       if (userData) {
         userPromise = Promise.resolve(userData)
       } else {
-        const fetching_promise = queryClient.fetchQuery({
-          queryKey: ['user', 'logged_in'],
-          queryFn: get_profile
-        })
+        const fetching_promise = _onlineStatus
+          ? db.last_user.toCollection().first()
+          : queryClient.fetchQuery({
+              queryKey: ['user', 'logged_in'],
+              queryFn: get_profile
+            })
 
         userPromise = fetching_promise
         userPromise
           .then(
-            data => {
+            async data => {
               const user = data as IUser
               setters.login_user({
                 _id: user._id,
                 name: user?.name,
                 email: user?.email,
-                profile_photo: user?.profile_photo
+                profile_photo: user?.profile_photo,
+                drive_linked: user?.drive_linked
+              })
+              await db.last_user.put({
+                _id: user._id,
+                name: user?.name,
+                email: user?.email,
+                profile_photo: user?.profile_photo,
+                drive_linked: user?.drive_linked
               })
             },
             () => {}
@@ -61,17 +72,52 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
     let localContactsManagerPromise!: Promise<unknown>
     localContactsManagerPromise = Promise.resolve(null)
     try {
+      const cachedPromise = () => db.managers.toArray()
       const fetching_promise = queryClient.fetchQuery({
         queryKey: ['contacts_manager', Math.random()],
-        queryFn: () => {
-          return get_contacts_manager(setters.currentToken.current)
-        }
+        queryFn: () => get_contacts_manager(setters.currentToken.current),
+        networkMode: 'always'
       })
-      fetching_promise.then(contacts_manager => {
-        if ((contacts_manager as Array<unknown>)?.length > 0) {
-          setters?.setManager(contacts_manager as ContactManagerEntry[])
-        }
-      })
+
+      fetching_promise
+        .then(async contact_managers => {
+          let myContactManagers: ContactManagerEntry[] = []
+          const cachedManagers = await cachedPromise()
+          if (Array.isArray(contact_managers) && contact_managers.length > 0) {
+            for (const cachedManager of cachedManagers) {
+              const presentManager = contact_managers.find(man => man._id == cachedManager._id)
+              if (presentManager) {
+                await db.managers.update(presentManager._id, {
+                  synced: true
+                })
+
+                myContactManagers.push(presentManager)
+              } else {
+                myContactManagers.push(cachedManager)
+              }
+            }
+          } else {
+            contact_managers = []
+            myContactManagers = cachedManagers
+          }
+          const merged = Object.values(
+            [
+              ...contact_managers.map(m => ({ ...m, synced: true })),
+              ...myContactManagers.map(m => ({ ...m }))
+            ].reduce<Record<string, ContactManagerEntry>>((acc, man) => {
+              acc[man._id] = man
+              return acc
+            }, {})
+          )
+
+          // Update state and optionally IndexedDB
+          setters?.setManager(merged)
+          await db.managers.bulkPut(merged as ContactManagerEntry[])
+        })
+        .catch(async () => {
+          const managers = await cachedPromise()
+          setters?.setManager(managers)
+        })
 
       localContactsManagerPromise = fetching_promise
     } catch (error) {

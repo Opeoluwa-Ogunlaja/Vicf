@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IContact } from '@/types'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
@@ -25,4 +26,9 @@ export const filteredContacts = (contacts: Partial<IContact>[]): ({ tel: string 
       tel: contact.number!
     }
   })
+}
+
+export const mergeObj = (obj1: Record<string, any>, obj2: Record<string, any>) => {
+  const result: Record<string, any> = { ...obj2, ...obj1 };
+  return result;
 }

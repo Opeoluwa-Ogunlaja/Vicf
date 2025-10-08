@@ -2,7 +2,8 @@ import { nanoid } from 'nanoid'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type Task<T = any> = (...args: any[]) => Promise<T>
-export class TaskQueue {
+export class 
+TaskQueue {
   queue: Task[]
   resolvers: Array<[resolve: (task: Task) => void, reject: (err: any) => void]>
   paused: boolean
@@ -33,7 +34,6 @@ export class TaskQueue {
   async consume() {
     while (true) {
       if (this.paused) {
-        this.activeConsumers++
         await this.waitWhilePaused()
       }
 
@@ -43,6 +43,7 @@ export class TaskQueue {
         const task = await this.getTask()
         await task()
 
+        this.activeConsumers--
         // eslint-disable-next-line no-empty, no-unused-vars, @typescript-eslint/no-unused-vars
       } catch (error: any) {}
     }
@@ -52,7 +53,7 @@ export class TaskQueue {
     return new Promise<void>(resolve => {
       const check = () => {
         if (!this.paused) return resolve()
-        setTimeout(check, 10) // poll until resumed
+        setTimeout(check, 10)
       }
       check()
     })
@@ -61,6 +62,7 @@ export class TaskQueue {
   getTask(): Promise<Task> {
     return new Promise<Task>((res, rej) => {
       if (this.queue.length > 0 && !this.paused) return res(this.queue.shift()!)
+      // push resolver so runTask can resolve it when a task is scheduled
       this.resolvers.push([res, rej])
     })
   }

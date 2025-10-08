@@ -3,6 +3,7 @@ import { zMongoId } from '../lib/validators/validateMongodbId'
 
 export const createContactGroupSchema = z
   .object({
+    _id: zMongoId.optional(),
     url_id: z.string(),
     description: z.string().nonempty().optional(),
     name: z.string().nonempty().optional()

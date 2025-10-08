@@ -1,7 +1,7 @@
 import { TaskQueue } from '@/lib/taskQueue'
 import { useCallback, useEffect, useRef } from 'react'
 import useHistoryState from './useHistory'
-import { generageTaskId } from '@/lib/utils/idUtils'
+import { generateTaskId } from '@/lib/utils/idUtils'
 import { useArray } from './useArray'
 
 export const useQueue = (defaultValue: unknown, concurrency: number = 10, capacity = 50) => {
@@ -12,14 +12,14 @@ export const useQueue = (defaultValue: unknown, concurrency: number = 10, capaci
   }, [concurrency])
 
   const [lastRequest, setLastRequest, controls] = useHistoryState(
-    { transactionId: generageTaskId(), data: defaultValue },
+    { transactionId: generateTaskId(), data: defaultValue },
     { capacity }
   )
 
   const queue = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (callback: (...args: any[]) => Promise<any>, mapFn: (...args: any[]) => any) => {
-      const taskId = generageTaskId()
+      const taskId = generateTaskId()
       isMutating.push(taskId)
       taskQueue.current
         ?.runTask(callback)

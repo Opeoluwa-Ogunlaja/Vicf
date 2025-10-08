@@ -6,14 +6,23 @@ import {
 } from '@/lib/utils/requestUtils'
 import { ContactManager, ContactManagerEntry } from '@/types/contacts_manager'
 import { create } from 'zustand'
-import { queryClient } from '@/queryClient';
+import { queryClient } from '@/queryClient'
+import { generateTaskId } from '@/lib/utils/idUtils'
 
 export const useContactManagerStore = create<ContactManager>()(set => {
   return {
     manager: [],
     actions: {
-      setManager(manager) {
-        set({ manager })
+      setManager(managers: ContactManagerEntry[]) {
+        const deduped = Array.from(
+          managers
+            .reduce<Map<string, ContactManagerEntry>>((map, m) => {
+              map.set(m._id, m)
+              return map
+            }, new Map())
+            .values()
+        )
+        return set({ manager: deduped })
       },
       setPreferences(id, preferences) {
         set(state => {
@@ -40,13 +49,19 @@ export const useContactManagerStore = create<ContactManager>()(set => {
       },
       async updateManagerOrganisation(id, newOrganisationId, upstream) {
         let errorsPresent = false
-        let pastOrganisation !: string | null
+        let pastOrganisation!: string | null
         // let listingIndex!: number | null
-        const updated = await myTaskManager.run('move_listing', true, id, newOrganisationId)
+        const updated = await myTaskManager.run(
+          generateTaskId(),
+          'move_listing',
+          true,
+          id,
+          newOrganisationId
+        )
         const updateManagerFlow = async () => {
           try {
             set(state => {
-              const manager = state.manager.map((entry,) => {
+              const manager = state.manager.map(entry => {
                 if ((updated as ContactManagerEntry)._id === id) {
                   pastOrganisation = entry.organisation?._id ?? null
                   // listingIndex = i ?? null
@@ -69,17 +84,17 @@ export const useContactManagerStore = create<ContactManager>()(set => {
 
         await updateManagerFlow()
 
-        if(pastOrganisation && pastOrganisation != newOrganisationId){
-          queryClient.invalidateQueries({queryKey: ['organisation', pastOrganisation]})
-          queryClient.invalidateQueries({queryKey: ['organisation', newOrganisationId]})
+        if (pastOrganisation && pastOrganisation != newOrganisationId) {
+          queryClient.invalidateQueries({ queryKey: ['organisation', pastOrganisation] })
+          queryClient.invalidateQueries({ queryKey: ['organisation', newOrganisationId] })
         }
 
         if (errorsPresent) throw new Error('Something occured')
       },
       async updateManagerOrganisationDisplay(id, newOrgId, newOrgName) {
         set(state => {
-          const manager = state.manager.map((entry,) => {
-            if (entry._id=== id) {
+          const manager = state.manager.map(entry => {
+            if (entry._id === id) {
               return {
                 ...entry,
                 organisation: {
@@ -93,36 +108,42 @@ export const useContactManagerStore = create<ContactManager>()(set => {
           return { manager }
         })
       },
-      async createManager(data, upstream = false) {
-        let errorsPresent = false
-        const new_manager = await myTaskManager.run('create_listing', true, data)
-        const newManagerFlow = async () => {
-          try {
-            set(state => {
-              return { manager: [new_manager, ...state.manager] as ContactManagerEntry[] }
-            })
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          } catch (e: unknown) {
-            if (upstream) {
-              errorsPresent = true
-            }
-            set(state => {
-              return { manager: [new_manager, ...state.manager] as ContactManagerEntry[] }
-            })
-          }
-        }
+      async createManager(data, upstream) {
+        console.log('called create manager')
+        const new_manager = await myTaskManager.run(
+          generateTaskId(),
+          'create_listing',
+          upstream,
+          data
+        )
 
-        await newManagerFlow()
-
-        if (errorsPresent) throw new Error('Something occured')
+        set(state => {
+          return { manager: [new_manager, ...state.manager] as ContactManagerEntry[] }
+        })
       },
-    async deleteManager(id: string, upstream = false) {
+
+      async syncManager(id, data) {
+        set(state => {
+          const manager = state.manager.map(entry => {
+            if (entry._id === id && !entry.synced) {
+              return { ...data, synced: true }
+            }
+            return entry
+          })
+          return { manager }
+        })
+      },
+      async deleteManager(id: string, upstream = false) {
         let errorsPresent = false
-        await myTaskManager.run('delete_listing', upstream, id)
+        await myTaskManager.run(generateTaskId(), 'delete_listing', upstream, id)
         const newManagerFlow = async () => {
           try {
             set(state => {
-              return { manager: [...state.manager].filter((manager) => manager._id !== id) as ContactManagerEntry[] }
+              return {
+                manager: [...state.manager].filter(
+                  manager => manager._id !== id
+                ) as ContactManagerEntry[]
+              }
             })
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (e: unknown) {
@@ -130,7 +151,11 @@ export const useContactManagerStore = create<ContactManager>()(set => {
               errorsPresent = true
             }
             set(state => {
-              return { manager: [...state.manager].filter((manager) => manager._id !== id) as ContactManagerEntry[] }
+              return {
+                manager: [...state.manager].filter(
+                  manager => manager._id !== id
+                ) as ContactManagerEntry[]
+              }
             })
           }
         }
@@ -154,13 +179,13 @@ export const useContactManagerStore = create<ContactManager>()(set => {
         })
       },
       setEditors(id, editors) {
-        const colors = ['blue', 'green', 'yellow', 'red', 'cyan'];
+        const colors = ['blue', 'green', 'yellow', 'red', 'cyan']
         set(state => {
           const manager = state.manager.map(entry => {
             if (entry._id === id) {
               return {
                 ...entry,
-                users_editing: editors!.map((e) => ({
+                users_editing: editors!.map(e => ({
                   ...e,
                   color: colors[Math.floor(Math.random() * colors.length)]
                 })) as [typeof editors][0]

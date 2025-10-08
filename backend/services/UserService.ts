@@ -28,8 +28,8 @@ export class UserService {
     return await this.repository.create(user as IUser)
   }
 
-  async updateRefreshToken(userId: string, refreshToken: string) {
-    return await this.repository.updateById(userId, { refreshToken })
+  async updateRefreshToken(userId: string, refreshToken: string, g_refreshToken?: string) {
+    return await this.repository.updateById(userId, { refreshToken, g_refreshToken: g_refreshToken })
   }
 
   get_user: typeof userRepository.findOne = async query => {

@@ -3,6 +3,7 @@ export interface IUser {
   _id: string
   name: string
   profile_photo: string
+  drive_linked: boolean
 }
 
 export type PartialUser = Partial<IUser>

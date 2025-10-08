@@ -26,11 +26,12 @@ const userSchema = new Schema<IUserDocument, UserModelType, { isPasswordMatched:
     default:
       'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
   },
+  drive_linked: Boolean,
   g_refreshToken: String
 })
 
 userSchema.methods.isPasswordMatched = async function (enteredPassword: string) {
-    return await bcrypt.compare(enteredPassword, this.password);
+    return await bcrypt.compare(enteredPassword, this.password || "");
 };
 
 userSchema.pre("save", async function (next) {
@@ -39,15 +40,14 @@ userSchema.pre("save", async function (next) {
     }
     const salt = await bcrypt.genSalt(10);
     if(this.password && typeof this.password == 'string'){
-      console.log(this.password)
       this.password = await bcrypt.hash(this.password, salt)
     }
 });
 
 userSchema.plugin(encryptedFieldPlugin, {fields: [{ field: "email" }, { field: "g_refreshToken" }]});
 
-// userSchema.pre('findOne', function(next){
-//   console.log(this.getQuery())
+// userSchema.pre('findOneAndUpdate', function(next){
+//   console.log(this.getQuery(), this.getUpdate());
 //   next()
 // })
 

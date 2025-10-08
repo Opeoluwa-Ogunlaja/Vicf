@@ -6,6 +6,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "baseUrl": ".",
+    "types": ["vite-plugin-pwa/pwa-assets"],
     "paths": {
       "@/*": ["./src/*"]
     },

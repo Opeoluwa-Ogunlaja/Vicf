@@ -10,6 +10,9 @@ userRouter.post('/login', userController.login_user.bind(userController))
 
 userRouter.post('/google-login', userController.social_signup_google.bind(userController))
 
+userRouter.get('/permissions', userController.gain_permissions.bind(userController))
+userRouter.get('/ack-permissions', userController.gain_permissions.bind(userController))
+
 userRouter.get('/token', userController.get_token.bind(userController))
 
 userRouter.get(
