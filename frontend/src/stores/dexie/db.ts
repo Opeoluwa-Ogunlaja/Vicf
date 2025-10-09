@@ -26,13 +26,13 @@ const db = new Dexie('Vicf') as Dexie & {
 // Schema declaration:
 db.version(2).stores({
   managers:
-    '_id, name, age, url_id, backed_up, contacts_count, input_backup, preferences, contacts, synced',
+    '++_id, name, age, url_id, backed_up, contacts_count, input_backup, preferences, contacts, synced',
   contacts:
-    '_id, number, email, additional_information, name, overwrite_name, time_added, time_updated, contact_group',
+    '++_id, number, email, additional_information, name, overwrite_name, time_added, time_updated, contact_group',
   queuedTasks:
-    '_id, type, payload, createdAt, status, worker, lockedAt, attempts, nextAttemptAt',
+    '++_id, type, payload, createdAt, status, worker, lockedAt, attempts, nextAttemptAt',
   last_user: 
-    '_id, email, name, profile_photo, drive_linked'
+    '++_id, email, name, profile_photo, drive_linked'
 })
 
 export { db }

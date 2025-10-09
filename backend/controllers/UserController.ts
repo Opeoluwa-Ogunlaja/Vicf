@@ -78,6 +78,7 @@ class UserController {
     res.json({
       ok: true,
       data: {
+        _id: userExists._id,
         id: userExists.id,
         email: userExists.email,
         name: userExists.name,

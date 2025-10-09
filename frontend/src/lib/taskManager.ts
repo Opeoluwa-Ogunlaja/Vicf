@@ -4,7 +4,6 @@ import { OnlineTaskQueue } from '@/queue'
 import { create_contact_listing, delete_contact_listing, move_listing_to_organisation } from './utils/requestUtils'
 import { db, QueuedTask } from '@/stores/dexie/db'
 import { useContactManagerStore } from '@/stores/contactsManagerStore'
-import { wait } from './utils/promiseUtils'
 
 export interface RegistryTask {
   [taskId: string]: {
@@ -33,7 +32,6 @@ export const taskRegistry: RegistryTask = {
       name?: string
       input_backup?: string
     }): Promise<T> => {
-      console.log('called')
       await db.managers.put(
         {
           _id: data._id,
@@ -48,7 +46,6 @@ export const taskRegistry: RegistryTask = {
         data._id
       )
 
-      await wait(2000)
       return data as T
     },
     onlineFn: async <T = any>(data: {
@@ -74,7 +71,8 @@ export const taskRegistry: RegistryTask = {
       const id = (payload && (payload._id ?? payload)) as any
       if (id) {
         await db.managers.update(id, {
-          synced: true
+          synced: true,
+          ...payload
         })
 
         useContactManagerStore.getState().actions.syncManager(id, payload)

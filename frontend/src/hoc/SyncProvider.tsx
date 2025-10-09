@@ -4,7 +4,7 @@ import { myTaskManager } from '@/lib/taskManager'
 import { FC, memo, ReactNode, useCallback, useEffect } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useOnline } from '@/hooks/useOnline'
-import { asyncForeach, wait } from '@/lib/utils/promiseUtils'
+import { asyncForeach } from '@/lib/utils/promiseUtils'
 
 const SyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { isOnline } = useOnline()
@@ -38,8 +38,6 @@ const SyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
     // Try to claim each eligible task. TaskManager.retry performs an atomic claim.
     await asyncForeach(eligible, async task => {
       try {
-        console.log("task to run", task)
-        await wait(2000)
         await myTaskManager.retry(task._id)
       } catch (e) {
         console.error('sync task retry failed', e)

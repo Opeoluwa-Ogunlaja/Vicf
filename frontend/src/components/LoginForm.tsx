@@ -144,7 +144,6 @@ const LoginForm = () => {
               drive_linked: res?.drive_linked
             }
           })
-          console.log('setting the state')
           if (res?.token) setToken(res?.token)
           // else console.warn('there was no token for some reason')
           update_user_state({

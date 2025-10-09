@@ -22,7 +22,7 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
     if (!setters.currentToken.current.trim()) {
       await fetchAccessToken()
       await waitForInterceptor()
-    } else console.log('skipped token check')
+    }
 
     let userPromise!: Promise<unknown>
     userPromise = Promise.resolve(null)
@@ -77,10 +77,7 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
         queryKey: ['contacts_manager', Math.random()],
         queryFn: () => get_contacts_manager(setters.currentToken.current),
         networkMode: 'always'
-      })
-
-      fetching_promise
-        .then(async contact_managers => {
+      }).then(async contact_managers => {
           let myContactManagers: ContactManagerEntry[] = []
           const cachedManagers = await cachedPromise()
           if (Array.isArray(contact_managers) && contact_managers.length > 0) {
@@ -102,8 +99,8 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
           }
           const merged = Object.values(
             [
+              ...myContactManagers.map(m => ({ ...m })),
               ...contact_managers.map(m => ({ ...m, synced: true })),
-              ...myContactManagers.map(m => ({ ...m }))
             ].reduce<Record<string, ContactManagerEntry>>((acc, man) => {
               acc[man._id] = man
               return acc
@@ -113,6 +110,8 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
           // Update state and optionally IndexedDB
           setters?.setManager(merged)
           await db.managers.bulkPut(merged as ContactManagerEntry[])
+
+          return merged
         })
         .catch(async () => {
           const managers = await cachedPromise()
@@ -148,7 +147,7 @@ export const authLoader = (onlineStatus: boolean, setters: RouteDataType) =>
     if (!setters.currentToken.current.trim()) {
       await fetchAccessToken()
       await waitForInterceptor()
-    } else console.log('skipped token check')
+    }
 
     let userPromise!: Promise<unknown>
     userPromise = Promise.resolve(null)

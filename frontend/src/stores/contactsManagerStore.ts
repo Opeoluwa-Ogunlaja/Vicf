@@ -109,7 +109,6 @@ export const useContactManagerStore = create<ContactManager>()(set => {
         })
       },
       async createManager(data, upstream) {
-        console.log('called create manager')
         const new_manager = await myTaskManager.run(
           generateTaskId(),
           'create_listing',
