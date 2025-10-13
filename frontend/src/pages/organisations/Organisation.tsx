@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
-import { useParams, useSearchParams } from 'react-router-dom'
-import { useUser } from '@/hooks/useUser'
+import { Navigate, useParams, useSearchParams } from 'react-router-dom'
 import { get_organisation } from '@/lib/utils/requestUtils'
 import Skeleton from 'react-loading-skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import useOrganisationsListing from '@/hooks/useOrganisationsListing'
 import BlockCard from '@/components/BlockCard'
 import OrganisationMembers from './OrganisationMembers'
+import { useOnline } from '@/hooks/useOnline'
 
 const OrganisationListings = ({ organisationId }: { organisationId: string }) => {
   const organisation_managers = useOrganisationsListing(organisationId)
@@ -15,7 +15,7 @@ const OrganisationListings = ({ organisationId }: { organisationId: string }) =>
   })
 }
 const Organisation = () => {
-  const { loggedIn } = useUser()
+  const { isOnline } = useOnline()
   const { organisationId } = useParams()
   const [params, setParams] = useSearchParams({
     tab: 'listings'
@@ -24,9 +24,11 @@ const Organisation = () => {
   const { data: currentOrganisation, isPending: organisationPending } = useQuery({
     queryFn: () => get_organisation(organisationId!),
     queryKey: ['organisation', organisationId],
-    enabled: loggedIn && Boolean(organisationId),
+    enabled: isOnline && Boolean(organisationId),
     staleTime: Infinity
   })
+
+  if(!isOnline) return <Navigate to={'/home'}/>
 
   if (organisationPending)
     return (

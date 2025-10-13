@@ -7,7 +7,7 @@ import { waitForInterceptor } from './tokenReady'
 import { db } from '@/stores/dexie/db'
 // import { db } from '@/stores/dexie/db'
 
-export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
+export const rootLoader = (onlineStatus: boolean, setters: RouteDataType) =>
   (async () => {
     const fetchAccessToken = async () => {
       try {
@@ -19,7 +19,7 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
       }
     }
 
-    if (!setters.currentToken.current.trim()) {
+    if (!setters.currentToken.current.trim() && onlineStatus) {
       await fetchAccessToken()
       await waitForInterceptor()
     }
@@ -31,9 +31,7 @@ export const rootLoader = (_onlineStatus: boolean, setters: RouteDataType) =>
       if (userData) {
         userPromise = Promise.resolve(userData)
       } else {
-        const fetching_promise = _onlineStatus
-          ? db.last_user.toCollection().first()
-          : queryClient.fetchQuery({
+        const fetching_promise = queryClient.fetchQuery({
               queryKey: ['user', 'logged_in'],
               queryFn: get_profile
             })
@@ -133,7 +131,6 @@ export type rootLoaderType = typeof rootLoader
 
 export const authLoader = (onlineStatus: boolean, setters: RouteDataType) =>
   (async () => {
-    console.log(onlineStatus)
     const fetchAccessToken = async () => {
       try {
         const token = await getAccessToken()
@@ -144,7 +141,7 @@ export const authLoader = (onlineStatus: boolean, setters: RouteDataType) =>
       }
     }
 
-    if (!setters.currentToken.current.trim()) {
+    if (!setters.currentToken.current.trim() && onlineStatus) {
       await fetchAccessToken()
       await waitForInterceptor()
     }

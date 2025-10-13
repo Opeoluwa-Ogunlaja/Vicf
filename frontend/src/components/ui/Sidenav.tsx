@@ -13,7 +13,7 @@ import CreateNewButton from '../CreateNewButton'
 import { useManager } from '@/hooks/useManager'
 import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import { useUser } from '@/hooks/useUser'
+import { useOnline } from '@/hooks/useOnline'
 
 const Sidenav = () => {
   const [open, , setOpen] = useSidenav()
@@ -23,7 +23,7 @@ const Sidenav = () => {
   const location = useLocation()
   const isOnSave = location.pathname.includes('/save')
   // const isOnHome = location.pathname.includes('/home')
-  const { loggedIn } = useUser()
+  const { isOnline } = useOnline()
 
   useEffect(() => {
     if (open) openCount.current += 1
@@ -87,7 +87,7 @@ const Sidenav = () => {
                   Home
                 </NavigationLink>
               </li>
-              {loggedIn && (
+              {isOnline && (
                 <>
                   <li className="flex items-center gap-4">
                     <UsersOrgIcon className="text-neutral-500" />

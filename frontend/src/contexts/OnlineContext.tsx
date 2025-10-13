@@ -5,6 +5,7 @@ const OnlineContext = createContext<{
   online: boolean
   lastOnline: Date | null
   lastCheck: Date | null
-}>({ isOnline: false, online: false, lastOnline: null, lastCheck: null })
+  hasNetwork: boolean
+}>({ isOnline: false, online: navigator.onLine, lastOnline: null, lastCheck: null, hasNetwork: navigator.onLine })
 
 export default OnlineContext

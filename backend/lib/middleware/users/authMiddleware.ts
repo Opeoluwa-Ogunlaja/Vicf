@@ -10,58 +10,53 @@ import { Socket } from 'socket.io'
 import { verifyAccessToken, verifyRefreshToken } from '../../utils/generateToken'
 
 export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
+   // ✅ If already authenticated, skip
   if (req.user) return next()
-  let refreshToken = req?.cookies[loginTokenName],
-    accessToken
 
-  if (refreshToken) {
-    accessToken = req?.headers.authorization?.replace('Bearer ', '') || ''
-    // Decode refreshToken to get Id and verify that Id
-    try {
-      // find the user by id
-      const userInfo = (await verifyAccessToken(accessToken, refreshToken)) as any
+  const refreshToken = req.cookies?.[loginTokenName]
+  const accessToken = req.headers.authorization?.replace('Bearer ', '') || ''
 
-      // if (!userInfo) {
-      //   const tokenContent = verifyRefreshToken(refreshToken)
-      //   const victim = tokenContent?._id
-      //   if (victim) {
-      //     await userRepository.updateById(victim, {
-      //       $unset: {
-      //         refreshToken: 1
-      //       }
-      //     })
+  if (!refreshToken) return next()
 
-      //     res.cookie(loginTokenName, null, {
-      //       expires: new Date(Date.now() - 500),
-      //       httpOnly: true,
-      //       path: '/',
-      //       secure: nodeEnv == 'production',
-      //       sameSite: nodeEnv == 'production' ? 'lax' : undefined
-      //       // partitioned: nodeEnv == 'production'
-      //     })
-      //   }
+  try {
+    const userInfo = await verifyAccessToken(accessToken, refreshToken)
 
-      //   return next()
-      // }
+    if (userInfo) {
+      const isValidId = validateMongodbId(userInfo.id)
+      if (!isValidId) return next()
 
-      const isValidId = validateMongodbId(userInfo?.id)
+      const user = await userRepository.findById(userInfo.id)
+      if (!user) return next()
 
-      const user = await userRepository.findById(userInfo?.id)
-
-      // Check if Id is valid
-      if (!user || !isValidId) {
-        return next()
-      }
-
-      // Attatch the user to the request object
       req.user = user
       return next()
-    } catch (e) {
-      if (e instanceof AccessError) throw new ForbiddenError('Access Expired')
     }
-  }
+    
+    const tokenContent = verifyRefreshToken(refreshToken)
+    const victimId = tokenContent?._id
 
-  next()
+    if (victimId) {
+      // Optionally clear refresh token from DB
+      // await userRepository.updateById(victimId, { $unset: { refreshToken: 1 } })
+
+      // Optionally clear cookie
+      // res.cookie(loginTokenName, '', {
+      //   expires: new Date(0),
+      //   httpOnly: true,
+      //   path: '/',
+      //   secure: nodeEnv === 'production',
+      //   sameSite: nodeEnv === 'production' ? 'lax' : undefined
+      // })
+
+      res.setHeader('hijack', 'true')
+    }
+
+    return next()
+  } catch (err) {
+    if (err instanceof ForbiddenError) throw err
+    if ((err as Error).name === 'AccessError') throw new ForbiddenError('Access Expired')
+    return next()
+  }
 })
 
 export const socketAuthMiddleware = async (

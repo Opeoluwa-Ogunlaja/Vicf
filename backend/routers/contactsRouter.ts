@@ -5,7 +5,7 @@ import { socketsController } from '../controllers/SocketController'
 
 const contactsRouter = express.Router()
 
-contactsRouter.post('/create', contactsController.create_group.bind(contactsController))
+contactsRouter.post('/create', mustAuthMiddleware, contactsController.create_group.bind(contactsController))
 
 contactsRouter.patch(
   '/backup-input/:listingId',
