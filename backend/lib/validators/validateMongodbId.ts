@@ -10,7 +10,6 @@ const validateMongodbId = (ids: string | string[]): boolean => {
     isValid = mongoose.Types.ObjectId.isValid(ids)
   }
 
-  if (!isValid) throw new Error('Invalid ID')
 
   return isValid
 }

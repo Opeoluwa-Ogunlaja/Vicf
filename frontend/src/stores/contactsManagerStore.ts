@@ -8,6 +8,7 @@ import { ContactManager, ContactManagerEntry } from '@/types/contacts_manager'
 import { create } from 'zustand'
 import { queryClient } from '@/queryClient'
 import { generateTaskId } from '@/lib/utils/idUtils'
+import usersStore from './usersStore'
 
 export const useContactManagerStore = create<ContactManager>()(set => {
   return {
@@ -113,7 +114,7 @@ export const useContactManagerStore = create<ContactManager>()(set => {
           generateTaskId(),
           'create_listing',
           upstream,
-          data
+        {...data, userId: usersStore.getState().user?._id}
         )
 
         set(state => {

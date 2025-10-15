@@ -10,6 +10,7 @@ import Loader from '../ui/loader'
 import { ContactManagerEntry } from '@/types/contacts_manager'
 import { twMerge } from 'tailwind-merge'
 import { useManagerActions } from '@/hooks/useManagerActions'
+import { useOnline } from '@/hooks/useOnline'
 
 const ListingDeleteButton: FC<{ listing: Partial<ContactManagerEntry>, className?: string, listing_id: string, children: ReactNode }> = props => {
   const { name } = props.listing
@@ -17,6 +18,7 @@ const ListingDeleteButton: FC<{ listing: Partial<ContactManagerEntry>, className
   const [open, , set] = useToggle(false)
   const { toast } = useToast()
   const {deleteManager} = useManagerActions()
+  const { isOnline } = useOnline()
 
   useLayoutEffect(() => {
     document.body.style.pointerEvents = "all"
@@ -25,7 +27,7 @@ const ListingDeleteButton: FC<{ listing: Partial<ContactManagerEntry>, className
   const deleteMutation = useMutation({
     mutationKey: ['delete_contact_listing', listing_id],
     mutationFn: () => {
-      return deleteManager(listing_id)
+      return deleteManager(listing_id, isOnline)
     },
     onSuccess() {
       toast({ title: 'Listing Deleted', description: <>`Deleted <b>{name}</b></> })

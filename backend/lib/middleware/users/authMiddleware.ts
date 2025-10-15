@@ -22,9 +22,6 @@ export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
     const userInfo = await verifyAccessToken(accessToken, refreshToken)
 
     if (userInfo) {
-      const isValidId = validateMongodbId(userInfo.id)
-      if (!isValidId) return next()
-
       const user = await userRepository.findById(userInfo.id)
       if (!user) return next()
 

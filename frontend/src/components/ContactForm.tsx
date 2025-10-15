@@ -233,7 +233,7 @@ const ContactForm = () => {
             input_backup: JSON.stringify({ ...formHook.getValues(), name: undefined }),
             name: formHook.getValues().name
           },
-          user.loggedIn
+          true
         )
       }
     },

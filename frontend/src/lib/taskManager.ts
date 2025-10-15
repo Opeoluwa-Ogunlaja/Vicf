@@ -4,6 +4,7 @@ import { OnlineTaskQueue } from '@/queue'
 import { create_contact_listing, delete_contact_listing, move_listing_to_organisation } from './utils/requestUtils'
 import { db, QueuedTask } from '@/stores/dexie/db'
 import { useContactManagerStore } from '@/stores/contactsManagerStore'
+import { asyncForeach } from '@/lib/utils/promiseUtils';
 
 export interface RegistryTask {
   [taskId: string]: {
@@ -31,6 +32,7 @@ export const taskRegistry: RegistryTask = {
       url_id: string
       name?: string
       input_backup?: string
+      userId?: string
     }): Promise<T> => {
       await db.managers.put(
         {
@@ -41,7 +43,8 @@ export const taskRegistry: RegistryTask = {
           name: data.name!,
           url_id: data.url_id,
           preferences: { slug_type: 'title_number' },
-          synced: false
+          synced: false,
+          userId: data?.userId
         },
         data._id
       )
@@ -84,10 +87,12 @@ export const taskRegistry: RegistryTask = {
 
   delete_listing: {
     offlineFn: async <T = any>(id: string): Promise<T> => {
-      return await delete_contact_listing(id) as T
+      const listing = await db.managers.get(id)
+      await db.managers.delete(id)
+      return listing as T
     },
     onlineFn: async <T = any>(id: string): Promise<T> => {
-      return await Promise.resolve(id) as T
+      return await delete_contact_listing(id) as T
     },
     retry: {
       retries: 3,
@@ -121,6 +126,7 @@ export const taskRegistry: RegistryTask = {
 
 type TaskRegistry = typeof taskRegistry
 
+// const LISTENER_FLAG = Symbol.for('OnlineTaskQueue.TaskManagerListener')
 export class TaskManager extends EventTarget {
   registry: TaskRegistry
   handlers: ((taskEntry: QueuedTask) => void)[]
@@ -135,7 +141,49 @@ export class TaskManager extends EventTarget {
     db.queuedTasks.toArray().then((tasks) => {
       this.sync_tasks = tasks
     })
+
+  //  if (!(OnlineTaskQueue as any)[LISTENER_FLAG]) {
+  //     (OnlineTaskQueue as any)[LISTENER_FLAG] = true
+
+  //     OnlineTaskQueue.listen(async (paused) => {
+  //       if (!paused) {
+  //         console.log('[TaskManager] Queue resumed, triggering keepSync() once')
+  //         await this.keepSync()
+  //       }
+  //     })
+  //   }
   }
+
+  private syncing = false;
+
+async keepSync() {
+  if (this.syncing) return;
+  this.syncing = true;
+
+  // console.log('[keepSync] triggered at', new Date().toISOString(), 'stack:', new Error().stack);
+  try {
+    const now = Date.now();
+    const eligible = await db.queuedTasks
+      .where('status')
+      .equals('idle')
+      .and(t => (t.nextAttemptAt || 0) <= now)
+      .toArray();
+
+    if (!eligible.length) return;
+
+    await asyncForeach(eligible, async task => {
+      try {
+        if (this.sync_tasks.some(t => t._id === task._id && t.status === 'processing')) return;
+        await this.retry(task._id);
+      } catch (e) {
+        console.error('sync task retry failed', e);
+      }
+    });
+  } finally {
+    this.syncing = false;
+  }
+}
+
 
   listen(handler: typeof this.handlers[0]){
     this.handlers.push(handler)
@@ -195,7 +243,6 @@ export class TaskManager extends EventTarget {
       if (!task) return null
       if (task.status === 'processing') return null
       if (task.nextAttemptAt && task.nextAttemptAt > now) return null
-      // claim it
       await db.queuedTasks.update(taskId, { status: 'processing', worker: `${taskId}-${now}`, lockedAt: now })
       return await db.queuedTasks.get(taskId)
     })

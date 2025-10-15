@@ -66,7 +66,7 @@ const BlockCard: FC<{
               <DropdownMenuItem className='block p-2'>Open</DropdownMenuItem>
             </Link>
 
-            { owner && <MoveListingButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-neutral-50 hover:text-neutral-600 transition-colors text-left text-sm'>
+            { isOnline && owner && <MoveListingButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-neutral-50 hover:text-neutral-600 transition-colors text-left text-sm'>
               Move
             </MoveListingButton>}
             { owner && <ListingDeleteButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-red-50 hover:text-red-400 transition-colors text-left text-sm'>

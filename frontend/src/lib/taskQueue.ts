@@ -10,6 +10,7 @@ TaskQueue {
   concurrency: number
   activeConsumers: number
   queueId: string
+  stateListeners: ((state: boolean) => void)[]
   constructor(concurrency: number = 10, startPaused: boolean = false) {
     this.queue = []
     this.resolvers = []
@@ -21,14 +22,30 @@ TaskQueue {
       this.activeConsumers++
       this.consume()
     }
+
+    this.stateListeners = []
+  }
+
+  listen(listener: (state: boolean) => void){
+    this.stateListeners.push(listener)
   }
 
   pause() {
-    this.paused = true
+    if(this.paused) return
+    this.paused = true 
+    this.stateListeners.forEach(s => s(this.paused))
   }
 
   resume() {
+    if(!this.paused) return
     this.paused = false
+    this.stateListeners.forEach(s => s(this.paused))
+
+     while (this.resolvers.length > 0 && this.queue.length > 0) {
+      const resolver = this.resolvers.shift()
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      resolver && resolver[0](this.queue.shift()!)
+    }
   }
 
   async consume() {
@@ -37,15 +54,14 @@ TaskQueue {
         await this.waitWhilePaused()
       }
 
-      // console.log(`omo ${this.queueId}`)
-
       try {
         const task = await this.getTask()
         await task()
 
         this.activeConsumers--
         // eslint-disable-next-line no-empty, no-unused-vars, @typescript-eslint/no-unused-vars
-      } catch (error: any) {}
+      } catch (error: any) {
+      }
     }
   }
 

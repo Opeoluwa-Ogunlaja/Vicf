@@ -17,7 +17,6 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { useManagerActions } from '@/hooks/useManagerActions'
-import { useUser } from '@/hooks/useUser'
 import { useManager } from '@/hooks/useManager'
 import { useToast } from '@/hooks/use-toast'
 import { emptyBaseContactManager } from '@/lib/consts'
@@ -32,7 +31,6 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const location = useLocation()
   const isOnSave = location.pathname.includes('/save')
   const [open, setOpen] = useState(false)
-  const { loggedIn } = useUser()
   const manager = useManager()
   const managerLength = useRef<number>(manager.length)
 
@@ -56,7 +54,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
             input_backup: JSON.stringify({ name: undefined }),
             name: `New Contacts ${managerLength.current + 1}`
           }) as ContactManagerEntry,
-          loggedIn
+          true
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ) as any
       )

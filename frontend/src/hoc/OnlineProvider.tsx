@@ -87,7 +87,7 @@ const OnlineProvider = memo(({ children }: { children: ReactNode }) => {
   }, [isUserLoggedIn, syncOnlineStatus])
 
   // --- Task queue sync ---
-  useEffect(() => {
+  useUpdateEffect(() => {
     if (online) OnlineTaskQueue.resume()
     else OnlineTaskQueue.pause()
   }, [online])
