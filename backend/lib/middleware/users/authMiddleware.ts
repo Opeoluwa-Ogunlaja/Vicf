@@ -50,7 +50,6 @@ export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
 
     return next()
   } catch (err) {
-    console.log(req.path)
     if (err instanceof ForbiddenError && req.path != "/api/users/token") throw err
     return next()
   }
