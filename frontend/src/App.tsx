@@ -12,6 +12,7 @@ import { Toaster } from './components/ui/toaster'
 import OnlineProvider from './hoc/OnlineProvider'
 import SocketProvider from './hoc/SocketProvider'
 import LoadingScreen from './components/LoadingScreen'
+import SyncProvider from './hoc/SyncProvider';
 
 const App: FC = () => {
   const [ready, setReady] = useState(false)
@@ -21,11 +22,13 @@ const App: FC = () => {
       <GoogleOAuthProvider clientId={GClient}>
         <UserProvider>
           <SocketProvider>
-            <OnlineProvider>
-              <SidenavProvider>
-                <AppRouter setReady={setReady} />
-                <Toaster />
-              </SidenavProvider>
+              <OnlineProvider>
+                <SyncProvider>
+                <SidenavProvider>
+                  <AppRouter setReady={setReady} />
+                  <Toaster />
+                </SidenavProvider>
+                </SyncProvider>
             </OnlineProvider>
           </SocketProvider>
         </UserProvider>

@@ -21,6 +21,7 @@ import LoadingScreen from '@/components/LoadingScreen'
 import { Link } from 'react-router-dom'
 import { downloadCsv, downloadVcf, downloadXlsx } from '@/lib/utils/requestUtils'
 import { filteredContacts } from '@/lib/utils'
+import BackupButton from '@/components/BackupButton'
 
 const SaveLayout: FC<{ name?: string }> = memo(() => {
   const contacts = useContacts()
@@ -113,6 +114,11 @@ const SaveLayout: FC<{ name?: string }> = memo(() => {
               <Suspense fallback={<>Loading</>}>
                 <Await resolve={contacts_manager_promise} errorElement={<>Omo</>}>
                   {(manager: { _id: string, url_id: string }[]) => {const managerID = manager.find((m) => m.url_id == contacts.url_id); return <Button  className="bg-green-500 text-white" onClick={() => managerID && downloadXlsx(managerID['_id'], console.log)}>Excel Document (.xlsx)</Button>}}
+                </Await>
+              </Suspense>
+              <Suspense fallback={<>Loading</>}>
+                <Await resolve={contacts_manager_promise} errorElement={<>Omo</>}>
+                  {(manager: { _id: string, url_id: string }[]) => {const managerID = manager.find((m) => m.url_id == contacts.url_id); return <BackupButton manager={managerID}/>}}
                 </Await>
               </Suspense>
             </div>

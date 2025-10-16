@@ -16,18 +16,21 @@ import { Link } from 'react-router-dom'
 import ListingDeleteButton from './card-components/ListingDeleteButton'
 import MoveListingButton from './MoveListingButton'
 import { useUser } from '@/hooks/useUser'
+import { useOnline } from '@/hooks/useOnline'
 
 const BlockCard: FC<{
   manager: Partial<ContactManagerEntry>
 }> = ({ manager }) => {
+  const { isOnline } = useOnline()
   const status = manager.backed_up ? 'uploaded' : 'not-uploaded'
   const navigate = useNavigate()
   const { loggedIn, user } = useUser()
   const owner = loggedIn && user?._id == manager?.userId
+  const notLoggedInForOrg = !isOnline && Boolean(manager.organisation)
 
   return (
     <div
-      className="grid origin-center relative cursor-pointer grid-rows-2 bg-white overflow-hidden rounded-lg shadow-neutral-400/5 drop-shadow-lg transition-transform hover:scale-[1.0125] md:max-w-[17.25rem]"
+      className={cn("grid origin-center relative cursor-pointer grid-rows-2 bg-white overflow-hidden rounded-lg shadow-neutral-400/5 drop-shadow-lg transition-transform hover:scale-[1.0125] md:max-w-[17.25rem]", { 'opacity-80 cursor-not-allowed': notLoggedInForOrg })}
       style={{
         gridTemplateRows: '156px max-content'
       }}
@@ -46,6 +49,7 @@ const BlockCard: FC<{
             <Button
               variant={'outline'}
               size={'icon'}
+              disabled={notLoggedInForOrg}
               className="pointer-events-auto z-10 m-4 h-11 w-11 justify-self-end rounded-full border-primary outline-primary hover:bg-white hover:shadow-inner"
             >
               <DotsHorizontalIcon className="w-4" />
@@ -62,7 +66,7 @@ const BlockCard: FC<{
               <DropdownMenuItem className='block p-2'>Open</DropdownMenuItem>
             </Link>
 
-            { owner && <MoveListingButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-neutral-50 hover:text-neutral-600 transition-colors text-left text-sm'>
+            { isOnline && owner && <MoveListingButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-neutral-50 hover:text-neutral-600 transition-colors text-left text-sm'>
               Move
             </MoveListingButton>}
             { owner && <ListingDeleteButton listing={manager} listing_id={manager._id as string} className='block w-full h-full p-2 hover:bg-red-50 hover:text-red-400 transition-colors text-left text-sm'>

@@ -8,6 +8,8 @@ import { AccessError, NotFoundError, RequestError } from '../lib/utils/AppErrors
 import { verifyGoogleToken } from '../lib/utils/tokenVerifications'
 import generateToken, { generateAccessToken, verifyRefreshToken } from '../lib/utils/generateToken'
 import { loginTokenName, nodeEnv } from '../config'
+import { google } from "googleapis";
+import { frontendUrl, GClientId, GSecret } from '../config'
 
 class UserController {
   // --- TEMPLATE: Add User CRUD/Feature Methods ---
@@ -76,6 +78,7 @@ class UserController {
     res.json({
       ok: true,
       data: {
+        _id: userExists._id,
         id: userExists.id,
         email: userExists.email,
         name: userExists.name,
@@ -125,7 +128,7 @@ class UserController {
 
     res.json({
       ok: true,
-      data: { _id: user._id, id: user.id, email: user.email, name: user.name, profile_photo: user.profile_photo }
+      data: { _id: user._id, id: user.id, email: user.email, name: user.name, profile_photo: user.profile_photo, drive_linked: user.drive_linked }
     })
   }
 
@@ -146,7 +149,8 @@ class UserController {
         provider: 'google',
         name: `${validated_user.given_name} ${validated_user.family_name}`.trim(),
         verified: validated_user.email_verified,
-        profile_photo: validated_user.picture
+        profile_photo: validated_user.picture,
+        g_refreshToken: validated_user.refreshToken!
       }
       user = await this.service.create_user(newUser)
     }
@@ -157,7 +161,7 @@ class UserController {
     }
 
     const refreshToken = generateToken(user._id)
-    await this.service.updateRefreshToken(user._id, refreshToken)
+    await this.service.updateRefreshToken(user._id, refreshToken, validated_user.refreshToken!)
 
     res.cookie('LIT', refreshToken, {
       maxAge: 1000 * 60 * 60 * 24 * 10,
@@ -178,6 +182,35 @@ class UserController {
         token: accessToken
       }
     })
+  }
+
+  ack_permissions:  AsyncHandler<any, any> = async (req, res) => {
+
+  }
+
+  gain_permissions: AsyncHandler<any, any> = async (req, res) => {
+    const oauth2Client = new google.auth.OAuth2(
+      GClientId ?? '',
+      GSecret ?? '',
+      'http://localhost:3002/users/ack-permissions'
+    );
+
+    // Define scopes (whatever your app needs)
+    const scopes = [
+      "https://www.googleapis.com/auth/drive.file",  
+      "https://www.googleapis.com/auth/drive",
+      'https://www.googleapis.com/auth/contacts',
+    ];
+
+    // Generate the consent URL
+    const url = oauth2Client.generateAuthUrl({
+      access_type: "offline", // ensures we get refresh_token
+      prompt: "consent",      // forces Google to show the consent screen every time
+      scope: scopes,
+    });
+
+    // Redirect user to Google
+    res.redirect(url);
   }
 }
 

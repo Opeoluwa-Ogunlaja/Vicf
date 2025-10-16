@@ -98,9 +98,8 @@ interface EncryptedFieldConfig {
 }
 
 interface EncryptedFieldPluginOptions {
-  fields: EncryptedFieldConfig[];
+  fields: EncryptedFieldConfig[]
 }
-
 
 declare module 'mongoose' {
   interface Document {
@@ -148,34 +147,34 @@ function rewriteObject(obj: any, field: string, hashField: string) {
 }
 
 function rewriteAggregationObject(obj: any, field: string, hashField: string) {
-  if (!obj || typeof obj !== "object") return;
+  if (!obj || typeof obj !== 'object') return
 
   for (const key of Object.keys(obj)) {
-    const value = obj[key];
+    const value = obj[key]
 
-    if (["$or", "$and", "$nor"].includes(key) && Array.isArray(value)) {
-      value.forEach((sub: any) => rewriteAggregationObject(sub, field, hashField));
-      continue;
+    if (['$or', '$and', '$nor'].includes(key) && Array.isArray(value)) {
+      value.forEach((sub: any) => rewriteAggregationObject(sub, field, hashField))
+      continue
     }
 
     if (key === field) {
-      if (typeof value === "string") {
-        obj[hashField] = hmacHash(value);
-        delete obj[field];
-      } else if (value && typeof value === "object") {
+      if (typeof value === 'string') {
+        obj[hashField] = hmacHash(value)
+        delete obj[field]
+      } else if (value && typeof value === 'object') {
         for (const op of Object.keys(value)) {
-          if (["$eq"].includes(op) && typeof value[op] === "string") {
-            value[op] = hmacHash(value[op]);
+          if (['$eq'].includes(op) && typeof value[op] === 'string') {
+            value[op] = hmacHash(value[op])
           }
-          if (["$in", "$nin"].includes(op) && Array.isArray(value[op])) {
-            value[op] = value[op].map((v: string) => hmacHash(v));
+          if (['$in', '$nin'].includes(op) && Array.isArray(value[op])) {
+            value[op] = value[op].map((v: string) => hmacHash(v))
           }
         }
-        obj[hashField] = value;
-        delete obj[field];
+        obj[hashField] = value
+        delete obj[field]
       }
-    } else if (typeof value === "object") {
-      rewriteAggregationObject(value, field, hashField);
+    } else if (typeof value === 'object') {
+      rewriteAggregationObject(value, field, hashField)
     }
   }
 }
@@ -186,30 +185,28 @@ function rewriteAggregationPipeline(
 ) {
   return pipeline.map(stage => {
     if (stage.$match || stage.$project || stage.$set) {
-      fields.forEach(({ field, hashField }) =>
-        rewriteAggregationObject(stage, field, hashField)
-      );
+      fields.forEach(({ field, hashField }) => rewriteAggregationObject(stage, field, hashField))
     }
-    return stage;
-  });
+    return stage
+  })
 }
 
-const ENCRYPTED_FIELDS = Symbol("encryptedFields");
+const ENCRYPTED_FIELDS = Symbol('encryptedFields')
 
 export function encryptedFieldPlugin(schema: Schema, options: EncryptedFieldPluginOptions) {
-  const { fields } = options;
+  const { fields } = options
 
   // Track all encrypted fields
   if (!(schema as any)[ENCRYPTED_FIELDS]) {
-    (schema as any)[ENCRYPTED_FIELDS] = [];
+    ;(schema as any)[ENCRYPTED_FIELDS] = []
   }
 
   for (const f of fields) {
-    const { field, hashField = `${field}Hash`, encryptedField = `${field}Encrypted` } = f;
+    const { field, hashField = `${field}Hash`, encryptedField = `${field}Encrypted` } = f
 
     // Remove plain field if it exists in schema
     if (schema.path(field)) {
-      schema.remove(field);
+      schema.remove(field)
     }
 
     // Add encrypted + hash fields
@@ -224,104 +221,133 @@ export function encryptedFieldPlugin(schema: Schema, options: EncryptedFieldPlug
         index: true,
         sparse: true
       }
-    };
-    schema.add(encryptedSchema);
+    }
+    schema.add(encryptedSchema)
 
     // Virtual field accessor
     schema
       .virtual(field)
       .get(function (this: any) {
-        const enc: EncryptedData | undefined = this[encryptedField];
-        if (!enc?.encrypted || !enc?.iv || !enc?.tag) return undefined;
-        return decrypt(enc);
+        const enc: EncryptedData | undefined = this[encryptedField]
+        if (!enc?.encrypted || !enc?.iv || !enc?.tag) return undefined
+        return decrypt(enc)
       })
       .set(function (this: any, value: string) {
-        this[`__${field}`] = value;
-      });
+        this[`__${field}`] = value
+      })
 
     // Encrypt + hash before save
-    schema.pre("save", function (this: any, next) {
-      const raw = this[`__${field}`];
+    schema.pre('save', function (this: any, next) {
+      const raw = this[`__${field}`]
       if (raw !== undefined) {
-        this[encryptedField] = encrypt(raw);
-        this[hashField] = hmacHash(raw);
+        this[encryptedField] = encrypt(raw)
+        this[hashField] = hmacHash(raw)
+      } else {
+        // Strip both if undefined
+        this[encryptedField] = undefined
+        this[hashField] = undefined
       }
-      next();
-    });
+      next()
+    })
 
     // Register for aggregation post-processing
-    (schema as any)[ENCRYPTED_FIELDS].push({ field, hashField, encryptedField });
+    ;(schema as any)[ENCRYPTED_FIELDS].push({ field, hashField, encryptedField })
   }
 
   /**
    * 🔍 Query & Update middleware (applies to all fields)
    */
   const queryMiddleware = function (this: any, next: () => void) {
-    const q = this.getQuery();
-    const update = this.getUpdate();
+    const q = this.getQuery()
+    const update = this._update
 
-    for (const { field, hashField = `${field}Hash`, encryptedField = `${field}Encrypted` } of fields) {
-      rewriteObject(q, field, hashField);
+    for (const {
+      field,
+      hashField = `${field}Hash`,
+      encryptedField = `${field}Encrypted`
+    } of fields) {
+      // 🔍 Rewrite queries
+      rewriteObject(q, field, hashField)
 
       if (update) {
-        if (update.$set && update.$set[field]) {
-          const raw = update.$set[field];
-          update.$set[encryptedField] = encrypt(raw);
-          update.$set[hashField] = hmacHash(raw);
-          delete update.$set[field];
+        // --- Case 1: $set updates ---
+        if (update.$set && field in update.$set) {
+          const raw = update.$set[field]
+          if (raw !== undefined) {
+            update.$set[encryptedField] = encrypt(raw)
+            update.$set[hashField] = hmacHash(raw)
+          } else {
+            delete update.$set[encryptedField]
+            delete update.$set[hashField]
+          }
+          delete update.$set[field]
         }
 
-        if (update.$unset && update.$unset[field]) {
-          update.$unset[hashField] = update.$unset[field];
-          update.$unset[encryptedField] = update.$unset[field];
-          delete update.$unset[field];
+        // --- Case 2: $unset updates ---
+        if (update.$unset && field in update.$unset) {
+          update.$unset[hashField] = update.$unset[field]
+          update.$unset[encryptedField] = update.$unset[field]
+          delete update.$unset[field]
+        }
+
+        // --- Case 3: Replacement updates (top-level fields) ---
+        if (field in update && !field.startsWith('$')) {
+          const raw = update[field]
+          if (raw !== undefined) {
+            update[encryptedField] = encrypt(raw)
+            update[hashField] = hmacHash(raw)
+          } else {
+            delete update[encryptedField]
+            delete update[hashField]
+          }
+          delete update[field] // 🚫 strip raw field
         }
       }
     }
 
-    next();
-  };
+    next()
+  }
 
-  schema.pre("find", queryMiddleware);
-  schema.pre("findOne", queryMiddleware);
-  schema.pre("findOneAndUpdate", queryMiddleware);
-  schema.pre("updateOne", queryMiddleware);
-  schema.pre("updateMany", queryMiddleware);
-  schema.pre("deleteOne", queryMiddleware);
-  schema.pre("deleteMany", queryMiddleware);
+  schema.pre('find', queryMiddleware)
+  schema.pre('findOne', queryMiddleware)
+  schema.pre('findOneAndUpdate', queryMiddleware)
+  schema.pre('updateOne', queryMiddleware)
+  schema.pre('updateMany', queryMiddleware)
+  schema.pre('deleteOne', queryMiddleware)
+  schema.pre('deleteMany', queryMiddleware)
 
   /**
    * 🔐 Helper to get decrypted fields from a document
    */
   schema.methods.getDecrypted = function () {
-    const result: Record<string, any> = {};
+    const result: Record<string, any> = {}
     for (const { field } of fields) {
-      result[field] = this[field];
+      result[field] = this[field]
     }
-    return result;
-  };
+    return result
+  }
 
   /**
    * 📊 Secure aggregate (rewrites $match/$project & decrypts)
    */
   schema.statics.secureAggregate = async function (pipeline: any[]) {
-    const encryptedFields = (this as any)[ENCRYPTED_FIELDS] || [];
-    const rewritten = rewriteAggregationPipeline(pipeline, encryptedFields);
+    const encryptedFields = (this as any)[ENCRYPTED_FIELDS] || []
+    const rewritten = rewriteAggregationPipeline(pipeline, encryptedFields)
 
-    const docs = await this.aggregate(rewritten);
+    const docs = await this.aggregate(rewritten)
 
     return docs.map((doc: any) => {
-      const plainDoc = { ...doc };
+      const plainDoc = { ...doc }
       for (const { field, encryptedField } of encryptedFields) {
         if (doc[encryptedField]) {
           try {
-            plainDoc[field] = decrypt(doc[encryptedField]);
+            plainDoc[field] = decrypt(doc[encryptedField])
           } catch {
-            plainDoc[field] = null;
+            plainDoc[field] = null
           }
         }
       }
-      return plainDoc;
-    });
-  };
+      return plainDoc
+    })
+  }
 }

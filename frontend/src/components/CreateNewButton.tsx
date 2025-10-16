@@ -17,12 +17,13 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { useManagerActions } from '@/hooks/useManagerActions'
-import { useUser } from '@/hooks/useUser'
 import { useManager } from '@/hooks/useManager'
 import { useToast } from '@/hooks/use-toast'
 import { emptyBaseContactManager } from '@/lib/consts'
 import { useThrottleAsync } from '@/hooks/useThrottleAsync'
 import { PlusIcon } from '@radix-ui/react-icons'
+import { mergeObj } from '@/lib/utils'
+import { ContactManagerEntry } from '@/types/contacts_manager'
 
 const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const [isProcessing, toggle] = useToggle(false)
@@ -30,7 +31,6 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const location = useLocation()
   const isOnSave = location.pathname.includes('/save')
   const [open, setOpen] = useState(false)
-  const { loggedIn } = useUser()
   const manager = useManager()
   const managerLength = useRef<number>(manager.length)
 
@@ -44,18 +44,17 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
   const handleNewListing = useThrottleAsync(async () => {
     toggle()
     const id = generateListingId()
-    if (loggedIn) {
       ;(
         createManager(
-          {
+          mergeObj(emptyBaseContactManager, {
             _id: generateMongoId(),
             backed_up: false,
             contacts_count: 0,
             url_id: id as string,
             input_backup: JSON.stringify({ name: undefined }),
             name: `New Contacts ${managerLength.current + 1}`
-          },
-          loggedIn
+          }) as ContactManagerEntry,
+          true
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ) as any
       )
@@ -72,20 +71,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
           })
           toggle()
         })
-    } else {
-      createManager(
-        {
-          _id: generateMongoId(),
-          url_id: id as string,
-          name: `New Contact ${managerLength.current + 1}`,
-          ...emptyBaseContactManager
-        },
-        loggedIn
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ) as any
       setOpen(false)
-      navigate(`/save/${id}?new=true`)
-    }
   }, 5000)
 
   return (

@@ -21,7 +21,7 @@ const checkError = (err: AxiosError) => {
 }
 
 const fetchAccessToken = async (): Promise<{ token: string }> => {
-  const response = await axiosInstance.get('/users/token')
+  const response = await axiosInstance.get('/api/users/token')
   return response.data.data
 }
 
@@ -53,7 +53,7 @@ export const signup_user = async ({
   password
 }: SignupFormType): Promise<IUser | undefined> => {
   try {
-    const newUser = await axiosInstance.post('/users/register', {
+    const newUser = await axiosInstance.post('/api/users/register', {
       email,
       name,
       password
@@ -71,11 +71,12 @@ export const login_user = async ({
   password
 }: LoginFormType): Promise<IUser | undefined> => {
   try {
-    const newUser = await axiosInstance.post('/users/login', {
+    const newUser = await axiosInstance.post('/api/users/login', {
       email,
       password
     })
 
+    
     return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -89,7 +90,7 @@ export const google_login = async ({
   code: string
 }): Promise<(IUser & { token: string }) | undefined> => {
   try {
-    const newUser = await axiosInstance.post('/users/google-login', {
+    const newUser = await axiosInstance.post('/api/users/google-login', {
       code
     })
 
@@ -102,7 +103,7 @@ export const google_login = async ({
 
 export const get_profile = async (): Promise<IUser | undefined> => {
   try {
-    const newUser = await axiosInstance.get('/users/profile')
+    const newUser = await axiosInstance.get('/api/users/profile')
 
     return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,7 +117,7 @@ export const get_contacts_manager = async (
 ): Promise<ContactManagerEntry[] | undefined> => {
   try {
     const newUser = await axiosInstance.get(
-      '/contacts/manager',
+      '/api/contacts/manager',
       authToken ? { headers: { Authorization: `Bearer ${authToken}` } } : undefined
     )
 
@@ -128,16 +129,19 @@ export const get_contacts_manager = async (
 }
 
 export const create_contact_listing = async ({
+  _id,
   url_id,
   name,
   input_backup
 }: {
+  _id: string,
   url_id: string
   name?: string
   input_backup?: string
 }) => {
   try {
-    const newListing = await axiosInstance.post('/contacts/create', {
+    const newListing = await axiosInstance.post('/api/contacts/create', {
+      _id,
       url_id,
       name,
       input_backup
@@ -150,9 +154,21 @@ export const create_contact_listing = async ({
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const add_contact_listing = async (listingId: string, data: any) => {
+  try {
+    const newListing = await axiosInstance.post(`/api/contacts/${listingId}/add-contact`, data)
+
+    return newListing.data.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
+}
+
 export const update_contact_input_backup = async (id: string, backup: Partial<IContact>) => {
   try {
-    const newListing = await axiosInstance.patch(`/contacts/backup-input/${id}`, backup)
+    const newListing = await axiosInstance.patch(`/api/contacts/backup-input/${id}`, backup)
 
     return newListing.data.data.input_backup
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -163,7 +179,7 @@ export const update_contact_input_backup = async (id: string, backup: Partial<IC
 
 export const update_contact_name_backup = async (id: string, newName: string) => {
   try {
-    const newListing = await axiosInstance.patch(`/contacts/${id}/name`, { name: newName })
+    const newListing = await axiosInstance.patch(`/api/contacts/${id}/name`, { name: newName })
 
     return newListing.data.data.name
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -174,7 +190,7 @@ export const update_contact_name_backup = async (id: string, newName: string) =>
 
 export const update_manager_slug = async (id: string, slug_type: string) => {
   try {
-    const newListing = await axiosInstance.patch(`/contacts/${id}/slug-type`, {
+    const newListing = await axiosInstance.patch(`/api/contacts/${id}/slug-type`, {
       slug_type: slug_type
     })
 
@@ -187,7 +203,7 @@ export const update_manager_slug = async (id: string, slug_type: string) => {
 
 export const update_contact = async (id: string, data: Partial<IContact>) => {
   try {
-    const newListing = await axiosInstance.patch(`/contacts/contact/${id}/`, data)
+    const newListing = await axiosInstance.patch(`/api/contacts/contact/${id}/`, data)
 
     return newListing.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -200,7 +216,7 @@ export const get_contact_listing = async (
   listing_id: string
 ): Promise<ContactManagerEntry[] | undefined> => {
   try {
-    const newUser = await axiosInstance.get(`/contacts/${listing_id}/`)
+    const newUser = await axiosInstance.get(`/api/contacts/${listing_id}/`)
 
     return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -211,7 +227,7 @@ export const get_contact_listing = async (
 
 export const get_contacts = async (listing_id: string): Promise<IContact[] | undefined> => {
   try {
-    const newUser = await axiosInstance.get(`/contacts/${listing_id}/contacts`)
+    const newUser = await axiosInstance.get(`/api/contacts/${listing_id}/contacts`)
 
     return newUser.data.data || []
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -225,7 +241,7 @@ export const delete_contact = async (
   contact_id: string
 ): Promise<IContact[] | undefined> => {
   try {
-    const newUser = await axiosInstance.delete(`/contacts/${listing_id}/${contact_id}`)
+    const newUser = await axiosInstance.delete(`/api/contacts/${listing_id}/${contact_id}`)
 
     return (
       newUser.data.data.flatMap((contact: { contacts: IContact }) => {
@@ -242,7 +258,7 @@ export const delete_contact_listing = async (
   listing_id: string,
 ): Promise<ContactManagerEntry | undefined> => {
   try {
-    const deletedListing = await axiosInstance.delete(`/contacts/${listing_id}`) as ContactManagerEntry
+    const deletedListing = await axiosInstance.delete(`/api/contacts/${listing_id}`) as ContactManagerEntry
 
     return deletedListing
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -262,7 +278,7 @@ export const testPromise = async () => {
 
 export const createOrganisation = async (organisation_name: string) => {
   try {
-    const newUser = await axiosInstance.post('/organisations/create', {
+    const newUser = await axiosInstance.post('/api/organisations/create', {
       name: organisation_name
     })
 
@@ -275,7 +291,7 @@ export const createOrganisation = async (organisation_name: string) => {
 
 export const get_organisations_for_me = async () => {
   try {
-    const newUser = await axiosInstance.get(`/organisations/me`)
+    const newUser = await axiosInstance.get(`/api/organisations/me`)
 
     return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -286,7 +302,7 @@ export const get_organisations_for_me = async () => {
 
 export const get_organisation = async (organisationId: string) => {
   try {
-    const newUser = await axiosInstance.get(`/organisations/${organisationId}`)
+    const newUser = await axiosInstance.get(`/api/organisations/${organisationId}`)
 
     return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -297,7 +313,7 @@ export const get_organisation = async (organisationId: string) => {
 
 export const get_organisation_from_invite = async (inviteCode: string) => {
   try {
-    const newUser = await axiosInstance.get(`/organisations/inviteCode/${inviteCode}`)
+    const newUser = await axiosInstance.get(`/api/organisations/inviteCode/${inviteCode}`)
 
     return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -308,7 +324,7 @@ export const get_organisation_from_invite = async (inviteCode: string) => {
 
 export const join_organisation_from_invite = async (inviteCode: string) => {
   try {
-    const newUser = await axiosInstance.put(`/organisations/inviteCode/${inviteCode}`)
+    const newUser = await axiosInstance.put(`/api/organisations/inviteCode/${inviteCode}`)
 
     return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -319,7 +335,7 @@ export const join_organisation_from_invite = async (inviteCode: string) => {
 
 export const get_organisation_members = async (organisationId: string) => {
   try {
-    const newUser = await axiosInstance.get(`/organisations/${organisationId}/members`)
+    const newUser = await axiosInstance.get(`/api/organisations/${organisationId}/members`)
 
     return newUser.data.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -330,7 +346,7 @@ export const get_organisation_members = async (organisationId: string) => {
 
 export const move_listing_to_organisation = async (listingId: string, organisationId: string) => {
   try {
-    const newUser = await axiosInstance.patch(`/contacts/${listingId}/move-to-org`, {
+    const newUser = await axiosInstance.patch(`/api/contacts/${listingId}/move-to-org`, {
       organisationId
     })
 
@@ -342,7 +358,7 @@ export const move_listing_to_organisation = async (listingId: string, organisati
 }
 
 export async function downloadVcf(listingId: string, onProgress: (percentage: number) => void) {
-  const response = await axiosInstance.get(`/contacts/${listingId}/download-vcf`, {
+  const response = await axiosInstance.get(`/api/contacts/${listingId}/download-vcf`, {
     responseType: 'blob',
     onDownloadProgress: (event) => {
       if (event.lengthComputable && onProgress) {
@@ -365,7 +381,7 @@ export async function downloadVcf(listingId: string, onProgress: (percentage: nu
 }
 
 export async function downloadCsv(listingId: string, onProgress: (percentage: number) => void) {
-  const response = await axiosInstance.get(`/contacts/${listingId}/download-csv`, {
+  const response = await axiosInstance.get(`/api/contacts/${listingId}/download-csv`, {
     responseType: 'blob',
     onDownloadProgress: (event) => {
       if (event.lengthComputable && onProgress) {
@@ -388,7 +404,7 @@ export async function downloadCsv(listingId: string, onProgress: (percentage: nu
 }
 
 export async function downloadXlsx(listingId: string, onProgress: (percentage: number) => void) {
-  const response = await axiosInstance.get(`/contacts/${listingId}/download-xlsx`, {
+  const response = await axiosInstance.get(`/api/contacts/${listingId}/download-xlsx`, {
     responseType: 'blob',
     onDownloadProgress: (event) => {
       if (event.lengthComputable && onProgress) {
@@ -408,4 +424,35 @@ export async function downloadXlsx(listingId: string, onProgress: (percentage: n
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+}
+
+export function connectGoogle() {
+  return new Promise((res, rej) => {
+    window.open(
+    "http://localhost:3002/users/permissions", // backend endpoint
+    "googleLogin",
+    "width=500,height=600"
+  );
+
+  // Listen for message from popup
+  window.addEventListener("message", (event) => {
+    if (event.origin !== window.location.origin) rej(new Error("Forbidden"));
+
+    if (event.data.success) {
+     res(event.data.userId);
+      // Update state or trigger refetch
+    } else {
+      res(event.data.error);
+    }
+  });
+  })
+}
+
+export const initiate_drive_for_user = async () => {
+  try {
+    return await connectGoogle()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    checkError(error)
+  }
 }

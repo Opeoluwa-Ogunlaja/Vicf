@@ -4,10 +4,9 @@ import { useToast } from '@/hooks/use-toast'
 import { useManager } from '@/hooks/useManager'
 import { useManagerActions } from '@/hooks/useManagerActions'
 // import { useOnline } from '@/hooks/useOnline'
-import { useSocketActions } from '@/hooks/useSocketActions'
 import { useSocketEvent } from '@/hooks/useSocketEvent'
 import { useUser } from '@/hooks/useUser'
-import { delete_contact, get_contacts, update_contact } from '@/lib/utils/requestUtils'
+import { add_contact_listing, delete_contact, get_contacts, update_contact } from '@/lib/utils/requestUtils'
 // import { db } from '@/stores/dexie/db'
 import { contactsArray, IContact } from '@/types/contacts'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -15,7 +14,6 @@ import { FC, ReactNode } from 'react'
 import { ContactManagerEntry } from '@/types/contacts_manager'
 
 const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ children, url_id }) => {
-  const { sendMessage } = useSocketActions()
   const { toast } = useToast()
   const { loggedIn } = useUser()
   const manager = useManager()
@@ -110,16 +108,15 @@ const ContactsProvider: FC<{ children: ReactNode; url_id: string }> = ({ childre
         value={{
           add: contact => {
             if (loggedIn) {
-              sendMessage(
-                { listingId: contactManager?._id, ...contact },
-                'add-contacts',
-                contact => {
-                  toast({
+              const cPromise = add_contact_listing(contactManager?._id as string, contact)
+              
+              cPromise.then((contact) => {
+                toast({
                     title: 'Contacts synced',
                     description: `${(contact as IContact).number} Synced`
                   })
-                }
-              )
+              })
+
             }
 
             else{

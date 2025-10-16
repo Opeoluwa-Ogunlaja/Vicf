@@ -48,6 +48,11 @@ const contactSchema = new Schema<IContactDocument>(
 
 contactSchema.plugin(encryptedFieldPlugin, { fields: [{ field: 'email' }, { field: 'number' }] })
 
+// contactSchema.pre('findOneAndUpdate', function(next){
+//   console.log(this.getQuery(), this.getUpdate(), (this as any).__update)
+//   next()
+// })
+
 const Contact = model<IContactDocument, ContactModelType>('Contact', contactSchema)
 
 export default Contact

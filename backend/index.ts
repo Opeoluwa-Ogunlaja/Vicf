@@ -5,12 +5,15 @@ import { connectSocketIo } from './socket'
 import { createClient } from 'redis'
 import { createAdapter } from '@socket.io/redis-adapter'
 
+let socketHandler: ReturnType<typeof connectSocketIo> | null = null;
+
+export function getSocketHandler() {
+  return socketHandler;
+}
 dbConnection()
+
 ;(async () => {
-  const io = await connectSocketIo();
-
-  (global as any).io = io
-
+  socketHandler = connectSocketIo();
   if (nodeEnv !== 'production') {
     // const pubClient = createClient({ url: 'redis://localhost:6379' })
     // const subClient = pubClient.duplicate()

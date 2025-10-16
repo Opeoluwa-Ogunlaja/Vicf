@@ -8,7 +8,7 @@ export const slugifiedId = (name: string, id: string | number) => slugify(`${nam
 
 export const generateMongoId = () => new bson.ObjectId().toString()
 
-export const generageTaskId = () => nanoid(4)
+export const generateTaskId = () => nanoid(4)
 
 export const convertSlug = (
   currentType: 'title_number' | 'title_hash',

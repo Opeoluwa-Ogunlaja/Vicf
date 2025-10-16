@@ -5,7 +5,7 @@ import { saveLoader } from './pages/save/saveLoaders'
 import { redirect } from 'react-router-dom'
 import { generateListingId } from './lib/utils/idUtils'
 
-// import { useOnline } from './hooks/useOnline'
+import { useOnline } from './hooks/useOnline'
 
 import { useContactManagerStore } from './stores/contactsManagerStore'
 import useToken from './hooks/useToken'
@@ -28,7 +28,8 @@ const OrganisationHome = lazy(() => import('./pages/organisations/OrganisationsH
 const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'))
 
 const router = (onlineStatus: boolean, setters: RouteDataType) =>
-  createBrowserRouter(
+{
+  return createBrowserRouter(
     [
       {
         path: '/auth',
@@ -117,21 +118,22 @@ const router = (onlineStatus: boolean, setters: RouteDataType) =>
     ],
     {}
   )
+}
 
 const AppRouter: FC<{ setReady: Dispatch<boolean> }> = ({ setReady }) => {
-  // const { isOnline } = useOnline()
+  const { hasNetwork } = useOnline()
   const setManager = useContactManagerStore(state => state.actions.setManager)
   const { setToken, token } = useToken()
   const { login_user, set_loaded } = useUserUpdate()
   const routerMemoized = useMemo(() => {
-    return router(true, {
+    return router(hasNetwork, {
       currentToken: token!,
       setManager: setManager,
       setToken: setToken,
       login_user,
       set_loaded, setReady: setReady
     })
-  }, [setToken, setManager, login_user, set_loaded, token, setReady])
+  }, [setToken, setManager, login_user, set_loaded, token, hasNetwork, setReady])
 
   return (
     <Suspense fallback={<LoadingScreen />}>

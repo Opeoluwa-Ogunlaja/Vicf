@@ -24,6 +24,7 @@ import { useGoogleLogin } from '@react-oauth/google'
 import { useToggle } from '@/hooks/useToggle'
 import { useUserUpdate } from '@/hooks/useUserUpdate'
 import useToken from '@/hooks/useToken'
+import { db } from '@/stores/dexie/db'
 
 const LoginForm = () => {
   const formHook = useForm<LoginFormType>({
@@ -58,6 +59,14 @@ const LoginForm = () => {
   const login = useGoogleLogin({
     onSuccess: async codeResponse => {
       const res = await googleLoginMutation.mutateAsync({ code: codeResponse.code })
+      
+      await db.last_user.put({
+        _id: res?._id,
+        name: res?.name as string,
+        email: res?.email as string,
+        profile_photo: res?.profile_photo as string,
+        drive_linked: res?.drive_linked as boolean
+      })
       return await wait(500)
         .then(() => {
           formHook.setError('root', {
@@ -69,14 +78,16 @@ const LoginForm = () => {
               _id: res?._id,
               name: res?.name,
               email: res?.email,
-              profile_photo: res?.profile_photo
+              profile_photo: res?.profile_photo,
+              drive_linked: res?.drive_linked
             }
           })
           update_user_state({
             _id: res?._id,
             name: res?.name,
             email: res?.email,
-            profile_photo: res?.profile_photo
+            profile_photo: res?.profile_photo,
+            drive_linked: res?.drive_linked
           })
           if (res?.token) setToken(res?.token)
           // else console.warn('there was no token for some reason')
@@ -109,6 +120,15 @@ const LoginForm = () => {
   const onSubmit: SubmitHandler<LoginFormType> = async data => {
     try {
       const res = (await loginMutation.mutateAsync(data)) as PartialUser & { token?: string }
+      
+      await db.last_user.put({
+        _id: res?._id,
+        name: res?.name as string,
+        email: res?.email as string,
+        profile_photo: res?.profile_photo as string,
+        drive_linked: res?.drive_linked as boolean
+      })
+      
       return await wait(500)
         .then(() => {
           formHook.setError('root', {
@@ -120,17 +140,18 @@ const LoginForm = () => {
               _id: res?._id,
               name: res?.name,
               email: res?.email,
-              profile_photo: res?.profile_photo
+              profile_photo: res?.profile_photo,
+              drive_linked: res?.drive_linked
             }
           })
-          console.log('setting the state')
           if (res?.token) setToken(res?.token)
           // else console.warn('there was no token for some reason')
           update_user_state({
             _id: res?._id,
             name: res?.name,
             email: res?.email,
-            profile_photo: res?.profile_photo
+            profile_photo: res?.profile_photo,
+            drive_linked: res?.drive_linked
           })
           queryClient.invalidateQueries({
             queryKey: ['contacts_manager'],

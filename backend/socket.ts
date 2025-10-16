@@ -21,7 +21,7 @@ instrument(io, {
 })
 
 class SocketIOHandler {
-  private io: Server
+  io: Server
   clients: SocketClients
   usersSockets: SocketUsers
   constructor(io: Server) {
@@ -58,12 +58,12 @@ class SocketIOHandler {
   }
 }
 
-export async function connectSocketIo() {
+export function connectSocketIo() {
   try {
     const socketIOHandler = new SocketIOHandler(io)
-    socketIOHandler.connect()
+    socketIOHandler.connect();
 
-    return io
+    return socketIOHandler
   } catch (error) {
     console.error(error)
   }

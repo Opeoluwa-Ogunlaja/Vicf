@@ -16,7 +16,10 @@ const contactGroupSchema = new Schema<IContactGroupDocument, ContactGroupModelTy
     ref: 'Organisations'
   },
   url_id: { type: String, unique: true },
-  contacts_count: Number,
+  contacts_count: {
+    type: Number,
+    default: 0
+  },
   backed_up: {
     type: Boolean,
     default: false

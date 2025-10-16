@@ -18,11 +18,15 @@ app.use(express.json())
 
 app.use(cors({ origin: (o, cb) => cb(null, true), credentials: true }))
 
+app.use('/ping', (req, res) => {
+  res.sendStatus(200)
+})
+
 app.use(authMiddleware)
 
-app.use('/users', userRouter)
-app.use('/contacts', contactsRouter)
-app.use('/organisations', organisationsRouter)
+app.use('/api/users', userRouter)
+app.use('/api/contacts', contactsRouter)
+app.use('/api/organisations', organisationsRouter)
 app.use('/api/subscribe', subscriptionRouter)
 app.use('/api/dashboard', dashboardRouter)
 

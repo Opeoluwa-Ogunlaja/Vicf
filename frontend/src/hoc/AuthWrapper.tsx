@@ -32,7 +32,7 @@ const AuthWrapper = () => {
             <AuthLayout />
           }
         >
-          {({ user }) => {
+          {(user) => {
             login_user({ email: user.email, _id: user._id, name: user.name, profile_photo: user.profile_photo })
             return <Navigate replace to={'/home'} />
         }}
