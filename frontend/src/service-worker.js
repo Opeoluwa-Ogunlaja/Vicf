@@ -33,7 +33,7 @@ const onlineStatus = new Proxy(
 
 /* ---- Network checking ---- */
 /* ---- Network checking ---- */
-const CHECK_URL = 'http://localhost:3002/ping'
+const CHECK_URL = `${import.meta.env.VITE_BACKEND_URL}/ping`
 let firstCheckPromise = null
 
 async function checkNetwork() {
