@@ -52,7 +52,7 @@ const CreateNewButton: FC<{ className?: string }> = ({ className }) => {
             contacts_count: 0,
             url_id: id as string,
             input_backup: JSON.stringify({ name: undefined }),
-            name: `New Contacts ${managerLength.current + 1}`
+            name: `New Contacts ${++managerLength.current}`
           }) as ContactManagerEntry,
           true
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
