@@ -1,20 +1,22 @@
 # ---- Frontend build stage ----
 FROM node:18 AS frontend
 WORKDIR /frontend
-COPY frontend/package.json frontend/yarn.lock ./
+COPY ./frontend/package.json ./
+COPY ./frontend/yarn.lock ./  # optional
 RUN yarn install --frozen-lockfile
-COPY frontend/ .
+COPY ./frontend/ .
 RUN yarn build
 
 # ---- Backend build stage ----
 FROM node:18 AS backend
 WORKDIR /backend
-COPY backend/package.json backend/yarn.lock ./
+COPY ./backend/package.json ./
+COPY ./backend/yarn.lock ./  # optional
 RUN yarn install --frozen-lockfile
-COPY backend/ .
+COPY ./backend/ .
 
 # Copy frontend dist into backend build folder
-RUN mkdir -p ./dist/client && cp -r /frontend/dist/* ./dist/client/
+COPY --from=frontend /frontend/dist ./dist/client
 
 RUN yarn build
 
