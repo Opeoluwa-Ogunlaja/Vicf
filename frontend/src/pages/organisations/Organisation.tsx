@@ -58,7 +58,7 @@ const Organisation = () => {
         }
         className="mt-8 w-full"
       >
-        <TabsList className="contacts-grid w-full justify-start gap-2 border-b border-neutral-50 bg-transparent">
+        <TabsList className="contacts-grid w-full justify-start gap-2 border-b border-neutral-50 bg-transparent mb-4">
           <TabsTrigger
             value="listings"
             className="rounded-b-none px-10 py-2 font-medium transition hover:bg-neutral-100 data-[state=active]:bg-neutral-100"
@@ -72,7 +72,7 @@ const Organisation = () => {
             Members
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="listings" className="contacts-grid py-4 animate-in fade-in-45">
+        <TabsContent value="listings" className="contacts-grid grid gap-8 pb-10 max-sm:justify-center animate-in fade-in-45">
           <OrganisationListings organisationId={currentOrganisation._id} />
         </TabsContent>
         <TabsContent value="members" className="py-4 animate-in fade-in-45">

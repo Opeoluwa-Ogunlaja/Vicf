@@ -1,46 +1,26 @@
-# fly.toml file generated for Vicf on 2025-10-16T00:00:00Z
-app = "vicf"
-primary_region = "jnb"
+# fly.toml app configuration file generated for vicf-dry-sun-877 on 2025-10-18T22:05:38+01:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'vicf'
+primary_region = 'lhr'
 
 [build]
-  # Fly will run this command to build your app before deployment
   command = "cd ./frontend && yarn && yarn build && cd ../backend && yarn && yarn build && mkdir -p ./dist/client && cp -r ../frontend/dist/* ./dist/client/"
-
-[env]
-  NODE_ENV = "production"
-  PORT = "3000"
 
 [http_service]
   internal_port = 3000
   force_https = true
-  auto_stop_machines = false
+  auto_stop_machines = 'stop'
   auto_start_machines = true
-  min_machines_running = 1
-  processes = ["app"]
+  min_machines_running = 0
+  processes = ['app']
 
-[[services]]
-  processes = ["app"]
-  internal_port = 3000
-  protocol = "tcp"
-
-  [[services.ports]]
-    handlers = ["http"]
-    port = 80
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
-
-  [services.concurrency]
-    type = "connections"
-    hard_limit = 25
-    soft_limit = 20
-
-  [[services.tcp_checks]]
-    interval = "15s"
-    timeout = "2s"
-    grace_period = "10s"
-    restart_limit = 0
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
 
 [deploy]
   release_command = "cd ./backend && yarn start"
