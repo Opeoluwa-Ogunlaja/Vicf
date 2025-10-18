@@ -1,16 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 # ---- Frontend build stage ----
 FROM node:18 AS frontend
 WORKDIR /app/frontend
