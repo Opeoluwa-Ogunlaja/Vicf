@@ -10,7 +10,7 @@ primary_region = 'lhr'
   command = "cd ./frontend && yarn && yarn build && cd ../backend && yarn && yarn build && mkdir -p ./dist/client && cp -r ../frontend/dist/* ./dist/client/"
 
 [http_service]
-  internal_port = 3000
+  internal_port = 3002
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
