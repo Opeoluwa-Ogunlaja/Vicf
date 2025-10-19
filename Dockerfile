@@ -4,7 +4,9 @@ WORKDIR /frontend
 
 # Install dependencies and build frontend
 COPY ./frontend/package.json ./
-RUN yarn install --frozen-lockfile --ignore-scripts --non-interactive
+RUN apt-get update && apt-get install -y libvips-dev
+RUN yarn install --frozen-lockfile --include=optional
+RUN yarn rebuild sharp
 COPY ./frontend/ .
 RUN yarn build
 
@@ -15,7 +17,7 @@ WORKDIR /backend
 
 # Install dependencies and copy source
 COPY ./backend/package.json ./
-RUN yarn install --frozen-lockfile --ignore-scripts --non-interactive
+RUN yarn install --frozen-lockfile --include=optional
 COPY ./backend/ .
 
 # Copy built frontend into backend dist folder
