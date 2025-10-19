@@ -6,6 +6,9 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "baseUrl": ".",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "ignoreDeprecations": "6.0",
     "types": ["vite-plugin-pwa/pwa-assets"],
     "paths": {
