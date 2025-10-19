@@ -6,7 +6,7 @@ WORKDIR /frontend
 COPY ./frontend/package.json ./
 RUN apt-get update && apt-get install -y libvips-dev
 RUN yarn install --frozen-lockfile --include=optional
-RUN yarn rebuild sharp
+RUN yarn add sharp
 COPY ./frontend/ .
 RUN yarn build
 
