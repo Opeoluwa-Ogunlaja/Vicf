@@ -4,7 +4,7 @@ WORKDIR /frontend
 
 # Install dependencies and build frontend
 COPY ./frontend/package.json ./
-RUN yarn install
+RUN yarn install --frozen-lockfile --ignore-scripts --non-interactive
 COPY ./frontend/ .
 RUN yarn build
 
@@ -15,7 +15,7 @@ WORKDIR /backend
 
 # Install dependencies and copy source
 COPY ./backend/package.json ./
-RUN yarn install
+RUN yarn install --frozen-lockfile --ignore-scripts --non-interactive
 COPY ./backend/ .
 
 # Copy built frontend into backend dist folder
