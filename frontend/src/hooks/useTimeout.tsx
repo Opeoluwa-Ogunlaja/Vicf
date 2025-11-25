@@ -2,7 +2,7 @@ import { Timeout } from '@/types/index'
 import { useCallback, useEffect, useRef } from 'react'
 
 export const useTimeout = (
-  given_callback: (...args: unknown[]) => void,
+  given_callback: () => void,
   delay: number,
   startOnInit: boolean,
   dependencies: unknown[] = []
@@ -12,7 +12,7 @@ export const useTimeout = (
 
   const set = useCallback(() => {
     timeoutRef.current = setTimeout(() => callback(), delay)
-  }, [delay])
+  }, [callback, delay])
 
   const clear = useCallback(() => {
     clearTimeout(timeoutRef.current)
@@ -21,7 +21,7 @@ export const useTimeout = (
   const reset = useCallback(() => {
     clear()
     set()
-  }, [delay, set, clear])
+  }, [set, clear])
 
   useEffect(() => {
     if (startOnInit) {
