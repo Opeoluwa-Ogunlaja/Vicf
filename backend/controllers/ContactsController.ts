@@ -1,6 +1,7 @@
 import expressAsyncHandler from 'express-async-handler'
 import { Transform, pipeline, Readable } from 'stream';
 import { contactService, ContactService } from '../services/ContactService'
+import mongoose from 'mongoose'
 import {
   AsyncHandler,
   IContact,
@@ -57,7 +58,7 @@ export class ContactsController {
 
     const newContact = await this.use_case.CreateContactAndUpdate(userId, {
       // Here
-      _id: _id,
+      _id: new mongoose.Types.ObjectId(_id),
       url_id,
       description,
       name

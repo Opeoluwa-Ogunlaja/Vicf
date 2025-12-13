@@ -15,6 +15,8 @@ export type GoogleUserResponse = Partial<{
   email_verified: boolean
 }>
 
+console.log(GClientId, GSecret, frontendUrl)
+
 export async function verifyGoogleToken(code: string) {
   const client = new OAuth2Client({
     clientId: GClientId ?? '',
