@@ -85,7 +85,7 @@ export const socketAuthMiddleware = async (
   })
 
   // Support multiple sockets per user
-  if (!userSockets.has(userObj._id as string)) {
+  if (!userSockets.has(userObj._id as any).toString()) {
     userSockets.set(String(userObj._id), [socket.id])
   } else {
     userSockets.get(String(userObj._id))!.push(socket.id)

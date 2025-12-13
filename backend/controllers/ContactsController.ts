@@ -56,7 +56,7 @@ export class ContactsController {
     const { _id, url_id, description, name } = validation.data
 
     const newContact = await this.use_case.CreateContactAndUpdate(userId, {
-      _id,
+      _id: _id!.toString(),
       url_id,
       description,
       name
@@ -315,7 +315,7 @@ export class ContactsController {
 
     // Add user to editors
     await this.service.updateManager(listingId, {
-      $addToSet: { users_editing: (user!._id as string).toString() }
+      $addToSet: { users_editing: (user!._id as any).toString() }
     })
 
     // Fetch updated editors list
@@ -346,7 +346,7 @@ export class ContactsController {
 
     // Remove user from editors
     await this.service.updateManager(listingId, {
-      $pull: { users_editing: (user!._id as string).toString() }
+      $pull: { users_editing: (user!._id as any).toString() }
     });
 
     // Fetch updated editors list
