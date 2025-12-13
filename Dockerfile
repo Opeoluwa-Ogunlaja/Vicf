@@ -1,5 +1,6 @@
 # ---- Frontend build stage ----
-FROM node:18 AS frontend
+ARG NODE_VERSION=20.10.0
+FROM node:${NODE_VERSION} AS frontend
 WORKDIR /frontend
 
 # Install dependencies and build frontend
@@ -12,7 +13,7 @@ RUN yarn build
 
 
 # ---- Backend build stage ----
-FROM node:18 AS backend
+FROM node:${NODE_VERSION} AS backend
 WORKDIR /backend
 
 # Install dependencies and copy source
@@ -28,7 +29,7 @@ RUN yarn build
 
 
 # ---- Runtime stage ----
-FROM node:18-slim AS runtime
+FROM node:${NODE_VERSION}-slim AS runtime
 WORKDIR /app
 
 # Copy only what's needed for runtime

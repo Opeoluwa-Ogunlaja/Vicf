@@ -8,7 +8,7 @@ export function useRefGuard<T>(value: T, label?: string) {
     if (label) {
       console.debug(`[useRefGuard:${label}]`, value)
     }
-  }, [value])
+  }, [value, label])
 
   return ref.current
 }
