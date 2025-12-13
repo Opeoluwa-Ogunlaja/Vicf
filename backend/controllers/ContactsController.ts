@@ -57,7 +57,7 @@ export class ContactsController {
 
     const newContact = await this.use_case.CreateContactAndUpdate(userId, {
       // Here
-      _id: _id!.toString(),
+      _id: _id,
       url_id,
       description,
       name
