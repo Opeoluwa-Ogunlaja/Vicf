@@ -12,11 +12,10 @@ export default function useMediaQuery(query: string) {
     setMatches(matchQuery.current.matches)
   }, [query])
 
-  useEventListener<MediaQueryListEvent>(
+  useEventListener<MediaQueryList, 'change'>(
     'change',
     e => setMatches(e.matches),
-    matchQuery.current as any,
-    false
+    matchQuery.current as any
   )
 
   return matches

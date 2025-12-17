@@ -6,7 +6,7 @@ export function useKeyPress<T extends HTMLElement = HTMLElement>(
   key: string,
   callback: (code: string) => void
 ) {
-  useEventListener<KeyboardEvent>(
+  useEventListener<T, 'keydown'>(
     'keydown',
     e => {
       if (e.code == key) {
@@ -14,7 +14,6 @@ export function useKeyPress<T extends HTMLElement = HTMLElement>(
         callback(e.code)
       }
     },
-    ref.current,
-    false
+    ref.current
   )
 }

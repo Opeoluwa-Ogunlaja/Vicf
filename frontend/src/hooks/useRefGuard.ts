@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
 export function useRefGuard<T>(value: T, label?: string) {
-  const ref = useRef(value)
+  const ref = useRef<T>(value)
 
   useEffect(() => {
     ref.current = value
@@ -10,5 +10,5 @@ export function useRefGuard<T>(value: T, label?: string) {
     }
   }, [value, label])
 
-  return ref.current
+  return ref
 }

@@ -31,6 +31,7 @@ const Sidenav = () => {
 
   useClickOutside<HTMLDivElement>(e => {
     e.stopPropagation()
+    // console.log(e.target, (e.target as HTMLElement).dataset['sidenavToggle'], open)
     if ((e.target as HTMLElement).dataset['sidenavToggle'] === 'true') return
     if (open) {
       setOpen(false)

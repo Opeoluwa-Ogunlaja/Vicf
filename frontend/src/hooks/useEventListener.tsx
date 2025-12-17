@@ -1,32 +1,35 @@
 import { useEffect, useRef } from 'react'
 
+type EventTargetLike = HTMLElement | Window | Document
+type EventMap<T> = T extends Window ? WindowEventMap : T extends Document ? DocumentEventMap : T extends HTMLElement ? HTMLElementEventMap : Record<string, Event>
+
+
 export function useEventListener<
-  EventType extends Event = Event,
-  ElementType extends HTMLElement | Window = HTMLElement | Window
+  TTarget extends EventTargetLike = Window,
+  TEventName extends keyof EventMap<TTarget> & string = keyof EventMap<TTarget> & string
 >(
-  eventType: string,
-  callback: (event: EventType) => void,
-  element?: ElementType | null,
-  defaultToWindow: boolean = true
+  eventName: TEventName,
+  callbackFn: (event: EventMap<TTarget>[TEventName]) => void,
+  target: TTarget | null | undefined,
+  options?: AddEventListenerOptions
 ) {
-  const callbackRef = useRef(callback)
+  const callbackRef = useRef<typeof callbackFn>(callbackFn)
+
+  useEffect(( ) => { 
+    callbackRef.current = callbackFn
+   }, [ callbackFn ])
 
   useEffect(() => {
-    callbackRef.current = callback
-  }, [callback])
-
-  useEffect(() => {
-    const target = element ?? (defaultToWindow ? window : null)
     if (!target) return
 
-    const handler = (event: EventType) => {
-      callbackRef.current(event)
+    const handler = (event: Event) => {
+      callbackRef.current(event as EventMap<TTarget>[TEventName])
     }
 
-    target.addEventListener(eventType, handler as EventListener)
+    target.addEventListener(eventName, handler, options)
 
     return () => {
-      target.removeEventListener(eventType, handler as EventListener)
+      target.removeEventListener(eventName, handler, options)
     }
-  }, [eventType, element, defaultToWindow])
+  }, [eventName, target, options])
 }

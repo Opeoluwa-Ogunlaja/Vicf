@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 import User from "../../entities/User";
+import { GClientId, GSecret, frontendUrl } from "../../config";
 
 export async function getDriveClient(userId: string) {
   // 1. Load your user from DB
@@ -10,9 +11,9 @@ export async function getDriveClient(userId: string) {
 
   // 2. Initialize OAuth2 client
   const oauth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    process.env.GOOGLE_REDIRECT_URI
+    GClientId,
+    GSecret,
+    frontendUrl
   );
 
   // 3. Attach refresh token
@@ -35,9 +36,9 @@ export async function getPeopleClient(userId: string) {
 
   // 2. Initialize OAuth2 client
   const oauth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    process.env.GOOGLE_REDIRECT_URI
+    GClientId,
+    GSecret,
+    frontendUrl,
   );
 
   // 3. Attach refresh token
