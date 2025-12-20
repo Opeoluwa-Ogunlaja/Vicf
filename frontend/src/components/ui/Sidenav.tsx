@@ -2,11 +2,9 @@ import { ClockRewindIcon, HomeSmileIcon, PlusIcon, UsersOrgIcon, VicfIcon } from
 import { NavigationLink } from './navigation-link'
 import { cn } from '@/lib/utils'
 
-import { memo, MutableRefObject, useEffect, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { useClickOutside } from '@/hooks/useClickOutside'
-import useMediaQuery from '@/hooks/useMediaQuery'
-import { useUpdateEffect } from '@/hooks/useUpdateEffect'
+// import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 import { useSidenav } from './../../hooks/useSidenav'
 import GroupCard from '../GroupCard'
 import CreateNewButton from '../CreateNewButton'
@@ -15,10 +13,26 @@ import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useOnline } from '@/hooks/useOnline'
 
+import { useClickOutside } from '@/hooks/useClickOutside'
+import useMediaQuery from '@/hooks/useMediaQuery'
+
 const Sidenav = () => {
   const [open, , setOpen] = useSidenav()
+
+  const sidenavRef = useRef<HTMLDivElement | null>(null)
+  useClickOutside<HTMLDivElement>(e => {
+    if ((e.target as HTMLElement).dataset['sidenavToggle'] === 'true') return
+    if (open) {
+      setOpen(false)
+    }
+  }, sidenavRef)
+
+  const lgScreen = useMediaQuery('(min-width: 1024px)')
+  useEffect(() => {
+    if (lgScreen && open) setOpen(false)
+  }, [lgScreen, open, setOpen])
+
   const openCount = useRef<number>(0)
-  const sidenavRef = useRef<HTMLDivElement>(null)
   const manager = useManager()
   const location = useLocation()
   const isOnSave = location.pathname.includes('/save')
@@ -28,21 +42,6 @@ const Sidenav = () => {
   useEffect(() => {
     if (open) openCount.current += 1
   }, [open, openCount])
-
-  useClickOutside<HTMLDivElement>(e => {
-    e.stopPropagation()
-    // console.log(e.target, (e.target as HTMLElement).dataset['sidenavToggle'], open)
-    if ((e.target as HTMLElement).dataset['sidenavToggle'] === 'true') return
-    if (open) {
-      setOpen(false)
-    }
-  }, sidenavRef as MutableRefObject<HTMLDivElement>)
-
-  const lgScreen = useMediaQuery('(min-width: 1024px)')
-
-  useUpdateEffect(() => {
-    if (lgScreen && open) setOpen(false)
-  }, [lgScreen])
 
   return (
     <>

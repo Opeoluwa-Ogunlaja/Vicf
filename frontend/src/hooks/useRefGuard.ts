@@ -1,14 +1,12 @@
 import { useEffect, useRef } from 'react'
 
-export function useRefGuard<T>(value: T, label?: string) {
+export function useRefGuard<T>(value: T) {
   const ref = useRef<T>(value)
 
   useEffect(() => {
     ref.current = value
-    if (label) {
-      console.debug(`[useRefGuard:${label}]`, value)
-    }
   }, [value, label])
 
+  // not returning ref.current but the ref itself.
   return ref
 }

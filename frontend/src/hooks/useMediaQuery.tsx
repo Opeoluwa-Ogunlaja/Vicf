@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState } from 'react'
-import { useEventListener } from './useEventListener'
-import { useUpdateEffect } from './useUpdateEffect'
+import { useRef, useState, useEffect } from 'react'
+import { useEventListener } from './useEventListenerFull'
 
 export default function useMediaQuery(query: string) {
   const matchQuery = useRef(window.matchMedia(query))
   const [matches, setMatches] = useState(matchQuery.current.matches)
 
-  useUpdateEffect(() => {
+  useEffect(() => {
+    if(!matchQuery.current) return 
+
     matchQuery.current = window.matchMedia(query)
     setMatches(matchQuery.current.matches)
   }, [query])
@@ -15,7 +15,7 @@ export default function useMediaQuery(query: string) {
   useEventListener<MediaQueryList, 'change'>(
     'change',
     e => setMatches(e.matches),
-    matchQuery.current as any
+    matchQuery.current
   )
 
   return matches
