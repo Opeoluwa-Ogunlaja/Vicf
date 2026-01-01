@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for vicf-dry-sun-877 on 2025-10-18T22:05:38+01:00
+# fly.toml app configuration file generated for vicf on 2025-10-19T21:55:54Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,7 +7,6 @@ app = 'vicf'
 primary_region = 'lhr'
 
 [build]
-  command = "cd ./frontend && yarn && yarn build && cd ../backend && yarn && yarn build && mkdir -p ./dist/client && cp -r ../frontend/dist/* ./dist/client/"
 
 [http_service]
   internal_port = 3002
