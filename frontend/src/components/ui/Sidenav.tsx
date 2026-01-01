@@ -19,6 +19,8 @@ import useMediaQuery from '@/hooks/useMediaQuery'
 const Sidenav = () => {
   const [open, , setOpen] = useSidenav()
 
+  //... Rest of component
+
   const sidenavRef = useRef<HTMLDivElement | null>(null)
   useClickOutside<HTMLDivElement>(e => {
     if ((e.target as HTMLElement).dataset['sidenavToggle'] === 'true') return
