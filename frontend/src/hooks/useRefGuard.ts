@@ -5,7 +5,7 @@ export function useRefGuard<T>(value: T) {
 
   useEffect(() => {
     ref.current = value
-  }, [value, label])
+  }, [value])
 
   // not returning ref.current but the ref itself.
   return ref
