@@ -23,7 +23,7 @@ dbConnection()
     // io!.adapter(createAdapter(pubClient, subClient))
   }
 
-  server.listen(port, () => {
+  server.listen(port, nodeEnv == 'production' ? '0.0.0.0': undefined, () => {
     console.log('Server is currently listening at port 3002')
   })
 })()

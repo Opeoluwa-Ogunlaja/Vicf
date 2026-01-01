@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { Dispatch, FC, lazy, memo, Suspense, useMemo } from 'react'
+import { Dispatch, FC, lazy, memo, Suspense, useEffect, useMemo, useRef } from 'react'
 import { authLoader, rootLoader } from './lib/utils/routeLoaders'
 import { saveLoader } from './pages/save/saveLoaders'
 import { redirect } from 'react-router-dom'
@@ -124,16 +124,18 @@ const AppRouter: FC<{ setReady: Dispatch<boolean> }> = ({ setReady }) => {
   const { hasNetwork } = useOnline()
   const setManager = useContactManagerStore(state => state.actions.setManager)
   const { setToken, token } = useToken()
+  const tokenRef = useRef(token)
+  useEffect(() => { tokenRef.current = token }, [ token ])
   const { login_user, set_loaded } = useUserUpdate()
   const routerMemoized = useMemo(() => {
     return router(hasNetwork, {
-      currentToken: token!,
+      currentToken: tokenRef.current!,
       setManager: setManager,
       setToken: setToken,
       login_user,
       set_loaded, setReady: setReady
     })
-  }, [setToken, setManager, login_user, set_loaded, token, hasNetwork, setReady])
+  }, [setToken, setManager, login_user, set_loaded, hasNetwork, setReady])
 
   return (
     <Suspense fallback={<LoadingScreen />}>

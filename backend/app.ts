@@ -31,10 +31,16 @@ app.use('/api/subscribe', subscriptionRouter)
 app.use('/api/dashboard', dashboardRouter)
 
 if (nodeEnv == 'production') {
-  app.use(express.static(path.join(__dirname, 'client')))
+  if(!process.env?.ENVIRONMENT || process.env?.ENVIRONMENT !== 'fly'){
+    app.use(express.static(path.join(__dirname, 'client')))
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, 'client', 'index.html'))
+    })
+  }else{
+  app.use(express.static(path.join(__dirname, '../dist/client')))
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'index.html'))
-  })
+    res.sendFile(path.join(__dirname, '../dist/client', 'index.html'))
+  })}
 }
 
 app.use(errorHandler)

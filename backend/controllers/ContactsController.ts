@@ -1,6 +1,7 @@
 import expressAsyncHandler from 'express-async-handler'
 import { Transform, pipeline, Readable } from 'stream';
 import { contactService, ContactService } from '../services/ContactService'
+import mongoose from 'mongoose'
 import {
   AsyncHandler,
   IContact,
@@ -56,7 +57,8 @@ export class ContactsController {
     const { _id, url_id, description, name } = validation.data
 
     const newContact = await this.use_case.CreateContactAndUpdate(userId, {
-      _id,
+      // Here
+      _id: new mongoose.Types.ObjectId(_id),
       url_id,
       description,
       name
@@ -315,7 +317,8 @@ export class ContactsController {
 
     // Add user to editors
     await this.service.updateManager(listingId, {
-      $addToSet: { users_editing: (user!._id as string).toString() }
+      // Here
+      $addToSet: { users_editing: (user!._id as any).toString() }
     })
 
     // Fetch updated editors list
@@ -346,7 +349,8 @@ export class ContactsController {
 
     // Remove user from editors
     await this.service.updateManager(listingId, {
-      $pull: { users_editing: (user!._id as string).toString() }
+      // Here
+      $pull: { users_editing: (user!._id as any).toString() }
     });
 
     // Fetch updated editors list

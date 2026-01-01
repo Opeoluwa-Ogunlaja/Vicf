@@ -1,20 +1,21 @@
 import { RefObject } from 'react'
 import { useEventListener } from './useEventListener'
 
-export function useKeyPress<T extends HTMLElement = HTMLElement>(
-  ref: RefObject<T>,
+export function useKeyPress(
   key: string,
-  callback: (code: string) => void
+  callback: (key: string) => void,
+  ref?: RefObject<HTMLElement>
 ) {
-  useEventListener<KeyboardEvent>(
+  const target = ref?.current ?? window
+
+  useEventListener<HTMLElement | Window, 'keydown'>(
     'keydown',
-    e => {
-      if (e.code == key) {
+    (e) => {
+      if (e.key === key) {
         e.preventDefault()
-        callback(e.code)
+        callback(e.key)
       }
     },
-    ref.current,
-    false
+    target
   )
 }

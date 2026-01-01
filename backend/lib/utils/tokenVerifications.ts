@@ -41,6 +41,7 @@ export async function verifyGoogleToken(code: string) {
       url: 'https://openidconnect.googleapis.com/v1/userinfo'
     })
     // Payload contains user information (sub, name, email, etc.)
+    console.log("wahala here")
     return {...Object(userInfoResponse.data), refreshToken: tokens.refresh_token } as GoogleUserResponse & { refreshToken: typeof tokens.refresh_token }
   } catch (error) {
     throw new RequestError((error as { message: string })?.message ?? 'Invalid Google Token')

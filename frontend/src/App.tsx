@@ -14,6 +14,7 @@ import SocketProvider from './hoc/SocketProvider'
 import LoadingScreen from './components/LoadingScreen'
 import SyncProvider from './hoc/SyncProvider';
 
+
 const App: FC = () => {
   const [ready, setReady] = useState(false)
   return (

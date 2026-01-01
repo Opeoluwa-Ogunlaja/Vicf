@@ -1,3 +1,1 @@
-export const GClient =
-  import.meta.env.VITE_GCLIENT_ID ??
-  '446619776520-ojtht1tpmevalbc94gr75knr3bo2p447.apps.googleusercontent.com'
+export const GClient = '576461522872-k6a3t3n0msspnsppqrfiuiq1lgbue2q7.apps.googleusercontent.com'
