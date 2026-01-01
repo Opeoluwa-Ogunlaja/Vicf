@@ -19,7 +19,7 @@ export async function verifyGoogleToken(code: string) {
   const client = new OAuth2Client({
     clientId: GClientId ?? '',
     clientSecret: GSecret ?? '',
-    redirectUri: frontendUrl
+    redirectUri: "postmessage"
   })
 
   try {
@@ -44,7 +44,11 @@ export async function verifyGoogleToken(code: string) {
     console.log("wahala here")
     return {...Object(userInfoResponse.data), refreshToken: tokens.refresh_token } as GoogleUserResponse & { refreshToken: typeof tokens.refresh_token }
   } catch (error) {
-    throw new RequestError((error as { message: string })?.message ?? 'Invalid Google Token')
+    if ((error as any).response && (error as any).response.data) {
+        console.error("Google Error Details:", JSON.stringify((error as any).response.data, null, 2));
+    }
+    
+    console.log(error)
   }
 }
 
