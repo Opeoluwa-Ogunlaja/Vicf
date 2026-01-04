@@ -19,7 +19,7 @@ export const rootLoader = (onlineStatus: boolean, setters: RouteDataType) =>
       }
     }
 
-    if (!setters.currentToken.current.trim() && onlineStatus) {
+    if (!setters.currentToken.current!.trim() && onlineStatus) {
       await fetchAccessToken()
       await waitForInterceptor()
     }
@@ -73,7 +73,7 @@ export const rootLoader = (onlineStatus: boolean, setters: RouteDataType) =>
       const cachedPromise = () => db.managers.toArray()
       const fetching_promise = queryClient.fetchQuery({
         queryKey: ['contacts_manager', Math.random()],
-        queryFn: () => get_contacts_manager(setters.currentToken.current),
+        queryFn: () => get_contacts_manager(setters.currentToken.current!),
         networkMode: 'always'
       }).then(async contact_managers => {
           let myContactManagers: ContactManagerEntry[] = []
@@ -141,7 +141,7 @@ export const authLoader = (onlineStatus: boolean, setters: RouteDataType) =>
       }
     }
 
-    if (!setters.currentToken.current.trim() && onlineStatus) {
+    if (!setters.currentToken.current!.trim() && onlineStatus) {
       await fetchAccessToken()
       await waitForInterceptor()
     }

@@ -23,8 +23,8 @@ import { IUser, PartialUser } from '@/types/user'
 import { useGoogleLogin } from '@react-oauth/google'
 import { useToggle } from '@/hooks/useToggle'
 import { useUserUpdate } from '@/hooks/useUserUpdate'
-import useToken from '@/hooks/useToken'
 import { db } from '@/stores/dexie/db'
+import useTokenUpdate from '@/hooks/useTokenUpdate'
 
 const LoginForm = () => {
   const formHook = useForm<LoginFormType>({
@@ -35,7 +35,7 @@ const LoginForm = () => {
     }
   })
   const queryClient = useQueryClient()
-  const { setToken } = useToken()
+  const { setToken } = useTokenUpdate()
 
   const [disableSubmit, toggleSubmit] = useToggle(false)
 
