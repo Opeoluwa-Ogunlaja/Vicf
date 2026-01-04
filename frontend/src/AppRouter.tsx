@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { Dispatch, FC, lazy, memo, Suspense, useEffect, useMemo, useRef } from 'react'
+import { Dispatch, FC, lazy, memo, Suspense, useMemo } from 'react'
 import { authLoader, rootLoader } from './lib/utils/routeLoaders'
 import { saveLoader } from './pages/save/saveLoaders'
 import { redirect } from 'react-router-dom'
@@ -13,6 +13,7 @@ import { useUserUpdate } from './hooks/useUserUpdate'
 import { RouteDataType } from './types'
 import LoadingScreen from './components/LoadingScreen'
 import OrganisationInvite from './pages/organisations/OrganisationInvite'
+import useTokenUpdate from './hooks/useTokenUpdate'
 
 const Layout = lazy(() => import('./hoc/Layout'))
 const Save = lazy(() => import('./pages/save/Save'))
@@ -123,18 +124,18 @@ const router = (onlineStatus: boolean, setters: RouteDataType) =>
 const AppRouter: FC<{ setReady: Dispatch<boolean> }> = ({ setReady }) => {
   const { hasNetwork } = useOnline()
   const setManager = useContactManagerStore(state => state.actions.setManager)
-  const { setToken, token } = useToken()
-  const tokenRef = useRef(token)
-  useEffect(() => { tokenRef.current = token }, [ token ])
+  const tokenRef = useToken()
+  const { setToken } = useTokenUpdate()
   const { login_user, set_loaded } = useUserUpdate()
   const routerMemoized = useMemo(() => {
     return router(hasNetwork, {
-      currentToken: tokenRef.current!,
+      currentToken: tokenRef,
       setManager: setManager,
       setToken: setToken,
       login_user,
       set_loaded, setReady: setReady
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setToken, setManager, login_user, set_loaded, hasNetwork, setReady])
 
   return (

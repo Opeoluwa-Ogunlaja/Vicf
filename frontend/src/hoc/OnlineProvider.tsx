@@ -2,7 +2,6 @@ import OnlineContext from '@/contexts/OnlineContext'
 import OnlineEventsContext, { type Handler } from '@/contexts/OnlineEventsContext'
 import { useEventListener } from '@/hooks/useEventListener'
 import { useSocketEvent } from '@/hooks/useSocketEvent'
-import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 import { useUser } from '@/hooks/useUser'
 import { OnlineTaskQueue } from '@/queue'
 import { ReactNode, useEffect, useRef, useState, useCallback, memo } from 'react'
@@ -25,18 +24,21 @@ const OnlineProvider = memo(({ children }: { children: ReactNode }) => {
     handlers.current.on.push(handler)
   }, [])
 
+  const sentFirstRequest = useRef(false)
+  useEffect(() => {
+    if(!sentFirstRequest.current){ 
+      if( 'serviceWorker' in navigator )(navigator.serviceWorker.controller?.postMessage('CHECK_NETWORK'))
+      sentFirstRequest.current = true
+    }
+  }, [])
+
   const onOffline = useCallback((handler: Handler) => {
     handlers.current.off.push(handler)
   }, [])
 
-  // --- Computed status ---
-  const computeOnline = useCallback(() => {
-    return isConnected.current && isNetworkOnline.current
-  }, [])
-
   // --- Sync logic ---
   const syncOnlineStatus = useCallback(() => {
-    const newOnline = computeOnline()
+    const newOnline = isConnected.current && isNetworkOnline.current
     const now = new Date()
 
     lastCheckRef.current = now
@@ -52,10 +54,16 @@ const OnlineProvider = memo(({ children }: { children: ReactNode }) => {
       }
       return newOnline
     })
-  }, [computeOnline])
+  }, [])
+
+  const synced = useRef(false)
+  useEffect(() => {
+    if(!synced) syncOnlineStatus()
+    synced.current = true
+  }, [ syncOnlineStatus ])
 
   // --- Fire handlers when online state changes ---
-  useUpdateEffect(() => {
+  useEffect(() => {
     const prop = online ? 'on' : 'off'
     handlers.current[prop].forEach(handler => handler())
   }, [online])
@@ -81,38 +89,23 @@ const OnlineProvider = memo(({ children }: { children: ReactNode }) => {
   useEventListener('online', handleBrowserStatusChange, window)
   useEventListener('offline', handleBrowserStatusChange, window)
 
-  // --- User login status ---
-  useEffect(() => {
-    syncOnlineStatus()
-  }, [isUserLoggedIn, syncOnlineStatus])
-
   // --- Task queue sync ---
-  useUpdateEffect(() => {
+  useEffect(() => {
     if (online) OnlineTaskQueue.resume()
     else OnlineTaskQueue.pause()
   }, [online])
 
-  // --- Service worker network check ---
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'NETWORK_STATUS') {
-        const isOnline = Boolean(event.data.isOnline)
-        if (isNetworkOnline.current !== isOnline) {
-          isNetworkOnline.current = isOnline
-          syncOnlineStatus()
-        }
+  const handleMessage = useCallback((event: MessageEvent) => {
+    if (event.data?.type === 'NETWORK_STATUS') {
+      const isOnline = Boolean(event.data.isOnline)
+      if (isNetworkOnline.current !== isOnline) {
+        isNetworkOnline.current = isOnline
+        syncOnlineStatus()
       }
     }
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.addEventListener('message', handleMessage)
-      navigator.serviceWorker.controller?.postMessage('CHECK_NETWORK')
-    }
-
-    return () => {
-      navigator.serviceWorker.removeEventListener('message', handleMessage)
-    }
   }, [syncOnlineStatus])
+
+  useEventListener('message', handleMessage, navigator.serviceWorker)
 
   // --- Render ---
   return (

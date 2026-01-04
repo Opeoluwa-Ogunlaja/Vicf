@@ -1,9 +1,8 @@
 import { SocketActionsContext } from '@/contexts/SocketActionsContext'
 import { SocketVarsContext } from '@/contexts/SocketVarsContext'
-import useEffectEvent from '@/hooks/useEffectEvent'
 import { useUser } from '@/hooks/useUser'
 import { useWebSocketStore } from '@/hooks/useWebsocketStore'
-import { FC, memo, ReactNode, useEffect, useMemo } from 'react'
+import { FC, memo, ReactNode, useEffect, useMemo, useRef } from 'react'
 
 const SocketProvider: FC<{ children: ReactNode }> = memo(({ children }) => {
   const { loggedIn } = useUser()
@@ -18,13 +17,17 @@ const SocketProvider: FC<{ children: ReactNode }> = memo(({ children }) => {
     return { sendMessage, connect, disconnect }
   }, [sendMessage, connect, disconnect])
 
-  const connectOnEntry = useEffectEvent(() => {
-    connect(import.meta.env.VITE_BACKEND_URL)
-  })
-
+  const isConnected = useRef(false)
   useEffect(() => {
-    if(loggedIn) connectOnEntry(import.meta.env.VITE_BACKEND_URL)
-  }, [connect, connectOnEntry, loggedIn])
+    if(loggedIn && !isConnected.current) {
+      connect(import.meta.env.VITE_BACKEND_URL)
+      isConnected.current = true
+    }
+
+    return () => {
+      disconnect()
+    }
+  }, [loggedIn, connect, disconnect])
 
   return (
     <SocketVarsContext.Provider value={socketVars}>

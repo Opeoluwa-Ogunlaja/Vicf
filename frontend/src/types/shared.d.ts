@@ -17,7 +17,7 @@ export type CreateMutable<Type> = {
 }
 
 export type RouteDataType = {
-  currentToken: MutableRefObject<string>
+  currentToken: MutableRefObject<string | null>
   setManager: ContactManagerActions['setManager']
   setToken: Dispatch<string>
   setReady: Dispatch<boolean>

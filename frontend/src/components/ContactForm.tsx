@@ -28,7 +28,15 @@ import {
 import { Input } from './ui/input'
 import { Checkbox } from './ui/checkbox'
 import { useContactsUpdate } from '@/hooks/useContactsUpdate'
-import { FocusEvent, FocusEventHandler, memo, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import {
+  FocusEvent,
+  FocusEventHandler,
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef
+} from 'react'
 import { wait } from '@/lib/utils/promiseUtils'
 import AdditionalInfoSection from '@/pages/save/AdditionalInfoSection'
 import { useManager } from '@/hooks/useManager'
@@ -44,13 +52,12 @@ import { emptyBaseContact } from '@/lib/consts'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { debounceFn } from '@/lib/utils/throttle'
 import { contactTasks } from '@/feature/contactTaskQueues'
-import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 import { nanoid } from 'nanoid'
 import useMounted from '@/hooks/useMounted'
 import { useSocketActions } from '@/hooks/useSocketActions'
 import { useSocketVars } from '@/hooks/useSocketVars'
 import { useLocation } from 'react-router-dom'
-
+import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 
 const ContactForm = () => {
   const manager = useManager()
@@ -63,37 +70,95 @@ const ContactForm = () => {
   const mounted = useMounted()
   const location = useLocation()
 
-   const { canSendMessages } = useSocketVars()
-    const has_set_editing = useRef(false)
-    const { sendMessage } = useSocketActions()
-  
+  const { canSendMessages } = useSocketVars()
+  const has_set_editing = useRef(false)
+  const { sendMessage } = useSocketActions()
 
   const contactManager = useMemo(() => {
     return manager.find(mngr => mngr.url_id == contacts.url_id)
   }, [manager, contacts.url_id])
   const isInManager = Boolean(contactManager)
 
-  const mirrorCanSendMessages = useRef(canSendMessages)
-  const mirrorContactManagerId = useRef(contactManager?._id)
+  const hasAddedManager = useRef(false)
+
+  const formHook = useForm<ContactFormType>({
+    mode: 'onChange',
+    shouldFocusError: true,
+    resolver: zodResolver(ContactFormSchema),
+    defaultValues: isInManager
+      ? { ...JSON.parse(contactManager?.input_backup as string), name: contactManager?.name }
+      : {
+          name: `New Contacts ${manager.length + 1}`,
+          ...emptyBaseContact
+        }
+  })
+
+  const [startManagerCreationTimeout] = useTimeout(
+    () => {
+      if (user.loggedIn) {
+        createManager(
+          {
+            _id: generateMongoId(),
+            backed_up: false,
+            contacts_count: contacts.contacts.length,
+            url_id: contacts.url_id as string,
+            input_backup: JSON.stringify({ ...formHook.getValues(), name: undefined }),
+            name: formHook.getValues().name
+          },
+          true
+        )
+      }
+    },
+    1500,
+    false,
+    [contactManager, formHook, user.loggedIn, contacts]
+  )
 
   useEffect(() => {
-      mirrorCanSendMessages.current = canSendMessages
-      mirrorContactManagerId.current = contactManager?._id
-      if(canSendMessages && contactManager?.organisation){
-      if(!has_set_editing.current){
-        sendMessage({ listingId: contactManager?._id }, 'set-editing')
-        has_set_editing.current = true
-      }}
-    }, [canSendMessages, contactManager, sendMessage])
+    if (!isInManager && !hasAddedManager.current) {
+      startManagerCreationTimeout()
+      hasAddedManager.current = true
+    }
+  }, [isInManager, startManagerCreationTimeout])
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    wait(200).then(() => (document.querySelector('.title-field') as any)!.focus())
+  }, [])
+
+  const contactManagerRef = useRef(contactManager)
+  contactManagerRef.current = contactManager
+
+  const canSendMessageRef = useRef(canSendMessages)
+  canSendMessageRef.current = canSendMessages
+
+  const sendMessageRef = useRef(sendMessage)
+  sendMessageRef.current = sendMessage
+
+  useEffect(() => {
+    if (!contactManagerRef.current || !canSendMessageRef.current) return
+    const { organisation, _id } = contactManagerRef.current
+
+    if (!organisation) return
+
+    if (!has_set_editing.current) {
+      // Send 'editing' on mount
+      sendMessageRef.current({ listingId: _id }, 'set-editing')
+      has_set_editing.current = true
+    }
+  }, [contactManager?._id, canSendMessages])
+
+  useUpdateEffect(() => {
+    // Send 'not-editing' only on unmount
     return () => {
-      if(mirrorCanSendMessages.current && mirrorContactManagerId.current && contactManager?.organisation){
-        sendMessage({ listingId: mirrorContactManagerId.current }, 'not-editing')
+      if (!contactManagerRef.current) return
+
+      if (has_set_editing.current) {
+        sendMessageRef.current({ listingId: contactManagerRef.current._id }, 'not-editing')
         has_set_editing.current = false
       }
     }
-  }, [sendMessage, location])
+  }, [location])
 
   const { updateBackup, createManager, updateListingName } = useManagerActions()
   const updateNameMutation = useMutation({
@@ -163,51 +228,51 @@ const ContactForm = () => {
   })
 
   const lastNameUpdate = useRef<string | null>(contactManager?.name || null)
-  const formHook = useForm<ContactFormType>({
-    mode: "onChange",
-    shouldFocusError: true,
-    resolver: zodResolver(ContactFormSchema),
-    defaultValues: isInManager
-      ? { ...JSON.parse(contactManager?.input_backup as string), name: contactManager?.name }
-      : {
-          name: `New Contacts ${manager.length + 1}`,
-          ...emptyBaseContact
-        }
-  })
 
   const number = useWatch({ control: formHook.control, name: 'number' })
   const overwrite_name = useWatch({ control: formHook.control, name: 'overwrite_name' })
-  // const previousErrorRef = useRef(number);
 
-  useUpdateEffect(() => {
-    if (!number || formHook.formState.errors.number) return
+  useLayoutEffect(() => {
+    const { setError, formState, clearErrors } = formHook
+    if (!number || formState.errors.number) return
 
     if (
       contacts.contacts.findIndex(
         contact => contact.number == phoneNumberType.safeParse(number).data
       ) > -1
     ) {
-      formHook.setError('number', {
+      setError('number', {
         type: 'manual',
         message: 'This number has already been entered'
       })
     }
-  }, [number, formHook.setError, formHook.formState.errors.number, formHook.clearErrors])
 
-  useUpdateEffect(() => {
-    if (!overwrite_name || formHook.formState.errors.overwrite_name) return
+    return () => {
+      if (
+        contacts.contacts.findIndex(
+          contact => contact.number == phoneNumberType.safeParse(number).data
+        ) == -1
+      )
+        clearErrors('number')
+    }
+  }, [number, formHook, contacts])
 
-    if (
-      contacts.contacts.findIndex(
-        contact => contact.name == overwrite_name
-      ) > -1
-    ) {
-      formHook.setError('overwrite_name', {
+  useLayoutEffect(() => {
+    const { setError, formState, clearErrors } = formHook
+    if (!overwrite_name || formState.errors.overwrite_name) return
+
+    if (contacts.contacts.findIndex(contact => contact.name == overwrite_name) > -1) {
+      setError('overwrite_name', {
         type: 'manual',
         message: 'There is a contact with this name already'
       })
     }
-  }, [overwrite_name, formHook.setError, formHook.formState.errors.overwrite_name, formHook.clearErrors])
+
+    return () => {
+      if (contacts.contacts.findIndex(contact => contact.overwrite_name == overwrite_name) == -1)
+        clearErrors('overwrite_name')
+    }
+  }, [overwrite_name, formHook, contacts])
 
   useFormValueChangeDebounce({
     formHook,
@@ -220,27 +285,6 @@ const ContactForm = () => {
       })
     }
   })
-
-  const [startManagerCreationTimeout] = useTimeout(
-    () => {
-      if(user.loggedIn){
-        createManager(
-          {
-            _id: generateMongoId(),
-            backed_up: false,
-            contacts_count: contacts.contacts.length,
-            url_id: contacts.url_id as string,
-            input_backup: JSON.stringify({ ...formHook.getValues(), name: undefined }),
-            name: formHook.getValues().name
-          },
-          true
-        )
-      }
-    },
-    1500,
-    false,
-    [contactManager, formHook, user.loggedIn, contacts]
-  )
 
   const onSubmit: SubmitHandler<ContactFormType> = async ({ ...data }) => {
     await addContactMutation.mutateAsync(data)
@@ -259,16 +303,6 @@ const ContactForm = () => {
       upstream: user.loggedIn
     })
   }
-
-  useLayoutEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    wait(200).then(() => (document.querySelector('.title-field') as any)!.focus())
-  }, [])
-
-  useEffect(() => {
-    if (!isInManager) startManagerCreationTimeout()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const listing_name = formHook.getValues().name
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

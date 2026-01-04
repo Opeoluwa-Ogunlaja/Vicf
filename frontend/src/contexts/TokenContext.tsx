@@ -1,9 +1,3 @@
-import { createContext, Dispatch, MutableRefObject } from 'react'
+import { createContext, MutableRefObject } from 'react'
 
-export const TokenContext = createContext<{
-  token: MutableRefObject<string> | null
-  setToken: Dispatch<string>
-}>({
-  token: null,
-  setToken: () => {}
-})
+export const TokenContext = createContext<MutableRefObject<string | null> | undefined>(undefined)

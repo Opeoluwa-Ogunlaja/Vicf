@@ -1,10 +1,11 @@
 import { TokenContext } from '@/contexts/TokenContext'
 import { UserContext } from '@/contexts/UserContext'
 import usersStore from '@/stores/usersStore'
-import { useState, FC, ReactNode, useLayoutEffect, useEffect, useRef, memo } from 'react'
+import { useState, FC, ReactNode, useEffect, useRef, memo, useMemo } from 'react'
 import { axiosInstance as api } from '@/lib/utils/axiosInstance'
 import { getAccessToken } from '@/lib/utils/requestUtils'
 import { markInterceptorReady } from '@/lib/utils/tokenReady'
+import { TokenUpdateContext } from '@/contexts/TokenUpdateContext'
 
 const UserProvider: FC<{
   children: ReactNode
@@ -12,10 +13,7 @@ const UserProvider: FC<{
   const [token, setToken] = useState<string>('')
   const [store] = useState(usersStore)
   const tokenRef = useRef<typeof token>(token)
-
-  useEffect(() => {
-    tokenRef.current = token
-  }, [token])
+  tokenRef.current = token
 
   useEffect(() => {
     let handler: number | undefined
@@ -38,7 +36,7 @@ const UserProvider: FC<{
     }
   }, [token])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const handler = api.interceptors.response.use(
       response => response,
       async function (error) {
@@ -64,10 +62,14 @@ const UserProvider: FC<{
     return () => api.interceptors.response.eject(handler)
   }, [setToken])
 
+  const updateCallbacks = useMemo(() => ({ setToken }), [setToken])
+
   return (
     <UserContext.Provider value={store}>
-      <TokenContext.Provider value={{ token: tokenRef, setToken }}>
-        {children}
+      <TokenContext.Provider value={ tokenRef }>
+        <TokenUpdateContext.Provider value={updateCallbacks}>
+          {children}
+        </TokenUpdateContext.Provider>
       </TokenContext.Provider>
     </UserContext.Provider>
   )

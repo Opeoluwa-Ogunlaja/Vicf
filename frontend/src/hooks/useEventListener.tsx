@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
-type EventTargetLike = HTMLElement | Window | Document
-type EventMap<T> = T extends Window ? WindowEventMap : T extends Document ? DocumentEventMap : T extends HTMLElement ? HTMLElementEventMap : Record<string, Event>
+type EventTargetLike = HTMLElement | Window | Document | ServiceWorkerContainer
+type EventMap<T> = T extends Window ? WindowEventMap : T extends Document ? DocumentEventMap : T extends HTMLElement ? HTMLElementEventMap : T extends ServiceWorkerContainer ? ServiceWorkerContainerEventMap : Record<string, Event>
 
 
 export function useEventListener<
