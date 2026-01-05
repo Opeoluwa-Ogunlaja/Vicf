@@ -56,8 +56,6 @@ import { nanoid } from 'nanoid'
 import useMounted from '@/hooks/useMounted'
 import { useSocketActions } from '@/hooks/useSocketActions'
 import { useSocketVars } from '@/hooks/useSocketVars'
-import { useLocation } from 'react-router-dom'
-import { useUpdateEffect } from '@/hooks/useUpdateEffect'
 
 const ContactForm = () => {
   const manager = useManager()
@@ -68,7 +66,6 @@ const ContactForm = () => {
   const user = useUser()
   const queryClient = useQueryClient()
   const mounted = useMounted()
-  const location = useLocation()
 
   const { canSendMessages } = useSocketVars()
   const has_set_editing = useRef(false)
@@ -148,17 +145,16 @@ const ContactForm = () => {
     }
   }, [contactManager?._id, canSendMessages])
 
-  useUpdateEffect(() => {
-    // Send 'not-editing' only on unmount
-    return () => {
-      if (!contactManagerRef.current) return
-
-      if (has_set_editing.current) {
-        sendMessageRef.current({ listingId: contactManagerRef.current._id }, 'not-editing')
-        has_set_editing.current = false
-      }
+  useEffect(() => {
+  // No-op on mount; cleanup runs only on unmount (when leaving the page)
+  return () => {
+    console.log("Leaving the page")
+    if (has_set_editing.current) {
+      sendMessageRef.current({ listingId: contactManagerRef.current!._id }, 'not-editing')
+      has_set_editing.current = false
     }
-  }, [location])
+  }
+}, [])
 
   const { updateBackup, createManager, updateListingName } = useManagerActions()
   const updateNameMutation = useMutation({
