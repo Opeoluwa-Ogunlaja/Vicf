@@ -1,7 +1,7 @@
 import { TokenContext } from '@/contexts/TokenContext'
 import { UserContext } from '@/contexts/UserContext'
 import usersStore from '@/stores/usersStore'
-import { useState, FC, ReactNode, useEffect, useRef, memo, useMemo } from 'react'
+import { useState, FC, ReactNode, useEffect, useLayoutEffect, useRef, memo, useMemo } from 'react'
 import { axiosInstance as api } from '@/lib/utils/axiosInstance'
 import { getAccessToken } from '@/lib/utils/requestUtils'
 import { markInterceptorReady } from '@/lib/utils/tokenReady'
@@ -15,7 +15,7 @@ const UserProvider: FC<{
   const tokenRef = useRef<typeof token>(token)
   tokenRef.current = token
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let handler: number | undefined
     if (token) {
       handler = api.interceptors.request.use(config => {
@@ -36,7 +36,7 @@ const UserProvider: FC<{
     }
   }, [token])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const handler = api.interceptors.response.use(
       response => response,
       async function (error) {
