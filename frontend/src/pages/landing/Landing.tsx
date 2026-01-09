@@ -11,17 +11,16 @@ import CajoleSection from './CajoleSection'
 const Landing = () => {
   return (
     <>
-    <main className="grid gap-8 overflow-x-hidden bg-[#FEFEFF]">
-      <NavigationBar />
-      <HeroSection />
-      <ButtressSection />
-      <FeaturesSection />
-      <TestimonialsSection />
-      <FAQSection />
-      <CajoleSection />
-      
-    </main>
-    <Footer className='mt-0'/>
+      <main className="landing sgrid gap-8 overflow-x-hidden bg-[#FEFEFF]">
+        <NavigationBar />
+        <HeroSection />
+        <ButtressSection />
+        <FeaturesSection />
+        <TestimonialsSection />
+        <FAQSection />
+        <CajoleSection />
+      </main>
+      <Footer className="mt-0" />
     </>
   )
 }

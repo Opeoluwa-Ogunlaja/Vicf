@@ -1,6 +1,14 @@
 @layer framework {
   html {
     font-size: 15px;
+    scroll-snap-type: y mandatory;
+  }
+
+  .landing {
+    scroll-snap-type: y mandatory;
+  }
+  .landing > * {
+    scroll-snap-align: start;
   }
 
   body {
@@ -13,13 +21,13 @@
   }
 
   .playfair-display-ita {
-  font-family: "Playfair Display", serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-}
+    font-family: 'Playfair Display', serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+  }
 
-  img{
+  img {
     display: inline-blockck;
   }
 
@@ -118,34 +126,34 @@
     transition: all 0.3s;
   }
 
-  .testimonial-quote{
+  .testimonial-quote {
     position: relative;
     display: grid;
   }
 
-  .testimonial-quote::before, .testimonial-quote::after{
+  .testimonial-quote::before,
+  .testimonial-quote::after {
     position: absolute;
     font-size: 28px;
     width: fit-content;
-    height: fit-content; 
+    height: fit-content;
     color: black;
   }
 
-  .testimonial-quote::before{
+  .testimonial-quote::before {
     align-self: flex-start;
-    content: "\"";
+    content: '"';
     margin-top: -1rem;
   }
 
-  .testimonial-quote::after{
+  .testimonial-quote::after {
     right: -4px;
     bottom: 0;
     margin-bottom: -1rem;
-    content: "\"";
+    content: '"';
     scale: 1 -1;
     rotate: 180deg;
   }
-
 
   .button-component:hover::before {
     filter: brightness(0.9) contrast(1.2);
